@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile with Clock and Music</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #141e30, #243b55);
+        color: #fff;
+        text-align: center;
+        padding: 0;
+        overflow-x: hidden;
+      }
+
+      .profile {
+        margin: 50px auto;
+        padding: 30px;
+        max-width: 900px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 1s ease-out;
+      }
+
+      .profile img {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        border: 5px solid #00c6ff;
+        margin-bottom: 20px;
+      }
+
+      .profile p {
+        font-size: 1.2em;
+        line-height: 1.8;
+        color: #dcdcdc;
+        margin-bottom: 30px;
+      }
+
+      .favorite-song {
+        margin-top: 30px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      .favorite-song h3 {
+        font-size: 2em;
+        color: #00c6ff;
+        margin-bottom: 15px;
+      }
+
+      .favorite-song audio {
+        width: 100%;
+        border-radius: 5px;
+        margin-top: 15px;
+      }
+
+      .social-links {
+        margin-top: 50px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        animation: fadeIn 2s ease-out;
+      }
+
+      .social-links a {
+        display: block;
+        width: 50px;
+        height: 50px;
+        background: #00c6ff;
+        border-radius: 50%;
+        padding: 12px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .social-links a:hover {
+        transform: scale(1.1);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .social-links img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .clock {
+        margin-top: 20px;
+        font-size: 2em;
+        color: #fff;
+      }
+
+      .digital-clock {
+        font-size: 2.5em;
+        color: #fff;
+        margin-bottom: 20px;
+      }
+
+      .analog-clock {
+        margin-top: 20px;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 5px solid #00c6ff;
+        position: relative;
+        display: inline-block;
+        background-color: #1c2833;
+      }
+
+      .analog-clock div {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 50%;
+        height: 3px;
+        background-color: #fff;
+        transform-origin: 100%;
+        transform: translateX(-50%);
+        border-radius: 10px;
+      }
+
+      .analog-clock .hour {
+        height: 6px;
+        background-color: #ff5733;
+      }
+
+      .analog-clock .minute {
+        height: 4px;
+        background-color: #33c1ff;
+      }
+
+      .analog-clock .second {
+        height: 2px;
+        background-color: #fffa33;
+      }
+
+      footer {
+        margin-top: 50px;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #999;
+        font-size: 1em;
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="profile">
+      <img
+        src="https://img102.pixhost.to/images/114/557025919_tenrai-bot.jpg"
+        alt="Profile"
+      />
+      <p>
+        Halo, saya Riskiyan Benta Yudistira, biasa dipanggil Yudis. Saya sangat
+        menyukai teknologi, khususnya pengembangan website dan bot. Hobi saya adalah
+        mendengarkan musik dan mengeksplorasi hal-hal baru yang menarik. Saya juga suka
+        berbagi pengetahuan dan membuat hal-hal kreatif.
+      </p>
+      <div class="favorite-song">
+        <h3>Lagu Favorit Saya:</h3>
+        <p><strong>Nina - Feast</strong></p>
+        <audio controls>
+          <source
+            src="https://files.catbox.moe/j4aq54.mp3"
+            type="audio/mpeg"
+          />
+          Browser Anda tidak mendukung pemutar audio.
+        </audio>
+        <p><strong>Hindia - Secukupnya</strong></p>
+        <audio controls>
+          <source
+            src="https://files.catbox.moe/2nco0t.m4a"
+            type="audio/mpeg"
+          />
+          Browser Anda tidak mendukung pemutar audio.
+        </audio>
+        <p><strong>Sal Pribadi</strong></p>
+        <audio controls>
+          <source
+            src="https://files.catbox.moe/ychm2f.m4a"
+            type="audio/mpeg"
+          />
+          Browser Anda tidak mendukung pemutar audio.
+        </audio>
+      </div>
+    </section>
+    <div class="social-links">
+      <a href="https://www.instagram.com/yudis_299/" target="_blank">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1200px-Instagram_logo_2022.svg.png"
+          alt="Instagram"
+        />
+      </a>
+      <a href="https://wa.me/6282143985744" target="_blank">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+          alt="WhatsApp"
+        />
+      </a>
+    </div>
+
+    <div class="digital-clock" id="digital-clock">
+      <!-- Digital clock will show here -->
+    </div>
+
+    <div class="analog-clock" id="analog-clock">
+      <div class="hour" id="hour"></div>
+      <div class="minute" id="minute"></div>
+      <div class="second" id="second"></div>
+    </div>
+
+    <footer>
+      <p>© 2025 Riskiyan Benta Yudistira | Dibuat dengan hati.</p>
+    </footer>
+
+    <script>
+      // Digital Clock Script
+      function updateClock() {
+        const digitalClock = document.getElementById("digital-clock");
+        const date = new Date();
+        const hours = date.getHours().toString().padStart(2, "0");
+        const minutes = date.getMinutes().toString().padStart(2, "0");
+        const seconds = date.getSeconds().toString().padStart(2, "0");
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+
+        digitalClock.innerHTML = `${hours}:${minutes}:${seconds} - ${day}/${month}/${year}`;
+      }
+
+      setInterval(updateClock, 1000);
+
+      // Analog Clock Script
+      function updateAnalogClock() {
+        const hourHand = document.getElementById("hour");
+        const minuteHand = document.getElementById("minute");
+        const secondHand = document.getElementById("second");
+        const date = new Date();
+        const seconds = date.getSeconds();
+        const minutes = date.getMinutes();
+        const hours = date.getHours();
+
+        const secondDeg = (seconds / 60) * 360;
+        const minuteDeg = (minutes / 60) * 360 + (seconds / 60) * 6;
+        const hourDeg = (hours / 12) * 360 + (minutes / 60) * 30;
+
+        secondHand.style.transform = `rotate(${secondDeg}deg)`;
+        minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
+        hourHand.style.transform = `rotate(${hourDeg}deg)`;
+      }
+
+      setInterval(updateAnalogClock, 1000);
+    </script>
+  </body>
+</html>
