@@ -2,103 +2,115 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Playlist Musik & Lirik</title>
+  <title>Playlist Musik</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
       background: #f4f4f4;
-      font-family: sans-serif;
-      margin: 0;
       padding: 20px;
-      color: #222;
     }
     h1 {
       text-align: center;
     }
-    .playlist {
-      max-width: 600px;
-      margin: auto;
-    }
-    .artist-title {
-      font-weight: bold;
-      font-size: 18px;
-      margin-top: 20px;
-    }
-    .song {
+    .folder, .song {
       cursor: pointer;
-      padding: 5px;
-      margin: 5px 0;
       background: #fff;
+      margin: 5px auto;
+      padding: 10px;
       border: 1px solid #ccc;
+      max-width: 600px;
     }
-    .song:hover {
+    .folder:hover, .song:hover {
       background: #e0e0e0;
+    }
+    .song-list {
+      margin-left: 30px;
     }
     audio {
       display: block;
       margin: 20px auto;
       width: 100%;
+      max-width: 600px;
     }
     pre {
       background: #fff;
-      padding: 10px;
+      padding: 15px;
       white-space: pre-wrap;
       border: 1px solid #ddd;
       max-width: 600px;
-      margin: auto;
+      margin: 10px auto;
     }
   </style>
 </head>
 <body>
-  <h1>🎵 Playlist Musik & Lirik</h1>
-  <div class="playlist" id="playlist"></div>
-  <audio controls id="audioPlayer"></audio>
-  <pre id="lyricsBox">Klik salah satu lagu untuk memutar dan melihat liriknya...</pre>
+  <h1>🎵 Playlist Musik</h1>
+  <div id="folders"></div>
+  <audio id="audioPlayer" controls autoplay></audio>
+  <pre id="lyricsBox">Klik lagu untuk menampilkan lirik dan memutar lagu.</pre>
 
   <script>
-    // Atur manual playlist berdasarkan struktur folder
-    const songs = [
-      { artist: "nina", id: "otuan", title: "Nina - O Tuan" },
-      { artist: "nina", id: "feast", title: "Nina - Feast" },
-      { artist: "yura", id: "senja", title: "Yura - Senja" }
-    ];
+    const artists = ['nina', 'yura']; // Tambahkan nama folder artis di sini
+    const musicRoot = 'music/';
+    const lyricsRoot = 'lyrics/';
 
-    const groupByArtist = {};
-    songs.forEach(song => {
-      if (!groupByArtist[song.artist]) groupByArtist[song.artist] = [];
-      groupByArtist[song.artist].push(song);
+    const foldersDiv = document.getElementById("folders");
+
+    artists.forEach(artist => {
+      const folderDiv = document.createElement("div");
+      folderDiv.className = "folder";
+      folderDiv.textContent = `🎤 ${artist}`;
+      folderDiv.onclick = () => loadSongs(artist, folderDiv);
+      foldersDiv.appendChild(folderDiv);
     });
 
-    const playlistDiv = document.getElementById("playlist");
-    for (const artist in groupByArtist) {
-      const artistTitle = document.createElement("div");
-      artistTitle.className = "artist-title";
-      artistTitle.textContent = artist;
-      playlistDiv.appendChild(artistTitle);
+    async function loadSongs(artist, container) {
+      // Cegah load dua kali
+      if (container.dataset.loaded === "true") return;
+      container.dataset.loaded = "true";
 
-      groupByArtist[artist].forEach(song => {
-        const songDiv = document.createElement("div");
-        songDiv.className = "song";
-        songDiv.textContent = song.title;
-        songDiv.onclick = () => loadSong(song.artist, song.id);
-        playlistDiv.appendChild(songDiv);
-      });
+      const songListDiv = document.createElement("div");
+      songListDiv.className = "song-list";
+
+      try {
+        const list = await fetch(`${musicRoot}${artist}/`).then(res => res.text());
+        const files = [...list.matchAll(/href="([^?"]+\.mp3)"/g)].map(match => match[1]);
+
+        files.forEach(file => {
+          const songName = file.replace('.mp3', '');
+          const songDiv = document.createElement("div");
+          songDiv.className = "song";
+          songDiv.textContent = songName.replace(/_/g, ' ');
+          songDiv.onclick = () => playSong({
+            audio: `${musicRoot}${artist}/${file}`,
+            lyrics: `${lyricsRoot}${artist}/${songName}.js`
+          });
+          songListDiv.appendChild(songDiv);
+        });
+
+        container.appendChild(songListDiv);
+      } catch (err) {
+        const errorDiv = document.createElement("div");
+        errorDiv.textContent = "Gagal memuat lagu.";
+        container.appendChild(errorDiv);
+      }
     }
 
-    function loadSong(artist, id) {
-      const scriptPath = `lyrics/${artist}/${id}.js`;
+    function playSong({ audio, lyrics }) {
+      const player = document.getElementById("audioPlayer");
+      player.src = audio;
+      player.play();
+
       const oldScript = document.getElementById("dynamicLyrics");
       if (oldScript) oldScript.remove();
 
       const script = document.createElement("script");
-      script.src = scriptPath;
       script.id = "dynamicLyrics";
+      script.src = lyrics;
       script.onload = () => {
-        document.getElementById("audioPlayer").src = songData.audio;
-        document.getElementById("lyricsBox").textContent = songData.lyrics;
+        document.getElementById("lyricsBox").textContent = songData.lyrics || "Lirik tidak ditemukan.";
       };
       script.onerror = () => {
-        document.getElementById("lyricsBox").textContent = "Lirik tidak ditemukan.";
-        document.getElementById("audioPlayer").src = "";
+        document.getElementById("lyricsBox").textContent = "Lirik gagal dimuat.";
       };
       document.body.appendChild(script);
     }
