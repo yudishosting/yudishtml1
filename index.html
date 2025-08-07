@@ -2,66 +2,84 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Random Quotes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lagu Favorit Saya</title>
   <style>
     body {
-      margin: 0;
-      padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      background: linear-gradient(to right, #f8ffae, #43c6ac);
+      margin: 0;
+      padding: 2em;
       color: #333;
     }
-    .card {
-      background-color: white;
-      padding: 2em;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      max-width: 400px;
+    h1 {
       text-align: center;
-    }
-    .quote {
-      font-size: 1.2em;
       margin-bottom: 1em;
     }
-    button {
-      padding: 10px 20px;
-      font-size: 1em;
-      border: none;
-      border-radius: 10px;
-      background-color: #007bff;
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s ease;
+    .song-list {
+      max-width: 600px;
+      margin: 0 auto;
     }
-    button:hover {
-      background-color: #0056b3;
+    .song {
+      padding: 1em;
+      background: white;
+      margin-bottom: 1em;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    .song:hover {
+      transform: scale(1.02);
+    }
+    #lyrics {
+      white-space: pre-wrap;
+      margin-top: 2em;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 1.5em;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <div class="quote" id="quote">Klik tombol di bawah untuk mendapatkan kutipan!</div>
-    <button onclick="generateQuote()">🎲 Acak Kutipan</button>
+  <h1>🎵 Daftar Lagu Favorit Saya</h1>
+
+  <div class="song-list">
+    <div class="song" onclick="loadLyrics('ninafeast')">Nina Feast - Judul Lagu</div>
+    <div class="song" onclick="loadLyrics('otuan')">O Tuan</div>
+    <!-- Tambah lagu lain di sini -->
   </div>
 
-  <script>
-    const quotes = [
-      "Hidup bukan tentang menunggu badai berlalu, tapi belajar menari di tengah hujan.",
-      "Kegagalan adalah kesempatan untuk memulai lagi dengan lebih cerdas.",
-      "Jangan takut berubah. Kamu mungkin kehilangan sesuatu yang baik, tapi kamu bisa mendapatkan sesuatu yang lebih baik.",
-      "Berhenti mengejar yang tidak bisa kau kendalikan. Fokus pada yang bisa kamu perbaiki.",
-      "Hari ini mungkin berat, tapi esok bisa jadi luar biasa."
-    ];
+  <div id="lyrics"></div>
 
-    function generateQuote() {
-      const randomIndex = Math.floor(Math.random() * quotes.length);
-      document.getElementById("quote").textContent = quotes[randomIndex];
+  <script>
+    function loadLyrics(songName) {
+      const script = document.createElement('script')
+      script.src = `lyrics/${songName}.js`
+      script.onload = () => {
+        if (typeof lyrics !== 'undefined') {
+          const container = document.getElementById('lyrics')
+          container.textContent = lyrics
+          container.style.display = 'block'
+        } else {
+          alert("Lirik tidak ditemukan.")
+        }
+      }
+      script.onerror = () => {
+        alert("Gagal memuat file lirik: " + songName)
+      }
+
+      // Reset dan hapus skrip lama
+      const oldScript = document.querySelector('script[data-lyrics]')
+      if (oldScript) oldScript.remove()
+      script.setAttribute('data-lyrics', songName)
+      document.body.appendChild(script)
     }
   </script>
 
