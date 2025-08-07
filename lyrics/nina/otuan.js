@@ -1,5 +1,4 @@
-var songData = {
-  title: "Judul Lagu",
-  audio: "music/nama_artis/nama_lagu.mp3",
-  lyrics: `Tulis lirik disini...`
-};
+var lyrics = `Lirik lagu New Song oleh Nina
+[Isi lirik di sini]
+Baris 1...
+Baris 2...`;

@@ -2,152 +2,165 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Playlist Lagu Favorit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playlist Musik Favorit</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #f8ffae, #43c6ac);
-      margin: 0;
-      padding: 2em;
-      color: #333;
+    /* Animasi fade-in untuk transisi halus */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    h1 { text-align: center; }
-    .folder, .song {
-      max-width: 600px;
-      margin: 0 auto 1em;
-      padding: 1em;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: transform 0.2s;
+    .fade-in {
+      animation: fadeIn 0.3s ease-in-out;
     }
-    .folder:hover, .song:hover {
-      transform: scale(1.02);
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
     }
-    #song-list, #lyrics-box {
-      max-width: 600px;
-      margin: 2em auto;
-      display: none;
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
     }
-    #lyrics-box {
-      background: white;
-      padding: 1.5em;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    ::-webkit-scrollbar-thumb {
+      background: #6b7280;
+      border-radius: 4px;
     }
-    audio {
-      width: 100%;
-      margin-bottom: 1em;
-    }
-    .back {
-      text-align: center;
-      margin-bottom: 1em;
-      cursor: pointer;
-      color: #007bff;
-      font-weight: bold;
-    }
-    .back:hover {
-      text-decoration: underline;
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4b5563;
     }
   </style>
 </head>
-<body>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="container max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+    <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">Playlist Musik Favorit</h1>
+    <button id="backButton" class="hidden mb-6 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300">Kembali ke Daftar Artis</button>
+    <div id="artistList" class="space-y-4"></div>
+    <div id="playlist" class="hidden space-y-4"></div>
+    <div id="player" class="mt-8 text-center">
+      <audio id="audioPlayer"></audio>
+      <div id="nowPlaying" class="text-gray-600 text-sm mt-2"></div>
+    </div>
+    <div id="lyrics" class="mt-8 p-6 bg-gray-50 rounded-lg text-gray-700 font-mono text-sm leading-relaxed max-h-80 overflow-y-auto"></div>
+  </div>
 
-<h1>🎶 Playlist Lagu Favorit</h1>
+  <script>
+    // Daftar playlist dengan path ke file mp3 dan lirik
+    const playlist = [
+      {
+        artist: "Nina",
+        title: "Feast",
+        mp3: "music/nina/otuan.mp3",
+        lyric: "lyrics/nina/feast.js"
+      },
+      {
+        artist: "Yura",
+        title: "Yura",
+        mp3: "music/yura/yura.mp3",
+        lyric: "lyrics/yura/yura.js"
+      }
+    ];
 
-<div id="artist-list"></div>
-<div id="song-list">
-  <div class="back" onclick="goBackToArtist()">⬅ Kembali ke daftar artis</div>
-  <div id="songs-container"></div>
-</div>
+    const artistList = document.getElementById('artistList');
+    const playlistContainer = document.getElementById('playlist');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const lyricsContainer = document.getElementById('lyrics');
+    const backButton = document.getElementById('backButton');
+    const nowPlaying = document.getElementById('nowPlaying');
 
-<div id="lyrics-box">
-  <h3 id="song-title"></h3>
-  <audio controls id="audio-player" autoplay></audio>
-  <div id="lyrics-text" style="white-space: pre-wrap;"></div>
-</div>
-
-<script>
-async function getFolders(path) {
-  const res = await fetch(path);
-  const text = await res.text();
-  const matches = [...text.matchAll(/<a href="([^"]+)\/">/g)];
-  return matches.map(m => m[1]).filter(name => name !== '..');
-}
-
-async function getSongs(artist) {
-  const res = await fetch(`music/${artist}/`);
-  const text = await res.text();
-  const matches = [...text.matchAll(/<a href="([^"]+\.mp3)">/g)];
-  return matches.map(m => m[1]);
-}
-
-async function loadArtists() {
-  const artistList = document.getElementById('artist-list');
-  const folders = await getFolders('music/');
-  folders.forEach(artist => {
-    const div = document.createElement('div');
-    div.className = 'folder';
-    div.textContent = artist;
-    div.onclick = () => openArtist(artist);
-    artistList.appendChild(div);
-  });
-}
-
-async function openArtist(artist) {
-  document.getElementById('artist-list').style.display = 'none';
-  document.getElementById('song-list').style.display = 'block';
-  const container = document.getElementById('songs-container');
-  container.innerHTML = '';
-
-  const songs = await getSongs(artist);
-  songs.forEach(songFile => {
-    const songName = songFile.replace('.mp3', '');
-    const div = document.createElement('div');
-    div.className = 'song';
-    div.textContent = songName;
-    div.onclick = () => loadSong(artist, songName);
-    container.appendChild(div);
-  });
-}
-
-function goBackToArtist() {
-  document.getElementById('song-list').style.display = 'none';
-  document.getElementById('lyrics-box').style.display = 'none';
-  document.getElementById('artist-list').style.display = 'block';
-}
-
-function loadSong(artist, songFileName) {
-  const oldScript = document.querySelector('script[data-lyrics]');
-  if (oldScript) oldScript.remove();
-
-  const script = document.createElement('script');
-  script.src = `lyrics/${artist}/${songFileName}.js`;
-  script.setAttribute('data-lyrics', 'true');
-  script.onload = () => {
-    if (typeof songData !== 'undefined') {
-      document.getElementById('lyrics-box').style.display = 'block';
-      document.getElementById('song-title').textContent = songData.title;
-      document.getElementById('lyrics-text').textContent = songData.lyrics;
-
-      const audio = document.getElementById('audio-player');
-      audio.src = songData.audio;
-      audio.play();
-
-      songData = undefined;
-    } else {
-      alert('Data lagu tidak ditemukan.');
+    // Fungsi untuk mendapatkan daftar artis unik
+    function getArtists() {
+      return [...new Set(playlist.map(song => song.artist))];
     }
-  };
-  script.onerror = () => {
-    alert('Gagal memuat lirik dari file.');
-  };
-  document.body.appendChild(script);
-}
 
-window.onload = loadArtists;
-</script>
+    // Fungsi untuk memuat daftar artis
+    function loadArtists() {
+      artistList.innerHTML = '';
+      const artists = getArtists();
+      artists.forEach(artist => {
+        const artistElement = document.createElement('div');
+        artistElement.classList.add('p-4', 'bg-indigo-50', 'rounded-lg', 'cursor-pointer', 'hover:bg-indigo-100', 'transition', 'duration-300', 'fade-in');
+        artistElement.textContent = artist;
+        artistElement.addEventListener('click', () => showArtistSongs(artist));
+        artistList.appendChild(artistElement);
+      });
+    }
+
+    // Fungsi untuk menampilkan lagu-lagu dari artis tertentu
+    function showArtistSongs(artist) {
+      artistList.classList.add('hidden');
+      playlistContainer.classList.remove('hidden');
+      backButton.classList.remove('hidden');
+      playlistContainer.innerHTML = '';
+
+      const songs = playlist.filter(song => song.artist === artist);
+      songs.forEach(song => {
+        const songElement = document.createElement('div');
+        songElement.classList.add('p-4', 'bg-gray-50', 'rounded-lg', 'cursor-pointer', 'hover:bg-gray-100', 'transition', 'duration-300', 'fade-in');
+        songElement.textContent = song.title;
+        songElement.addEventListener('click', () => playSong(song));
+        playlistContainer.appendChild(songElement);
+      });
+    }
+
+    // Fungsi untuk memutar lagu dan memuat lirik
+    function playSong(song) {
+      // Highlight lagu yang sedang diputar
+      document.querySelectorAll('#playlist > div').forEach(el => {
+        el.classList.toggle('bg-indigo-200', el.textContent === song.title);
+        el.classList.toggle('bg-gray-50', el.textContent !== song.title);
+      });
+
+      // Set sumber audio dan putar otomatis
+      audioPlayer.src = song.mp3;
+      audioPlayer.play().catch(error => {
+        console.error('Gagal memutar audio:', error);
+        nowPlaying.textContent = 'Gagal memutar lagu.';
+      });
+
+      // Tampilkan info lagu yang sedang diputar
+      nowPlaying.textContent = `Sedang diputar: ${song.artist} - ${song.title}`;
+
+      // Muat lirik
+      loadLyrics(song.lyric);
+    }
+
+    // Fungsi untuk memuat lirik dari file JS
+    function loadLyrics(lyricPath) {
+      lyricsContainer.textContent = 'Memuat lirik...';
+      
+      // Hapus script sebelumnya jika ada
+      const oldScript = document.getElementById('lyricScript');
+      if (oldScript) oldScript.remove();
+
+      // Buat elemen script baru untuk memuat file lirik
+      const script = document.createElement('script');
+      script.id = 'lyricScript';
+      script.src = lyricPath;
+      script.onload = () => {
+        if (window.lyrics) {
+          lyricsContainer.textContent = window.lyrics;
+        } else {
+          lyricsContainer.textContent = 'Lirik tidak ditemukan.';
+        }
+      };
+      script.onerror = () => {
+        lyricsContainer.textContent = 'Gagal memuat lirik.';
+      };
+      document.body.appendChild(script);
+    }
+
+    // Fungsi untuk kembali ke daftar artis
+    backButton.addEventListener('click', () => {
+      artistList.classList.remove('hidden');
+      playlistContainer.classList.add('hidden');
+      backButton.classList.add('hidden');
+      audioPlayer.pause();
+      nowPlaying.textContent = '';
+      lyricsContainer.textContent = '';
+    });
+
+    // Muat daftar artis saat halaman dimuat
+    loadArtists();
+  </script>
 </body>
 </html>
