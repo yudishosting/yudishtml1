@@ -1,6 +1,10 @@
-var songData = {
-  lyrics: `O Tuan yang baik hati
-Kau datang dalam mimpi
-Membawa rindu tak henti
-Menjadi nyanyian sunyi...`
-};
+export const songData = {
+  title: "O Tuan",
+  artist: "nina",
+  lyrics: `
+O Tuan, betapa indah wajahmu
+Langit malam pun cemburu padamu
+Setiap kata dari bibirmu
+Menggetarkan kalbu, menyentuh jiwa
+  `
+}
