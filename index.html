@@ -2,121 +2,106 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Playlist Lagu Favorit</title>
-<style>
-  body {
-    font-family: sans-serif;
-    background: #f4f4f4;
-    color: #333;
-    padding: 20px;
-  }
-  h1 {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  .playlist {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  .artist-title {
-    font-weight: bold;
-    margin-top: 20px;
-    font-size: 1.2em;
-    text-transform: capitalize;
-  }
-  .song {
-    background: #fff;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  .song:hover {
-    background: #e0e0e0;
-  }
-  #lyrics-box {
-    margin-top: 40px;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    display: none;
-  }
-  audio {
-    width: 100%;
-    margin-top: 10px;
-  }
-  pre {
-    white-space: pre-wrap;
-    margin-top: 10px;
-  }
-</style>
+  <title>Playlist Musik & Lirik</title>
+  <style>
+    body {
+      background: #f4f4f4;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      color: #222;
+    }
+    h1 {
+      text-align: center;
+    }
+    .playlist {
+      max-width: 600px;
+      margin: auto;
+    }
+    .artist-title {
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+    .song {
+      cursor: pointer;
+      padding: 5px;
+      margin: 5px 0;
+      background: #fff;
+      border: 1px solid #ccc;
+    }
+    .song:hover {
+      background: #e0e0e0;
+    }
+    audio {
+      display: block;
+      margin: 20px auto;
+      width: 100%;
+    }
+    pre {
+      background: #fff;
+      padding: 10px;
+      white-space: pre-wrap;
+      border: 1px solid #ddd;
+      max-width: 600px;
+      margin: auto;
+    }
+  </style>
 </head>
 <body>
-
-  <h1>🎵 Playlist Lagu Favorit</h1>
-
-  <div class="playlist" id="playlist-container"></div>
-
-  <div id="lyrics-box">
-    <h2 id="song-title"></h2>
-    <audio controls id="audio-player"></audio>
-    <pre id="lyrics-text"></pre>
-  </div>
-
-  <!-- Playlist Data -->
-  <script src="playlist.js"></script>
+  <h1>🎵 Playlist Musik & Lirik</h1>
+  <div class="playlist" id="playlist"></div>
+  <audio controls id="audioPlayer"></audio>
+  <pre id="lyricsBox">Klik salah satu lagu untuk memutar dan melihat liriknya...</pre>
 
   <script>
-    const playlist = window.playlist || {};
-    const container = document.getElementById("playlist-container");
+    // Atur manual playlist berdasarkan struktur folder
+    const songs = [
+      { artist: "nina", id: "otuan", title: "Nina - O Tuan" },
+      { artist: "nina", id: "feast", title: "Nina - Feast" },
+      { artist: "yura", id: "senja", title: "Yura - Senja" }
+    ];
 
-    for (const artist in playlist) {
-      const title = document.createElement("div");
-      title.className = "artist-title";
-      title.textContent = artist;
-      container.appendChild(title);
+    const groupByArtist = {};
+    songs.forEach(song => {
+      if (!groupByArtist[song.artist]) groupByArtist[song.artist] = [];
+      groupByArtist[song.artist].push(song);
+    });
 
-      playlist[artist].forEach(song => {
-        const div = document.createElement("div");
-        div.className = "song";
-        div.textContent = song;
-        div.onclick = () => loadSong(artist, song);
-        container.appendChild(div);
+    const playlistDiv = document.getElementById("playlist");
+    for (const artist in groupByArtist) {
+      const artistTitle = document.createElement("div");
+      artistTitle.className = "artist-title";
+      artistTitle.textContent = artist;
+      playlistDiv.appendChild(artistTitle);
+
+      groupByArtist[artist].forEach(song => {
+        const songDiv = document.createElement("div");
+        songDiv.className = "song";
+        songDiv.textContent = song.title;
+        songDiv.onclick = () => loadSong(song.artist, song.id);
+        playlistDiv.appendChild(songDiv);
       });
     }
 
-    function loadSong(artist, song) {
-      const lowerArtist = artist.toLowerCase();
-      const lowerSong = song.toLowerCase();
-
-      const jsPath = `lyrics/${lowerArtist}/${lowerSong}.js`;
-
-      // Remove previous script
-      const oldScript = document.querySelector("script[data-lyrics]");
+    function loadSong(artist, id) {
+      const scriptPath = `lyrics/${artist}/${id}.js`;
+      const oldScript = document.getElementById("dynamicLyrics");
       if (oldScript) oldScript.remove();
 
       const script = document.createElement("script");
-      script.src = jsPath;
-      script.setAttribute("data-lyrics", "true");
+      script.src = scriptPath;
+      script.id = "dynamicLyrics";
       script.onload = () => {
-        if (typeof songData !== 'undefined') {
-          document.getElementById("lyrics-box").style.display = "block";
-          document.getElementById("song-title").textContent = songData.title;
-          document.getElementById("lyrics-text").textContent = songData.lyrics;
-          const audio = document.getElementById("audio-player");
-          audio.src = songData.audio;
-          audio.play();
-          songData = undefined;
-        } else {
-          alert("Data lirik tidak ditemukan.");
-        }
+        document.getElementById("audioPlayer").src = songData.audio;
+        document.getElementById("lyricsBox").textContent = songData.lyrics;
       };
-      script.onerror = () => alert(`Gagal memuat: ${jsPath}`);
+      script.onerror = () => {
+        document.getElementById("lyricsBox").textContent = "Lirik tidak ditemukan.";
+        document.getElementById("audioPlayer").src = "";
+      };
       document.body.appendChild(script);
     }
   </script>
-
 </body>
 </html>
