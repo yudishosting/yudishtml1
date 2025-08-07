@@ -1,306 +1,69 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Halaman tentang Yudis, seorang yang penuh semangat dan selalu ingin belajar hal-hal baru.">
-    <meta name="keywords" content="Yudis, profil, musik, kontak, teknologi">
-    <title>Tentang Saya - Yudis</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(90deg, #ff7e5f, #feb47b);
-            color: #fff;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 900px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            margin: 20px;
-        }
-
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8em;
-            margin-bottom: 10px;
-        }
-
-        .profile-img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 3px solid #fff;
-            margin: 20px 0;
-        }
-
-        p {
-            margin-bottom: 20px;
-        }
-
-        .music-section {
-            margin-top: 20px;
-        }
-
-        .music-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .music-buttons button {
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.3s ease;
-        }
-
-        .music-buttons button:hover {
-            background: #ffcc00;
-            transform: scale(1.1);
-        }
-
-        .contact-icons a {
-            font-size: 2em;
-            color: #fff;
-            margin: 0 15px;
-            transition: 0.3s ease;
-        }
-
-        .contact-icons a:hover {
-            color: #ffcc00;
-        }
-
-        footer {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #ddd;
-        }
-
-        #lyrics {
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            min-height: 150px;
-            color: #333;
-            font-size: 14px;
-            text-align: left;
-            white-space: pre-wrap;
-        }
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Quotes</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      color: #333;
+    }
+    .card {
+      background-color: white;
+      padding: 2em;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      max-width: 400px;
+      text-align: center;
+    }
+    .quote {
+      font-size: 1.2em;
+      margin-bottom: 1em;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 10px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Tentang Saya</h1>
-        <img src="https://img97.pixhost.to/images/740/557271381_tenrai-bot.jpg" alt="Foto Profil Yudis" class="profile-img">
-        <p class="bio">Halo! Nama saya <strong>RISKIYAN BENTA YUDISTIRA</strong>, tetapi saya biasa dipanggil <strong>Yudis</strong>. Saya adalah seorang yang penuh semangat dan selalu ingin belajar hal-hal baru. Saya memiliki minat yang besar dalam teknologi, musik, dan pengembangan diri. Setiap hari adalah kesempatan baru untuk belajar dan tumbuh.</p>
 
-        <h2>Hobi</h2>
-        <p>Di waktu luang, saya suka mendengarkan musik, bermain game, dan hal yang random. Musik adalah bagian penting dari hidup saya, dan saya percaya bahwa setiap lagu memiliki cerita yang unik. Selain itu, saya juga menikmati menjelajahi teknologi baru dan mengikuti perkembangan terbaru di dunia digital.</p>
+  <div class="card">
+    <div class="quote" id="quote">Klik tombol di bawah untuk mendapatkan kutipan!</div>
+    <button onclick="generateQuote()">🎲 Acak Kutipan</button>
+  </div>
 
-        <h2>Keterampilan</h2>
-        <p>Saya memiliki keterampilan dalam pemrograman, desain grafis, dan manajemen proyek. Saya selalu berusaha untuk meningkatkan keterampilan saya dan belajar hal-hal baru. Saya percaya bahwa keterampilan yang baik adalah kunci untuk mencapai kesuksesan dalam setiap bidang yang saya geluti.</p>
+  <script>
+    const quotes = [
+      "Hidup bukan tentang menunggu badai berlalu, tapi belajar menari di tengah hujan.",
+      "Kegagalan adalah kesempatan untuk memulai lagi dengan lebih cerdas.",
+      "Jangan takut berubah. Kamu mungkin kehilangan sesuatu yang baik, tapi kamu bisa mendapatkan sesuatu yang lebih baik.",
+      "Berhenti mengejar yang tidak bisa kau kendalikan. Fokus pada yang bisa kamu perbaiki.",
+      "Hari ini mungkin berat, tapi esok bisa jadi luar biasa."
+    ];
 
-        <h2>Visi & Misi</h2>
-        <p>Visi saya adalah untuk menjadi seorang profesional yang berpengaruh di bidang teknologi dan kreatif, serta memberikan dampak positif bagi masyarakat. Misi saya adalah untuk terus belajar, berinovasi, dan berkolaborasi dengan orang-orang yang memiliki visi yang sama.</p>
+    function generateQuote() {
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      document.getElementById("quote").textContent = quotes[randomIndex];
+    }
+  </script>
 
-        <h2>Musik Favorit</h2>
-        <div class="music-section">
-            <div class="music-buttons">
-                <button onclick="playMusic('https://files.catbox.moe/j4aq54.mp3', showNinaLyrics)">Nina Feast</button>
-                <button onclick="playMusic('https://files.catbox.moe/8h7u99.mp3', showSalLyrics)">Sal Pribadi</button>
-                <button onclick="playMusic('https://files.catbox.moe/8vs1w9.mp3', showHindiaLyrics)">Hindia - Secukupnya</button>
-            </div>
-        </div>
-
-        <h2>Lirik Lagu</h2>
-        <div id="lyrics">
-            Pilih lagu untuk menampilkan lirik.
-        </div>
-
-        <h2>Kontak Saya</h2>
-        <div class="contact-icons">
-            <a href="https://wa.me/6285124039070" target="_blank" title="Hubungi saya di WhatsApp">
-                <i class="fab fa-whatsapp"></i>
-            </a>
-            <a href="https://instagram.com/yudis_299" target="_blank" title="Ikuti saya di Instagram">
-                <i class="fab fa-instagram"></i>
-            </a>
-        </div>
-
-        <footer>
-            <p>© 2025 Yudis - Semua hak cipta dilindungi</p>
-        </footer>
-    </div>
-
-    <script>
-        let currentAudio = null;
-
-        function playMusic(url, lyricsFunction) {
-            // Hentikan audio yang sedang diputar jika ada
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio.currentTime = 0;
-            }
-
-            // Mainkan audio baru
-            currentAudio = new Audio(url);
-            currentAudio.play();
-
-            // Tampilkan lirik lagu
-            lyricsFunction();
-        }
-    </script>
-
-    <!-- Lirik Lagu -->
-    <script>
-        const ninaLyrics = `    "Saat engkau tertidur",
-    "Aku pergi menghibur",
-    "Beda kota, pisah raga, bukan masalahku",
-    "Lihat wajahmu di layar, ku tetap bersyukur",
-    "Saat engkau terjaga",
-    "Aku 'kan ada di sana",
-    "Sempatkan bermain dan bawakan cendera mata",
-    "Satu sampai lima tahun, cepat tak terasa",
-    "Segala hal kuupayakan untuk melindungi",
-    "Tunggu aku kembali lagi esok pagi",
-    "Tumbuh lebih baik, cari panggilanmu",
-    "Jadi lebih baik dibanding diriku",
-    "'Tuk sementara ini aku mengembara jauh",
-    "Saat dewasa kau 'kan mengerti",
-    "Saat engkau dewasa",
-    "Dan aku kian menua",
-    "Jika ku berpulang lebih awal, tidak apa",
-    "Berjumpa lagi di sana, aku tetap sama",
-    "Saat engkau teringat",
-    "Tengkar kita, manakala",
-    "Maaf atas perjalanan yang tidak sempurna",
-    "Namun percayalah, untukmu kujual dunia",
-    "Segala hal kuupayakan untuk melindungi (untuk melindungi)",
-    "Tunggu aku kembali lagi esok pagi (selalu janjiku pada dirimu)",
-    "Tumbuh lebih baik, cari panggilanmu",
-    "Jadi lebih baik dibanding diriku",
-    "Dan tertawalah saat ini selepas-lepasnya",
-    "Kar'na kelak kau 'kan tersakiti",
-    "Aku tahu kamu hebat",
-    "Namun, s'lamanya diriku pasti berkutat",
-    "'Tuk s'lalu jauhkanmu dari dunia yang jahat",
-    "Ini sumpahku padamu 'tuk biarkanmu",
-    "Tumbuh lebih baik, cari panggilanmu",
-    "Jadi lebih baik dibanding diriku",
-    "'Tuk sementara kita tertawakan berbagai hal",
-    "Yang lucu dan lara selepas-lepasnya",
-    "Saat dewasa kau 'kan mengerti",
-    "Kar'na kelak kau 'kan tersakiti",
-    "Saat dewasa kau 'kan mengerti",
-    "Kar'na kelak kau 'kan tersakiti"...`;
-
-        const salLyrics = `I’d like to watch you sleeping
-Lebih sering menganga
-‘Kan kulihat ada tempat longgar disana
-Aku ingin tinggal di belakang gigimu
-Aku banyak takutnya
-Misalnya kehilangan dirimu sekali lagi
-Dan patah hati perasaan sendiri
-Bukan hal yang aku suka
-Hal yang paling kusuka di dekatmu
-Kau adalah orang favoritku nomor satu
-Nomor dua tiga empat lima enam
-Isinya namamu, huruf besar semua
-Dan hitungan ke seribu
-Seribu tahun lagi maksudku
-Hiduplah terus, ada terus
-Seperti tokoh kartun di televisi itu
-I'd like to watch you sleeping
-Cari cara bagaimana kita bisa menjelajahi alam alam mimpi
-Berdua akhirnya bisa terbang dan bermain main di awan,
-Berenang renang ke dasar samudera biru
-Berdua di sana
-Tubuh kita menguap menjadi bulir hujan yang diharapkan
-Setelah musim kemarau yang sangat panjang
-Serupa berkat deras jatuh deras jatuh ke bumi
-Menyirami bunga bunga indah
-Yang mekar hiasi hutan hutan raksasa itu
-I’d like to watch you sleeping
-I’d like to watch you sleeping
-Lebih sering menganga
-Aku lihat ada tempat longgar disana
-Ku ingin tinggal di belakang gigimu
-Satu yang tak bisa lepas
-Percayalah
-Hanya kau yang mampu mencuri hatiku
-Aku pun tak mengerti
-Satu yang tak bisa lepas
-Percayalah
-Hanya kau yang mampu mencuri hatiku
-Aku pun tak mengerti
-Satu yang tak bisa lepas
-Bawalah kembali jiwa yang luka
-Dan perasaan yang lemah ini
-Menyentuh sendiriku...`;
-
-        const hindiaLyrics = `Kapan terakhir kali kamu dapat tertidur tenang (renggang)
-Tak perlu memikirkan tentang apa yang akan datang di esok hari
-Tubuh yang berpatah hati bergantung pada gaji
-Berlomba jadi asri mengais validasi
-Dan aku pun terhadir
-Seakan paling mahir
-Menenangkan dirimu
-Yang merasa terpinggirkan dunia
-Tak pernah adil
-Kita semua gagal
-Angkat minumanmu
-Bersedih bersama-sama
-Ah ah ah ah
-Sia-sia pada akhirnya
-Putus asa terekam pedih semua
-Masalahnya lebih dari yang secukupnya
-Rekam gambar dirimu yang terabadikan bertahun silam
-Putra putri sakit hati Ayah Ibu sendiri
-Komitmen lama mati hubungan yang menyepi
-Wisata masa lalu
-Kau hanya merindu
-Mencari pelarian
-Dari pengabdian yang terbakar sirna
-Mengapur berdebu
-Kita semua gagal
-Ambil sedikit tisu
-Bersedihlah secukupnya
-Ah ah ah ah
-Secukupnya kan masih ada
-Penggantinya belum waktunya kau bisa
-Menjawabnya ah ah ah ah ah secukupnya
-Semua yang sirna kan kembali lagi
-Semua yang sirna kan nanti berganti`;
-
-        function showNinaLyrics() {
-            document.getElementById("lyrics").innerText = ninaLyrics;
-        }
-
-        function showSalLyrics() {
-            document.getElementById("lyrics").innerText = salLyrics;
-        }
-
-        function showHindiaLyrics() {
-            document.getElementById("lyrics").innerText = hindiaLyrics;
-        }
-    </script>
 </body>
 </html>
