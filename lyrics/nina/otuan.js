@@ -1,7 +1,5 @@
 var songData = {
-  title: "O Tuan - Nina",
-  audio: "music/nina/otuan.mp3",
-  lyrics: `O tuan yang empunya langit dan bumi
-Segala doa hanya kepada-Mu
-Ampuni aku...`
+  title: "Judul Lagu",
+  audio: "music/nama_artis/nama_lagu.mp3",
+  lyrics: `Tulis lirik disini...`
 };
