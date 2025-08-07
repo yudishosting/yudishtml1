@@ -1,11 +1,6 @@
 var songData = {
-  title: "nina - feast",
-  audio: "music/nina/otuan.mp3",
-  lyrics: `🎶  .Feast o' tuan
-
-Lirik bait pertama...
-Lirik bait kedua...
-Lirik ketiga...
-
-~ TAMAT ~`
+  lyrics: `O Tuan yang baik hati
+Kau datang dalam mimpi
+Membawa rindu tak henti
+Menjadi nyanyian sunyi...`
 };
