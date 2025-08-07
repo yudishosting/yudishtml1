@@ -1,12 +1,7 @@
-export const songData = {
-  title: "O Tuan",
-  artist: "Nina",
+var songData = {
+  title: "O Tuan - Nina",
   audio: "music/nina/otuan.mp3",
-  lyrics: `
-O Tuan  
-Betapa indah wajahmu  
-Langit malam pun cemburu padamu  
-Setiap kata dari bibirmu  
-Menggetarkan kalbu, menyentuh jiwa  
-  `
-}
+  lyrics: `O tuan yang empunya langit dan bumi
+Segala doa hanya kepada-Mu
+Ampuni aku...`
+};
