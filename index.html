@@ -1,118 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Playlist Musik & Lirik</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Playlist Musik</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f3f3f3;
-      color: #333;
+      font-family: sans-serif;
+      background: #f4f4f4;
       margin: 0;
       padding: 20px;
     }
     h1 {
       text-align: center;
     }
-    .artist {
-      margin: 20px 0;
+    .folder, .song {
+      margin: 10px 0;
       padding: 10px;
-      background: #ddd;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       cursor: pointer;
-      font-weight: bold;
+      transition: background 0.3s;
     }
-    .song-list {
-      margin-left: 20px;
-      display: none;
+    .folder:hover, .song:hover {
+      background: #e0e0e0;
     }
-    .song {
-      margin: 5px 0;
-      cursor: pointer;
-      color: #007BFF;
-    }
-    .song:hover {
-      text-decoration: underline;
+    #songs, #lyrics {
+      margin-top: 20px;
     }
     audio {
       width: 100%;
       margin-top: 20px;
     }
     pre {
-      background: #eee;
-      padding: 10px;
       white-space: pre-wrap;
-      margin-top: 20px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
-  <h1>🎵 Playlist Musik & Lirik</h1>
-  <div id="playlist"></div>
-  <audio id="audio" controls autoplay></audio>
-  <pre id="lyrics">Klik lagu untuk menampilkan lirik...</pre>
+  <h1>🎵 Playlist Musik</h1>
+  <div id="folders"></div>
+  <div id="songs"></div>
+  <audio id="player" controls autoplay></audio>
+  <div id="lyrics"><pre></pre></div>
 
   <script>
-    async function getMusicFolders() {
-      const res = await fetch('music/');
+    async function getFolders(path) {
+      const res = await fetch(path);
       const text = await res.text();
-      const matches = [...text.matchAll(/<a href="([^?][^"]*?)\/">/g)];
-      return matches.map(m => m[1]).filter(name => name !== '..');
-    }
-
-    async function getSongs(artist) {
-      const res = await fetch(`music/${artist}/`);
-      const text = await res.text();
-      const matches = [...text.matchAll(/<a href="([^?][^"]*?.mp3)">/g)];
+      const matches = [...text.matchAll(/href="([^"?/]+)\/"/g)];
       return matches.map(m => m[1]);
     }
 
-    async function loadLyrics(artist, songName) {
-      try {
-        const module = await import(`./lyrics/${artist}/${songName}.js`);
-        return module.songData.lyrics.trim();
-      } catch {
-        return '(Lirik tidak ditemukan)';
-      }
+    async function getMP3s(folder) {
+      const res = await fetch(`music/${folder}/`);
+      const text = await res.text();
+      const matches = [...text.matchAll(/href="([^"?/]+\.mp3)"/g)];
+      return matches.map(m => m[1]);
     }
 
-    async function init() {
-      const playlist = document.getElementById('playlist');
-      const folders = await getMusicFolders();
-
-      for (const artist of folders) {
-        const artistDiv = document.createElement('div');
-        artistDiv.className = 'artist';
-        artistDiv.textContent = artist;
-        playlist.appendChild(artistDiv);
-
-        const songList = document.createElement('div');
-        songList.className = 'song-list';
-        playlist.appendChild(songList);
-
-        artistDiv.addEventListener('click', async () => {
-          songList.innerHTML = '';
-          songList.style.display = songList.style.display === 'block' ? 'none' : 'block';
-          const songs = await getSongs(artist);
-          songs.forEach(songFile => {
-            const songName = songFile.replace('.mp3', '');
-            const songDiv = document.createElement('div');
-            songDiv.className = 'song';
-            songDiv.textContent = songName;
-            songDiv.addEventListener('click', async () => {
-              const audio = document.getElementById('audio');
-              const lyrics = document.getElementById('lyrics');
-              audio.src = `music/${artist}/${songFile}`;
-              audio.play();
-              lyrics.textContent = 'Memuat lirik...';
-              lyrics.textContent = await loadLyrics(artist, songName);
-            });
-            songList.appendChild(songDiv);
-          });
-        });
-      }
+    async function loadFolders() {
+      const folders = await getFolders('music/');
+      const foldersDiv = document.getElementById('folders');
+      foldersDiv.innerHTML = '';
+      folders.forEach(artist => {
+        const div = document.createElement('div');
+        div.className = 'folder';
+        div.textContent = artist;
+        div.onclick = () => loadSongs(artist);
+        foldersDiv.appendChild(div);
+      });
     }
 
-    init();
+    async function loadSongs(artist) {
+      const songsDiv = document.getElementById('songs');
+      songsDiv.innerHTML = `<h2>🎶 Lagu dari: ${artist}</h2>`;
+      const mp3s = await getMP3s(artist);
+      mp3s.forEach(file => {
+        const title = file.replace('.mp3', '');
+        const div = document.createElement('div');
+        div.className = 'song';
+        div.textContent = title;
+        div.onclick = async () => {
+          const player = document.getElementById('player');
+          const lyricsBox = document.querySelector('#lyrics pre');
+          try {
+            const songInfo = await import(`./lyrics/${artist}/${title}.js`);
+            player.src = songInfo.songData.audio;
+            player.play();
+            lyricsBox.textContent = songInfo.songData.lyrics.trim();
+          } catch (e) {
+            player.src = `music/${artist}/${file}`;
+            player.play();
+            lyricsBox.textContent = "(Lirik tidak ditemukan)";
+          }
+        };
+        songsDiv.appendChild(div);
+      });
+    }
+
+    loadFolders();
   </script>
 </body>
 </html>
