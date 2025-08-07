@@ -2,109 +2,126 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Playlist Musik</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>🎵 Playlist Lagu Favorit</title>
   <style>
     body {
-      font-family: sans-serif;
-      background: #f4f4f4;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f8ffae, #43c6ac);
       margin: 0;
-      padding: 20px;
+      padding: 2em;
+      color: #333;
     }
     h1 {
       text-align: center;
     }
     .folder, .song {
-      margin: 10px 0;
-      padding: 10px;
-      background: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: 0 auto 1em;
+      padding: 1em;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       cursor: pointer;
-      transition: background 0.3s;
+      transition: transform 0.2s;
     }
     .folder:hover, .song:hover {
-      background: #e0e0e0;
+      transform: scale(1.02);
     }
-    #songs, #lyrics {
-      margin-top: 20px;
+    #song-list, #lyrics-box {
+      max-width: 600px;
+      margin: 2em auto;
+      display: none;
+    }
+    #lyrics-box {
+      background: white;
+      padding: 1.5em;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     audio {
       width: 100%;
-      margin-top: 20px;
+      margin-bottom: 1em;
     }
-    pre {
-      white-space: pre-wrap;
-      background: #fff;
-      padding: 15px;
-      border-radius: 6px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    .back {
+      text-align: center;
+      margin-bottom: 1em;
+      cursor: pointer;
+      color: #007bff;
+      font-weight: bold;
+    }
+    .back:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h1>🎵 Playlist Musik</h1>
-  <div id="folders"></div>
-  <div id="songs"></div>
-  <audio id="player" controls autoplay></audio>
-  <div id="lyrics"><pre></pre></div>
 
-  <script>
-    async function getFolders(path) {
-      const res = await fetch(path);
-      const text = await res.text();
-      const matches = [...text.matchAll(/href="([^"?/]+)\/"/g)];
-      return matches.map(m => m[1]);
-    }
+<h1>🎶 Playlist Lagu Favorit</h1>
 
-    async function getMP3s(folder) {
-      const res = await fetch(`music/${folder}/`);
-      const text = await res.text();
-      const matches = [...text.matchAll(/href="([^"?/]+\.mp3)"/g)];
-      return matches.map(m => m[1]);
-    }
+<div id="artist-list">
+  <div class="folder" onclick="openArtist('Nina')">🎤 Nina</div>
+  <div class="folder" onclick="openArtist('Rizky')">🎤 Rizky</div>
+</div>
 
-    async function loadFolders() {
-      const folders = await getFolders('music/');
-      const foldersDiv = document.getElementById('folders');
-      foldersDiv.innerHTML = '';
-      folders.forEach(artist => {
-        const div = document.createElement('div');
-        div.className = 'folder';
-        div.textContent = artist;
-        div.onclick = () => loadSongs(artist);
-        foldersDiv.appendChild(div);
-      });
-    }
+<div id="song-list">
+  <div class="back" onclick="goBackToArtist()">⬅ Kembali ke daftar artis</div>
+  <div id="songs-container"></div>
+</div>
 
-    async function loadSongs(artist) {
-      const songsDiv = document.getElementById('songs');
-      songsDiv.innerHTML = `<h2>🎶 Lagu dari: ${artist}</h2>`;
-      const mp3s = await getMP3s(artist);
-      mp3s.forEach(file => {
-        const title = file.replace('.mp3', '');
-        const div = document.createElement('div');
-        div.className = 'song';
-        div.textContent = title;
-        div.onclick = async () => {
-          const player = document.getElementById('player');
-          const lyricsBox = document.querySelector('#lyrics pre');
-          try {
-            const songInfo = await import(`./lyrics/${artist}/${title}.js`);
-            player.src = songInfo.songData.audio;
-            player.play();
-            lyricsBox.textContent = songInfo.songData.lyrics.trim();
-          } catch (e) {
-            player.src = `music/${artist}/${file}`;
-            player.play();
-            lyricsBox.textContent = "(Lirik tidak ditemukan)";
-          }
-        };
-        songsDiv.appendChild(div);
-      });
-    }
+<div id="lyrics-box">
+  <h3 id="song-title"></h3>
+  <audio controls id="audio-player" autoplay></audio>
+  <div id="lyrics-text" style="white-space: pre-wrap;"></div>
+</div>
 
-    loadFolders();
-  </script>
-</body>
-</html>
+<script>
+  const songsByArtist = {
+    Nina: ['Feast', 'Otuan'],
+    Rizky: ['HinggaTua']
+  };
+
+  function openArtist(artist) {
+    document.getElementById('artist-list').style.display = 'none';
+    document.getElementById('song-list').style.display = 'block';
+    const container = document.getElementById('songs-container');
+    container.innerHTML = '';
+    songsByArtist[artist].forEach(song => {
+      const div = document.createElement('div');
+      div.className = 'song';
+      div.textContent = song.replace(/([A-Z])/g, ' $1').trim();
+      div.onclick = () => loadSong(artist, song);
+      container.appendChild(div);
+    });
+  }
+
+  function goBackToArtist() {
+    document.getElementById('song-list').style.display = 'none';
+    document.getElementById('lyrics-box').style.display = 'none';
+    document.getElementById('artist-list').style.display = 'block';
+  }
+
+  function loadSong(artist, songFileName) {
+    const oldScript = document.querySelector('script[data-lyrics]');
+    if (oldScript) oldScript.remove();
+
+    const script = document.createElement('script');
+    script.src = `lyrics/${artist}/${songFileName}.js`;
+    script.setAttribute('data-lyrics', 'true');
+    script.onload = () => {
+      if (typeof songData !== 'undefined') {
+        document.getElementById('lyrics-box').style.display = 'block';
+        document.getElementById('song-title').textContent = songData.title;
+        document.getElementById('lyrics-text').textContent = songData.lyrics;
+
+        const audio = document.getElementById('audio-player');
+        audio.src = songData.audio;
+        audio.play();
+
+        songData = undefined;
+      } else {
+        alert('Data lagu tidak ditemukan.');
+      }
+    };
+    script.onerror = () => {
+      alert('Gagal memuat l
