@@ -1,6 +1,6 @@
 [
   { time: 0.0, text: "Yang tak bisa terobati" },
-  { time: 3.0, text: "Biarlah mengering sendiri" },
+  { time: 8.0, text: "Biarlah mengering sendiri" },
   { time: 6.0, text: "Menghias tubuh dan" },
   { time: 8.0, text: "Yang mengevaluasi ragamu" },
   { time: 11.0, text: "Hanya kau sendiri" },
