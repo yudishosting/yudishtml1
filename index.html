@@ -148,19 +148,15 @@
       script.src = lyricPath;
       script.onload = () => {
         if (window.lyrics && Array.isArray(window.lyrics)) {
-          // Keep the original lyrics format with time and text
-          currentLyrics = window.lyrics.filter(line => 
-            typeof line === 'object' && 
-            typeof line.time === 'number' && 
-            typeof line.text === 'string'
-          );
-          
-          if (currentLyrics.length > 0) {
-            displayLyrics();
-            startAutoScroll();
-          } else {
-            lyricsContainer.textContent = 'Format lirik tidak valid. Pastikan setiap item memiliki properti "time" dan "text".';
-          }
+          // Convert time-based lyrics to simple text array
+          currentLyrics = window.lyrics.map(line => {
+            if (typeof line === 'object' && line.text) {
+              return line.text;
+            }
+            return typeof line === 'string' ? line : 'Lirik tidak valid';
+          });
+          displayLyrics();
+          startAutoScroll();
         } else {
           lyricsContainer.textContent = 'Lirik tidak valid.';
           console.error('Format lirik salah di:', lyricPath, window.lyrics);
@@ -180,12 +176,11 @@
         return;
       }
       
-      currentLyrics.forEach((line, index) => {
+      currentLyrics.forEach((text, index) => {
         const lineElement = document.createElement('div');
         lineElement.classList.add('lyric-line');
-        lineElement.textContent = line.text;
+        lineElement.textContent = text;
         lineElement.dataset.index = index;
-        lineElement.dataset.time = line.time;
         lyricsContainer.appendChild(lineElement);
       });
       
@@ -201,32 +196,29 @@
       }
       
       currentLineIndex = 0;
-      updateLyricDisplay();
       
-      // Start time-based scrolling
-      scrollInterval = setInterval(() => {
-        if (!audioPlayer.paused && audioPlayer.currentTime > 0) {
-          const currentTime = audioPlayer.currentTime;
-          let newLineIndex = -1;
+      // Calculate scroll timing based on audio duration and number of lyrics
+      audioPlayer.addEventListener('loadedmetadata', () => {
+        const duration = audioPlayer.duration;
+        const lyricsCount = currentLyrics.length;
+        
+        if (duration && lyricsCount > 0) {
+          // Calculate interval: distribute lyrics evenly across song duration
+          const intervalTime = (duration * 1000) / lyricsCount;
           
-          // Find which lyric should be active based on current time
-          for (let i = currentLyrics.length - 1; i >= 0; i--) {
-            if (currentTime >= currentLyrics[i].time) {
-              newLineIndex = i;
-              break;
+          scrollInterval = setInterval(() => {
+            if (currentLineIndex < currentLyrics.length && !audioPlayer.paused) {
+              updateLyricDisplay();
+              scrollToCurrentLine();
+              currentLineIndex++;
+            } else if (currentLineIndex >= currentLyrics.length) {
+              clearInterval(scrollInterval);
             }
-          }
-          
-          // Update display if line changed
-          if (newLineIndex !== currentLineIndex && newLineIndex >= 0) {
-            currentLineIndex = newLineIndex;
-            updateLyricDisplay();
-            scrollToCurrentLine();
-          }
+          }, intervalTime);
         }
-      }, 100); // Check every 100ms for smooth updates
+      });
 
-      // Reset scroll when song ends
+      // Reset scroll when song ends or is paused
       audioPlayer.addEventListener('ended', () => {
         if (scrollInterval) {
           clearInterval(scrollInterval);
@@ -235,14 +227,12 @@
         updateLyricDisplay();
       });
 
-      // Pause scrolling when audio pauses
       audioPlayer.addEventListener('pause', () => {
         if (scrollInterval) {
           clearInterval(scrollInterval);
         }
       });
 
-      // Resume scrolling when audio plays
       audioPlayer.addEventListener('play', () => {
         if (!scrollInterval && currentLyrics.length > 0) {
           startAutoScroll();
