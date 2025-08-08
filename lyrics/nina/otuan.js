@@ -18,21 +18,11 @@ var lyrics = [
   { time: 147.3, text: "Ku tak bisa melawan jamah perhentian" },
   { time: 154.6, text: "Berjanji kuikhlaskan dengan rela" },
   { time: 161.9, text: "Namun jangan hari ini" },
-  { time: 169.2, text: "Kurelakan, o Tuan" },
-  { time: 176.5, text: "Kurelakan, namun jangan hari ini" },
-  { time: 183.8, text: "Kurelakan, o Tuan" },
-  { time: 191.1, text: "Kurelakan, namun jangan hari ini" },
-  { time: 198.4, text: "Kurelakan, o Tuan" },
-  { time: 205.7, text: "Kurelakan, namun jangan hari ini" },
-  { time: 213.0, text: "Namun jangan hari ini" },
-  { time: 220.3, text: "Hembus nafas terakhir kau tarik perlahan" },
-  { time: 227.6, text: "Kupeluk tubuhmu dan kuucap selamat jalan" },
-  { time: 234.9, text: "Air mataku tumpah tak tertahankan" },
-  { time: 242.2, text: "Namun kuikhlaskan" },
-{ time: 176.5, text: "Tak akan ku lawan keputusan Tuhan" }, // sebelumnya 180.0
-{ time: 179.0, text: "Kurelakan, o Tuan" },                  // target: 2:59 (pas)
-{ time: 183.6, text: "Kini ku berdiri sendiri" },
-{ time: 190.9, text: "Namun dengan hati yang mengerti" },
-{ time: 198.2, text: "Bahwa cinta sejati abadi" },
-{ time: 205.5, text: "Meski raga tak lagi di sisi" }
+  { time: 179.0, text: "Kurelakan, o Tuan" },
+  { time: 186.0, text: "Kurelakan, namun jangan hari ini" },
+  { time: 193.0, text: "Kurelakan, o Tuan" },
+  { time: 201.0, text: "Kurelakan, namun jangan hari ini" },
+  { time: 209.0, text: "Kurelakan, o Tuan" },
+  { time: 216.0, text: "Kurelakan, namun jangan hari ini" },
+  { time: 221.0, text: "Namun jangan hari ini" }
 ];
