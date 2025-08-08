@@ -13,7 +13,6 @@ var lyrics = [
   { time: 90.0, text: "Jadi lebih baik dibanding diriku" },
   { time: 96.0, text: "'Tuk sementara ini aku mengembara jauh" },
   { time: 108.0, text: "Saat dewasa kau 'kan mengerti" },
-
   { time: 122.0, text: "Saat engkau dewasa" },
   { time: 127.0, text: "Dan aku kian menua" },
   { time: 133.0, text: "Jika ku berpulang lebih awal, tidak apa" },
@@ -24,7 +23,6 @@ var lyrics = [
   { time: 159.0, text: "Namun percayalah, untukmu kujual dunia" },
   { time: 164.0, text: "Segala hal kuupayakan untuk melindungi (untuk melindungi)" },
   { time: 175.0, text: "Tunggu aku kembali lagi esok pagi (selalu janjiku pada dirimu)" },
-  var lyrics = [
   { time: 186.0, text: "Tumbuh lebih baik dari panggilanmu" },
   { time: 192.0, text: "Jadi lebih baik" },
   { time: 203.0, text: "Dan tertawalah saat ini selepas-lepasnya" },
@@ -41,5 +39,4 @@ var lyrics = [
   { time: 269.0, text: "Kar'na kelak kau 'kan tersakiti" },
   { time: 275.0, text: "Saat dewasa kau 'kan mengerti" },
   { time: 281.0, text: "Kar'na kelak kau 'kan tersakiti" }
-];
 ];
