@@ -1,10 +1,8 @@
 var lyrics = [
-  { time: 0.0, text: "Yang tak bisa terobati" },
-  { time: 5.52, text: "Biarlah mengering sendiri" },
-  { time: 11.4, text: "Menghias tubuh dan" },
-  { time: 11.4, text: "Yang mengevaluasi ragamu" },
-  { time: 18.6, text: "Hanya kau sendiri" },
-  { time: 21.0, text: "Mereka tak mampu" },
-  { time: 22.2, text: "Melewati yang telah kaulewa- Tiap berganti ha- Rintangan yang kauhadapi" }
+  { time: 0.0, text: "Namun jangan hari ini" },
+{ time: 17.1, text: "Kurelakan, o Tuan" },
+{ time: 24.1, text: "Kurelakan, namun jangan hari ini" },
+{ time: 31.1, text: "Kurelakan, o Tuan" },
+{ time: 39.1, text: "Kurelakan, namun jangan hari ini" },
 ];
 
