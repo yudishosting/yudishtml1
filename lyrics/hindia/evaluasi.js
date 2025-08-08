@@ -1,9 +1,9 @@
 var lyrics = [
   { time: 0.0, text: "Yang tak bisa terobati" },
   { time: 4.8, text: "Biarlah mengering sendiri" },
-  { time: 52.0, text: "Menghias tubuh dan" },
-  { time: 1, text: "Yang mengevaluasi ragamu" },
-  { time: 1, text: "Hanya kau sendiri" },
+  { time: 9.6, text: "Menghias tubuh dan" },
+  { time: 11.4, text: "Yang mengevaluasi ragamu" },
+  { time: 18.6, text: "Hanya kau sendiri" },
   { time: 1, text: "Mereka tak mampu" },
   { time: 1, text: "Melewati yang telah kaulewa-" },
   { time: 1, text: "Tiap berganti ha-" },
