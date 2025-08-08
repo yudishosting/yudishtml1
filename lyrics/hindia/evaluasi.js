@@ -1,4 +1,4 @@
-const lirikEvaluasi = [
+const lyrics = [
   { time: 0.0, text: "Yang tak bisa terobati" },
   { time: 8.0, text: "Biarlah mengering sendiri" },
   { time: 17.0, text: "Menghias tubuh dan" },
