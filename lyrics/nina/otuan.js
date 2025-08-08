@@ -1,4 +1,8 @@
 var lyrics = [
+  { time: 0, text: "[Instrumental Intro]" },
+  { time: 15.0, text: "..." },
+  { time: 20.5, text: "..." },
+  { time: 25.0, text: "..." },
   { time: 34.5, text: "Oh jelas aku tahu, bunga akan layu" },
   { time: 39.5, text: "Rumput kian mengering, daun kan menguning" },
   { time: 44.0, text: "Kau tahu menurutku waktu adalah" },
@@ -25,4 +29,4 @@ var lyrics = [
   { time: 125.0, text: "Kurelakan, o Tuan" },
   { time: 128.0, text: "Kurelakan, namun jangan hari ini" },
   { time: 131.0, text: "Namun jangan hari ini" }
-]
+];
