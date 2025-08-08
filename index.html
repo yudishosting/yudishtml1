@@ -87,8 +87,7 @@
     const backButton = document.getElementById('backButton');
     const nowPlaying = document.getElementById('nowPlaying');
     let currentLyrics = [];
-    let currentLineIndex = 0;
-    let scrollInterval = null;
+    let currentLineIndex = -1;
 
     function getArtists() {
       return [...new Set(playlist.map(song => song.artist))];
@@ -148,15 +147,18 @@
       script.src = lyricPath;
       script.onload = () => {
         if (window.lyrics && Array.isArray(window.lyrics)) {
-          // Convert time-based lyrics to simple text array
-          currentLyrics = window.lyrics.map(line => {
-            if (typeof line === 'object' && line.text) {
-              return line.text;
-            }
-            return typeof line === 'string' ? line : 'Lirik tidak valid';
-          });
-          displayLyrics();
-          startAutoScroll();
+          currentLyrics = window.lyrics.filter(line => 
+            typeof line === 'object' && 
+            typeof line.time === 'number' && 
+            typeof line.text === 'string'
+          );
+          
+          if (currentLyrics.length > 0) {
+            displayLyrics();
+            startAutoScroll();
+          } else {
+            lyricsContainer.textContent = 'Format lirik tidak valid. Pastikan setiap item memiliki properti "time" dan "text".';
+          }
         } else {
           lyricsContainer.textContent = 'Lirik tidak valid.';
           console.error('Format lirik salah di:', lyricPath, window.lyrics);
@@ -176,68 +178,58 @@
         return;
       }
       
-      currentLyrics.forEach((text, index) => {
+      currentLyrics.forEach((line, index) => {
         const lineElement = document.createElement('div');
         lineElement.classList.add('lyric-line');
-        lineElement.textContent = text;
+        lineElement.textContent = line.text;
         lineElement.dataset.index = index;
+        lineElement.dataset.time = line.time;
         lyricsContainer.appendChild(lineElement);
       });
       
-      // Reset current line index
-      currentLineIndex = 0;
+      currentLineIndex = -1;
       updateLyricDisplay();
     }
 
     function startAutoScroll() {
-      // Clear any existing interval
-      if (scrollInterval) {
-        clearInterval(scrollInterval);
+      currentLineIndex = -1;
+      updateLyricDisplay();
+      
+      // Remove existing listeners
+      audioPlayer.removeEventListener('timeupdate', handleTimeUpdate);
+      audioPlayer.removeEventListener('ended', handleEnded);
+      
+      // Add fresh listeners
+      audioPlayer.addEventListener('timeupdate', handleTimeUpdate);
+      audioPlayer.addEventListener('ended', handleEnded);
+    }
+
+    function handleTimeUpdate() {
+      const currentTime = audioPlayer.currentTime;
+      let newLineIndex = -1;
+      
+      // Find which lyric should be active
+      for (let i = currentLyrics.length - 1; i >= 0; i--) {
+        if (currentTime >= currentLyrics[i].time) {
+          newLineIndex = i;
+          break;
+        }
       }
       
-      currentLineIndex = 0;
-      
-      // Calculate scroll timing based on audio duration and number of lyrics
-      audioPlayer.addEventListener('loadedmetadata', () => {
-        const duration = audioPlayer.duration;
-        const lyricsCount = currentLyrics.length;
-        
-        if (duration && lyricsCount > 0) {
-          // Calculate interval: distribute lyrics evenly across song duration
-          const intervalTime = (duration * 1000) / lyricsCount;
-          
-          scrollInterval = setInterval(() => {
-            if (currentLineIndex < currentLyrics.length && !audioPlayer.paused) {
-              updateLyricDisplay();
-              scrollToCurrentLine();
-              currentLineIndex++;
-            } else if (currentLineIndex >= currentLyrics.length) {
-              clearInterval(scrollInterval);
-            }
-          }, intervalTime);
-        }
-      });
-
-      // Reset scroll when song ends or is paused
-      audioPlayer.addEventListener('ended', () => {
-        if (scrollInterval) {
-          clearInterval(scrollInterval);
-        }
-        currentLineIndex = 0;
+      // Update if changed
+      if (newLineIndex !== currentLineIndex) {
+        currentLineIndex = newLineIndex;
         updateLyricDisplay();
-      });
-
-      audioPlayer.addEventListener('pause', () => {
-        if (scrollInterval) {
-          clearInterval(scrollInterval);
+        if (newLineIndex >= 0) {
+          scrollToCurrentLine();
         }
-      });
+      }
+    }
 
-      audioPlayer.addEventListener('play', () => {
-        if (!scrollInterval && currentLyrics.length > 0) {
-          startAutoScroll();
-        }
-      });
+    function handleEnded() {
+      currentLineIndex = -1;
+      updateLyricDisplay();
+      lyricsContainer.scrollTop = 0;
     }
 
     function updateLyricDisplay() {
@@ -246,7 +238,9 @@
       lyricLines.forEach((line, index) => {
         line.classList.remove('current', 'passed', 'upcoming');
         
-        if (index < currentLineIndex) {
+        if (currentLineIndex === -1) {
+          line.classList.add('upcoming');
+        } else if (index < currentLineIndex) {
           line.classList.add('passed');
         } else if (index === currentLineIndex) {
           line.classList.add('current');
@@ -259,14 +253,9 @@
     function scrollToCurrentLine() {
       const currentLine = document.querySelector(`[data-index="${currentLineIndex}"]`);
       if (currentLine) {
-        const container = lyricsContainer;
-        const lineRect = currentLine.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        const offset = lineRect.top - containerRect.top + container.scrollTop - container.clientHeight / 2;
-        
-        container.scrollTo({
-          top: Math.max(0, offset),
-          behavior: 'smooth'
+        currentLine.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
         });
       }
     }
@@ -279,22 +268,11 @@
       nowPlaying.textContent = '';
       lyricsContainer.textContent = '';
       currentLyrics = [];
-      currentLineIndex = 0;
+      currentLineIndex = -1;
       
-      if (scrollInterval) {
-        clearInterval(scrollInterval);
-        scrollInterval = null;
-      }
-    });
-
-    // Manual scroll controls with mouse wheel
-    lyricsContainer.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      const scrollAmount = e.deltaY * 2;
-      lyricsContainer.scrollBy({
-        top: scrollAmount,
-        behavior: 'smooth'
-      });
+      // Clean up listeners
+      audioPlayer.removeEventListener('timeupdate', handleTimeUpdate);
+      audioPlayer.removeEventListener('ended', handleEnded);
     });
 
     loadArtists();
