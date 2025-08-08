@@ -88,6 +88,8 @@
     const nowPlaying = document.getElementById('nowPlaying');
     let currentLyrics = [];
     let currentLineIndex = -1;
+    let currentPlaylist = [];
+    let currentSongIndex = -1;
 
     function getArtists() {
       return [...new Set(playlist.map(song => song.artist))];
@@ -111,21 +113,36 @@
       backButton.classList.remove('hidden');
       playlistContainer.innerHTML = '';
 
-      const songs = playlist.filter(song => song.artist === artist);
-      songs.forEach(song => {
+      currentPlaylist = playlist.filter(song => song.artist === artist);
+      currentSongIndex = -1;
+      
+      currentPlaylist.forEach((song, index) => {
         const songElement = document.createElement('div');
         songElement.classList.add('p-4', 'bg-gray-50', 'rounded-lg', 'cursor-pointer', 'hover:bg-gray-100', 'transition', 'duration-300', 'fade-in');
         songElement.textContent = song.title;
-        songElement.addEventListener('click', () => playSong(song));
+        songElement.dataset.songIndex = index;
+        songElement.addEventListener('click', () => playSong(song, index));
         playlistContainer.appendChild(songElement);
       });
     }
 
-    function playSong(song) {
+    function playSong(song, index = -1) {
+      // Update current song index
+      if (index !== -1) {
+        currentSongIndex = index;
+      }
+      
+      // Update visual selection
       document.querySelectorAll('#playlist > div').forEach(el => {
-        el.classList.toggle('bg-indigo-200', el.textContent === song.title);
-        el.classList.toggle('bg-gray-50', el.textContent !== song.title);
+        el.classList.remove('bg-indigo-200');
+        el.classList.add('bg-gray-50');
       });
+      
+      const currentSongElement = document.querySelector(`[data-song-index="${currentSongIndex}"]`);
+      if (currentSongElement) {
+        currentSongElement.classList.remove('bg-gray-50');
+        currentSongElement.classList.add('bg-indigo-200');
+      }
 
       audioPlayer.src = song.mp3;
       audioPlayer.play().catch(error => {
@@ -133,7 +150,7 @@
         nowPlaying.textContent = 'Gagal memutar lagu.';
       });
 
-      nowPlaying.textContent = `Sedang diputar: ${song.artist} - ${song.title}`;
+      nowPlaying.textContent = `Sedang diputar: ${song.artist} - ${song.title} (${currentSongIndex + 1}/${currentPlaylist.length})`;
       loadLyrics(song.lyric);
     }
 
@@ -230,6 +247,29 @@
       currentLineIndex = -1;
       updateLyricDisplay();
       lyricsContainer.scrollTop = 0;
+      
+      // Auto play next song
+      playNextSong();
+    }
+
+    function playNextSong() {
+      if (currentPlaylist.length > 0 && currentSongIndex < currentPlaylist.length - 1) {
+        // Play next song
+        const nextIndex = currentSongIndex + 1;
+        const nextSong = currentPlaylist[nextIndex];
+        setTimeout(() => {
+          playSong(nextSong, nextIndex);
+        }, 1000); // Wait 1 second before playing next song
+      } else if (currentPlaylist.length > 0) {
+        // Reached end of playlist, show completion message
+        nowPlaying.textContent = 'Playlist selesai - Semua lagu telah diputar';
+        currentSongIndex = -1;
+        // Reset visual selection
+        document.querySelectorAll('#playlist > div').forEach(el => {
+          el.classList.remove('bg-indigo-200');
+          el.classList.add('bg-gray-50');
+        });
+      }
     }
 
     function updateLyricDisplay() {
@@ -269,6 +309,8 @@
       lyricsContainer.textContent = '';
       currentLyrics = [];
       currentLineIndex = -1;
+      currentPlaylist = [];
+      currentSongIndex = -1;
       
       // Clean up listeners
       audioPlayer.removeEventListener('timeupdate', handleTimeUpdate);
