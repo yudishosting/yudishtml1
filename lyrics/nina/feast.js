@@ -24,4 +24,22 @@ var lyrics = [
   { time: 159.0, text: "Namun percayalah, untukmu kujual dunia" },
   { time: 164.0, text: "Segala hal kuupayakan untuk melindungi (untuk melindungi)" },
   { time: 175.0, text: "Tunggu aku kembali lagi esok pagi (selalu janjiku pada dirimu)" },
+  var lyrics = [
+  { time: 186.0, text: "Tumbuh lebih baik dari panggilanmu" },
+  { time: 192.0, text: "Jadi lebih baik" },
+  { time: 203.0, text: "Dan tertawalah saat ini selepas-lepasnya" },
+  { time: 209.0, text: "Kar'na kelak kau 'kan tersakiti" },
+  { time: 215.0, text: "Aku tahu kamu hebat" },
+  { time: 221.0, text: "Namun, s'lamanya diriku pasti berkutat" },
+  { time: 227.0, text: "'Tuk s'lalu jauhkanmu dari dunia yang jahat" },
+  { time: 233.0, text: "Ini sumpahku padamu 'tuk biarkanmu" },
+  { time: 239.0, text: "Tumbuh lebih baik, cari panggilanmu" },
+  { time: 245.0, text: "Jadi lebih baik dibanding diriku" },
+  { time: 251.0, text: "'Tuk sementara kita tertawakan berbagai hal" },
+  { time: 257.0, text: "Yang lucu dan lara selepas lepasnya" },
+  { time: 263.0, text: "Saat dewasa kau 'kan mengerti" },
+  { time: 269.0, text: "Kar'na kelak kau 'kan tersakiti" },
+  { time: 275.0, text: "Saat dewasa kau 'kan mengerti" },
+  { time: 281.0, text: "Kar'na kelak kau 'kan tersakiti" }
+];
 ];
