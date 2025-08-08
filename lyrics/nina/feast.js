@@ -21,9 +21,7 @@ var lyrics = [
   { time: 144.0, text: "Saat engkau teringat" },
   { time: 149.0, text: "Tengkar kita, manakala" },
   { time: 155.0, text: "Maaf atas perjalanan yang tidak sempurna" },
-  { time: 165.0, text: "Namun percayalah, untukmu kujual dunia" },
-  { time: 176.0, text: "Segala hal kuupayakan untuk melindungi (untuk melindungi)" },
-  { time: 181.0, text: "Tunggu aku kembali lagi esok pagi (selalu janjiku pada dirimu)" },
-  { time: 187.0, text: "Tumbuh lebih baik, cari panggilanmu" },
-  { time: 192.0, text: "Jadi lebih baik dibanding diriku" }
+  { time: 159.0, text: "Namun percayalah, untukmu kujual dunia" },
+  { time: 164.0, text: "Segala hal kuupayakan untuk melindungi (untuk melindungi)" },
+  { time: 175.0, text: "Tunggu aku kembali lagi esok pagi (selalu janjiku pada dirimu)" },
 ];
