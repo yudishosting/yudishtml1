@@ -6,7 +6,6 @@
   <title>Playlist Musik Favorit</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Animasi fade-in untuk transisi halus */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -14,7 +13,6 @@
     .fade-in {
       animation: fadeIn 0.3s ease-in-out;
     }
-    /* Custom scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
     }
@@ -27,6 +25,12 @@
     }
     ::-webkit-scrollbar-thumb:hover {
       background: #4b5563;
+    }
+    .lyric-line.active {
+      color: #4f46e5;
+      font-weight: bold;
+      transform: scale(1.05);
+      transition: all 0.2s ease-in-out;
     }
   </style>
 </head>
@@ -44,19 +48,24 @@
   </div>
 
   <script>
-    // Daftar playlist dengan path ke file mp3 dan lirik
     const playlist = [
       {
-        artist: ".Nina",
-        title: "o'tuan",
-        mp3: "music/nina/otuan.mp3",
-        lyric: "lyrics/nina/otuan.js"
+        artist: "Nina",
+        title: "Feast",
+        mp3: "music/nina/feast.mp3",
+        lyric: "lyrics/nina/feast.js"
       },
       {
         artist: "Yura",
         title: "Yura",
         mp3: "music/yura/yura.mp3",
         lyric: "lyrics/yura/yura.js"
+      },
+      {
+        artist: "Nina",
+        title: "o,Tuan",
+        mp3: "music/nina/otuan.mp3",
+        lyric: "lyrics/nina/otuan.js"
       }
     ];
 
@@ -66,13 +75,12 @@
     const lyricsContainer = document.getElementById('lyrics');
     const backButton = document.getElementById('backButton');
     const nowPlaying = document.getElementById('nowPlaying');
+    let currentLyrics = [];
 
-    // Fungsi untuk mendapatkan daftar artis unik
     function getArtists() {
       return [...new Set(playlist.map(song => song.artist))];
     }
 
-    // Fungsi untuk memuat daftar artis
     function loadArtists() {
       artistList.innerHTML = '';
       const artists = getArtists();
@@ -85,7 +93,6 @@
       });
     }
 
-    // Fungsi untuk menampilkan lagu-lagu dari artis tertentu
     function showArtistSongs(artist) {
       artistList.classList.add('hidden');
       playlistContainer.classList.remove('hidden');
@@ -102,54 +109,90 @@
       });
     }
 
-    // Fungsi untuk memutar lagu dan memuat lirik
     function playSong(song) {
-      // Highlight lagu yang sedang diputar
       document.querySelectorAll('#playlist > div').forEach(el => {
         el.classList.toggle('bg-indigo-200', el.textContent === song.title);
         el.classList.toggle('bg-gray-50', el.textContent !== song.title);
       });
 
-      // Set sumber audio dan putar otomatis
       audioPlayer.src = song.mp3;
       audioPlayer.play().catch(error => {
         console.error('Gagal memutar audio:', error);
         nowPlaying.textContent = 'Gagal memutar lagu.';
       });
 
-      // Tampilkan info lagu yang sedang diputar
       nowPlaying.textContent = `Sedang diputar: ${song.artist} - ${song.title}`;
-
-      // Muat lirik
       loadLyrics(song.lyric);
     }
 
-    // Fungsi untuk memuat lirik dari file JS
     function loadLyrics(lyricPath) {
-      lyricsContainer.textContent = 'Memuat lirik...';
-      
-      // Hapus script sebelumnya jika ada
+      lyricsContainer.innerHTML = 'Memuat lirik...';
       const oldScript = document.getElementById('lyricScript');
       if (oldScript) oldScript.remove();
 
-      // Buat elemen script baru untuk memuat file lirik
       const script = document.createElement('script');
       script.id = 'lyricScript';
       script.src = lyricPath;
       script.onload = () => {
-        if (window.lyrics) {
-          lyricsContainer.textContent = window.lyrics;
+        if (window.lyrics && Array.isArray(window.lyrics) && window.lyrics.every(line => typeof line === 'object' && 'time' in line && 'text' in line && typeof line.text === 'string')) {
+          currentLyrics = window.lyrics;
+          displayLyrics();
+          syncLyrics();
         } else {
-          lyricsContainer.textContent = 'Lirik tidak ditemukan.';
+          lyricsContainer.textContent = 'Lirik tidak valid. Pastikan file lirik berisi array objek dengan properti "time" (angka) dan "text" (string).';
+          console.error('Format lirik salah di:', lyricPath, window.lyrics);
         }
       };
       script.onerror = () => {
-        lyricsContainer.textContent = 'Gagal memuat lirik.';
+        lyricsContainer.textContent = 'Gagal memuat lirik. Periksa path file: ' + lyricPath;
+        console.error('Gagal memuat file lirik:', lyricPath);
       };
       document.body.appendChild(script);
     }
 
-    // Fungsi untuk kembali ke daftar artis
+    function displayLyrics() {
+      lyricsContainer.innerHTML = '';
+      if (!currentLyrics || !Array.isArray(currentLyrics)) {
+        lyricsContainer.textContent = 'Tidak ada lirik untuk ditampilkan.';
+        return;
+      }
+      currentLyrics.forEach((line, index) => {
+        const lineElement = document.createElement('div');
+        lineElement.classList.add('lyric-line', 'py-1');
+        lineElement.textContent = typeof line.text === 'string' ? line.text : 'Lirik tidak valid';
+        lineElement.dataset.time = typeof line.time === 'number' ? line.time : 0;
+        lyricsContainer.appendChild(lineElement);
+      });
+    }
+
+    function syncLyrics() {
+      audioPlayer.ontimeupdate = () => {
+        const currentTime = audioPlayer.currentTime;
+        const lyricLines = document.querySelectorAll('.lyric-line');
+        let activeLine = null;
+
+        lyricLines.forEach((line, index) => {
+          const lineTime = parseFloat(line.dataset.time);
+          const nextLineTime = index < lyricLines.length - 1 ? parseFloat(lyricLines[index + 1].dataset.time) : Infinity;
+
+          if (currentTime >= lineTime && currentTime < nextLineTime) {
+            line.classList.add('active');
+            activeLine = line;
+          } else {
+            line.classList.remove('active');
+          }
+        });
+
+        if (activeLine) {
+          const container = lyricsContainer;
+          const lineRect = activeLine.getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+          const offset = lineRect.top - containerRect.top + container.scrollTop - container.clientHeight / 3;
+          container.scrollTo({ top: offset, behavior: 'smooth' });
+        }
+      };
+    }
+
     backButton.addEventListener('click', () => {
       artistList.classList.remove('hidden');
       playlistContainer.classList.add('hidden');
@@ -157,9 +200,9 @@
       audioPlayer.pause();
       nowPlaying.textContent = '';
       lyricsContainer.textContent = '';
+      currentLyrics = [];
     });
 
-    // Muat daftar artis saat halaman dimuat
     loadArtists();
   </script>
 </body>
