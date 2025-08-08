@@ -29,10 +29,10 @@ var lyrics = [
   { time: 227.6, text: "Kupeluk tubuhmu dan kuucap selamat jalan" },
   { time: 234.9, text: "Air mataku tumpah tak tertahankan" },
   { time: 242.2, text: "Namun kuikhlaskan" },
-  { time: 249.5, text: "Kurelakan, o Tuan" },
-  { time: 256.8, text: "Tak akan ku lawan keputusan Tuhan" },
-  { time: 264.1, text: "Kini ku berdiri sendiri" },
-  { time: 271.4, text: "Namun dengan hati yang mengerti" },
-  { time: 278.7, text: "Bahwa cinta sejati abadi" },
-  { time: 286.0, text: "Meski raga tak lagi di sisi" }
+{ time: 269.5, text: "Kurelakan, o Tuan" },
+{ time: 267.0, text: "Tak akan ku lawan keputusan Tuhan" },
+{ time: 274.1, text: "Kini ku berdiri sendiri" },
+{ time: 281.4, text: "Namun dengan hati yang mengerti" },
+{ time: 288.7, text: "Bahwa cinta sejati abadi" },
+{ time: 296.0, text: "Meski raga tak lagi di sisi" }
 ];
