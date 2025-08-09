@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap');
 
     /* Reset dan Base Styles */
     * {
@@ -84,9 +84,9 @@
 
     /* Lirik Styles */
     .lyric-line {
-      padding: 0;
-      margin: 12px 0;
-      border-radius: 0;
+      padding: 12px 16px;
+      margin: 4px 0;
+      border-radius: 8px;
       transition: all 0.3s ease;
       opacity: 0.7;
       font-size: 0.95rem;
@@ -97,9 +97,8 @@
       color: #facc15;
       font-weight: 500;
       opacity: 1;
-      background: none;
+      background: rgba(250, 204, 21, 0.1);
       border-left: 3px solid #facc15;
-      padding-left: 16px;
       transform: translateX(4px);
     }
 
@@ -144,8 +143,9 @@
 
     /* Empty State */
     .empty-state {
-      background: none;
-      border: none;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
       padding: 2.5rem;
       text-align: center;
     }
@@ -213,29 +213,6 @@
       cursor: pointer;
     }
 
-    /* Tampilan Font Awal Lirik */
-    .initial-message {
-      font-size: 1.5rem;
-      font-weight: 500;
-      background: none;
-      -webkit-background-clip: unset;
-      -webkit-text-fill-color: unset;
-      color: #ffffff;
-      line-height: 1.2;
-      font-family: 'Inter', sans-serif;
-    }
-
-    /* Like Button Styles */
-    .like-btn {
-      color: #ccc;
-      transition: color 0.3s ease, transform 0.2s ease;
-    }
-
-    .like-btn.liked {
-      color: #e53e3e;
-      transform: scale(1.1);
-    }
-
     /* Responsive Adjustments */
     @media (min-width: 640px) {
       .grid-responsive {
@@ -253,15 +230,14 @@
       .container {
         padding: 1rem;
       }
-      .initial-message {
-        font-size: 1.2rem;
-      }
     }
   </style>
 </head>
 <body>
+  <!-- Partikel Latar Belakang -->
   <canvas id="particleCanvas"></canvas>
 
+  <!-- Floating Notes -->
   <div class="absolute text-xl text-yellow-300/10 animate-[float_8s_ease-in-out_infinite]" style="top: 10%; left: 5%;">
     <i class="fas fa-music"></i>
   </div>
@@ -272,8 +248,10 @@
     <i class="fas fa-compact-disc"></i>
   </div>
 
+  <!-- Main Content -->
   <div id="mainContent" class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="glass-effect rounded-2xl p-6 sm:p-8 lg:p-10 relative z-10">
+      <!-- Header -->
       <div class="flex justify-between items-center mb-10">
         <div>
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 font-['Playfair_Display']">
@@ -284,17 +262,22 @@
         </div>
       </div>
 
+      <!-- Back Button -->
       <button id="backButton" class="hidden mb-6 px-5 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium text-sm">
         <i class="fas fa-arrow-left mr-2"></i>
         Kembali ke Daftar Artis
       </button>
 
+      <!-- Artist List -->
       <div id="artistList" class="grid-responsive"></div>
 
+      <!-- Playlist -->
       <div id="playlist" class="hidden space-y-4"></div>
 
+      <!-- Audio Player (Hidden) -->
       <audio id="audioPlayer" class="hidden"></audio>
 
+      <!-- Music Controls -->
       <div id="musicControls" class="hidden mt-8">
         <div class="glass-effect rounded-2xl p-6">
           <div id="nowPlaying" class="text-lg font-medium now-playing-text mb-4"></div>
@@ -329,24 +312,19 @@
         </div>
       </div>
 
+      <!-- Lyrics -->
       <div id="lyrics" class="mt-8 p-6 glass-effect rounded-2xl text-white text-base max-h-96 overflow-y-auto">
         <div class="empty-state">
-          <h3 class="initial-message font-['Inter']">
-            <i class="fas fa-headphones-alt text-yellow-400 mr-2"></i>
-            Pilih Artis dan Lagu
-          </h3>
-          <p class="text-gray-400 text-sm mt-2">untuk menampilkan lirik</p>
+          <i class="fas fa-headphones text-3xl text-gray-400 mb-3"></i>
+          <p class="text-gray-300">Pilih artis dan lagu untuk memulai</p>
         </div>
       </div>
 
+      <!-- Footer -->
       <footer class="mt-12 pt-6 border-t border-gray-700">
         <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-          <div class="text-gray-300 text-sm flex items-center space-x-4">
+          <div class="text-gray-300 text-sm">
             <p>&copy; 2025 <span class="font-medium text-yellow-400">Yudis</span>. All rights reserved.</p>
-            <p id="visitorCount" class="flex items-center space-x-1">
-              <i class="fas fa-users"></i>
-              <span class="font-medium">0</span>
-            </p>
           </div>
           
           <div class="flex items-center space-x-3">
@@ -369,93 +347,67 @@
     </div>
   </div>
 
-  <div id="adminPanel" class="hidden fixed inset-0 bg-gray-900 bg-opacity-90 backdrop-blur-sm z-50 p-8 overflow-y-auto">
-    <div class="max-w-4xl mx-auto glass-effect p-8 rounded-2xl text-white">
-      <h2 class="text-3xl font-bold mb-6">Dashboard Admin</h2>
-      <p class="text-gray-300 mb-4">
-        Data ini disimulasikan menggunakan <b class="text-yellow-400">localStorage</b>. Untuk implementasi real-time yang aman, Anda memerlukan backend dan database.
-      </p>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div class="glass-effect p-6 rounded-xl">
-          <h3 class="text-xl font-medium text-yellow-400">Total Pengunjung</h3>
-          <p class="text-4xl font-bold mt-2" id="adminVisitorCount">0</p>
-        </div>
-        <div class="glass-effect p-6 rounded-xl">
-          <h3 class="text-xl font-medium text-yellow-400">Total Like</h3>
-          <p class="text-4xl font-bold mt-2" id="adminTotalLikes">0</p>
-        </div>
-      </div>
-
-      <div class="bg-gray-800/50 p-6 rounded-xl overflow-x-auto mb-8">
-        <h3 class="text-xl font-medium text-yellow-400 mb-4">Daftar Pengunjung</h3>
-        <table class="min-w-full text-sm text-left text-gray-400">
-          <thead class="text-xs text-gray-200 uppercase bg-gray-700/50">
-            <tr>
-              <th scope="col" class="py-3 px-6">IP Address</th>
-              <th scope="col" class="py-3 px-6">Perangkat</th>
-              <th scope="col" class="py-3 px-6">Waktu Kunjungan</th>
-            </tr>
-          </thead>
-          <tbody id="visitorList" class="divide-y divide-gray-700">
-            </tbody>
-        </table>
-      </div>
-
-      <div class="bg-gray-800/50 p-6 rounded-xl overflow-x-auto">
-        <h3 class="text-xl font-medium text-yellow-400 mb-4">Pengguna yang Memberi Like</h3>
-        <table class="min-w-full text-sm text-left text-gray-400">
-          <thead class="text-xs text-gray-200 uppercase bg-gray-700/50">
-            <tr>
-              <th scope="col" class="py-3 px-6">IP Address</th>
-              <th scope="col" class="py-3 px-6">Perangkat</th>
-              <th scope="col" class="py-3 px-6">Lagu</th>
-              <th scope="col" class="py-3 px-6">Waktu Like</th>
-            </tr>
-          </thead>
-          <tbody id="likeList" class="divide-y divide-gray-700">
-            </tbody>
-        </table>
-      </div>
-
-      <button onclick="closeAdminPanel()" class="mt-8 px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-300 font-medium">
-        Tutup
-      </button>
-    </div>
-  </div>
-
   <script>
     // Data Playlist (Disimpan di localStorage)
-    // ID lagu dibuat unik untuk identifikasi
-    let playlist = [
-      { id: "nina-feast", artist: "Nina", title: "Feast", mp3: "music/nina/feast.mp3", lyric: "lyrics/nina/feast.js", artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg" },
-      { id: "nina-tarot", artist: "Nina", title: "Tarot", mp3: "music/nina/tarot.mp3", lyric: "lyrics/nina/tarot.js", artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg" },
-      { id: "nina-otuan", artist: "Nina", title: "o,Tuan", mp3: "music/nina/otuan.mp3", lyric: "lyrics/nina/otuan.js", artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg" },
-      { id: "hindia-evaluasi", artist: "Hindia", title: "Evaluasi", mp3: "music/hindia/evaluasi.mp3", lyric: "lyrics/hindia/evaluasi.js", artistPhoto: "https://files.catbox.moe/ln8c0r.jpg" },
-      { id: "hindia-cincin", artist: "Hindia", title: "Cincin", mp3: "music/hindia/cincin.mp3", lyric: "lyrics/hindia/cincin.js", artistPhoto: "https://files.catbox.moe/ln8c0r.jpg" },
-      { id: "hindia-kitakesana", artist: "Hindia", title: "Kita Kesana", mp3: "music/hindia/kitakesana.mp3", lyric: "lyrics/hindia/kitakesana.js", artistPhoto: "https://files.catbox.moe/ln8c0r.jpg" },
-      { id: "hindia-everythinguare", artist: "Hindia", title: "Everything U Are", mp3: "music/hindia/everything.mp3", lyric: "lyrics/hindia/everything.js", artistPhoto: "https://files.catbox.moe/ln8c0r.jpg" },
-      { id: "nadhif-basalamah-bergema", artist: "Nadhif Basalamah", title: "Bergema Sampai Selamanya", mp3: "music/nadifbasalamah/bergema.mp3", lyric: "lyrics/nadifbasalamah/bergema.js", artistPhoto: "https://files.catbox.moe/951vb9.jpeg" },
-      { id: "nadhif-basalamah-penjagahati", artist: "Nadhif Basalamah", title: "Penjaga Hati", mp3: "music/nadifbasalamah/penjagahati.mp3", lyric: "lyrics/nadifbasalamah/penjagahati.js", artistPhoto: "https://files.catbox.moe/951vb9.jpeg" }
+    let playlist = JSON.parse(localStorage.getItem('playlist')) || [
+      {
+        artist: "Nina",
+        title: "Feast",
+        mp3: "music/nina/feast.mp3",
+        lyric: "lyrics/nina/feast.js",
+        artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg"
+      },
+      {
+        artist: "Nina",
+        title: "Tarot",
+        mp3: "music/nina/tarot.mp3",
+        lyric: "lyrics/nina/tarot.js",
+        artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg"
+      },
+      {
+        artist: "Nina",
+        title: "o,Tuan",
+        mp3: "music/nina/otuan.mp3",
+        lyric: "lyrics/nina/otuan.js",
+        artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg"
+      },
+      {
+        artist: "Hindia",
+        title: "Evaluasi",
+        mp3: "music/hindia/evaluasi.mp3",
+        lyric: "lyrics/hindia/evaluasi.js",
+        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg"
+      },
+      {
+        artist: "Hindia",
+        title: "Cincin",
+        mp3: "music/hindia/cincin.mp3",
+        lyric: "lyrics/hindia/cincin.js",
+        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg"
+      },
+      {
+        artist: "Hindia",
+        title: "Kita Kesana",
+        mp3: "music/hindia/kitakesana.mp3",
+        lyric: "lyrics/hindia/kitakesana.js",
+        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg"
+      },
+      {
+        artist: "Nadhif Basalamah",
+        title: "Bergema Sampai Selamanya",
+        mp3: "music/nadifbasalamah/bergema.mp3",
+        lyric: "lyrics/nadifbasalamah/bergema.js",
+        artistPhoto: "https://files.catbox.moe/951vb9.jpeg"
+      },
+      {
+        artist: "Nadhif Basalamah",
+        title: "Penjaga Hati",
+        mp3: "music/nadifbasalamah/penjagahati.mp3",
+        lyric: "lyrics/nadifbasalamah/penjagahati.js",
+        artistPhoto: "https://files.catbox.moe/951vb9.jpeg"
+      }
     ];
 
-    // Status like dari user (disimpan di localStorage)
-    const userLikes = JSON.parse(localStorage.getItem('userLikes')) || {};
-
-    // Simulasi data like dan visitor publik dari server
-    let publicData = {
-      likes: JSON.parse(localStorage.getItem('publicLikes')) || {},
-      visitors: JSON.parse(localStorage.getItem('publicVisitors')) || [],
-      likesRecord: JSON.parse(localStorage.getItem('publicLikesRecord')) || []
-    };
-
-    // Fungsi untuk memperbarui data di localStorage sebagai simulasi backend
-    function savePublicData() {
-        localStorage.setItem('publicLikes', JSON.stringify(publicData.likes));
-        localStorage.setItem('publicVisitors', JSON.stringify(publicData.visitors));
-        localStorage.setItem('publicLikesRecord', JSON.stringify(publicData.likesRecord));
-    }
-    
     // DOM Elements
     const artistList = document.getElementById('artistList');
     const playlistContainer = document.getElementById('playlist');
@@ -471,10 +423,6 @@
     const currentTimeEl = document.getElementById('currentTime');
     const durationEl = document.getElementById('duration');
     const volumeSlider = document.getElementById('volumeSlider');
-    const visitorCountEl = document.querySelector('#visitorCount span');
-    const adminPanel = document.getElementById('adminPanel');
-    const visitorListEl = document.getElementById('visitorList');
-    const likeListEl = document.getElementById('likeList');
 
     // State
     let currentLyrics = [];
@@ -482,63 +430,6 @@
     let currentPlaylist = [];
     let currentSongIndex = -1;
     let isPlaying = false;
-    let visitorInfo = {};
-
-    // Fungsi untuk mendapatkan nama perangkat dari User-Agent
-    function getDeviceName() {
-      const userAgent = navigator.userAgent;
-      if (userAgent.match(/Android/i)) return 'Android';
-      if (userAgent.match(/iPhone|iPad|iPod/i)) return 'iOS';
-      if (userAgent.match(/Windows/i)) return 'Windows';
-      if (userAgent.match(/Mac/i)) return 'Mac';
-      if (userAgent.match(/Linux/i)) return 'Linux';
-      return 'Unknown Device';
-    }
-
-    // Fungsi untuk mendapatkan IP address menggunakan API
-    async function getPublicIP() {
-        try {
-            const response = await fetch('https://api.ipify.org?format=json');
-            const data = await response.json();
-            return data.ip;
-        } catch (error) {
-            console.error('Gagal mendapatkan IP:', error);
-            return 'Unknown IP';
-        }
-    }
-
-    // Inisialisasi Visitor tanpa meminta nama
-    async function initializeVisitor() {
-        let visitorId = localStorage.getItem('visitorId');
-        
-        if (!visitorId) {
-            const ip = await getPublicIP();
-            const device = getDeviceName();
-            const name = "Anonim";
-            
-            visitorId = Date.now().toString();
-            visitorInfo = { id: visitorId, name: name, ip: ip, device: device, firstVisit: new Date().toLocaleString() };
-            
-            localStorage.setItem('visitorId', visitorId);
-            publicData.visitors.push(visitorInfo);
-            savePublicData();
-        } else {
-            visitorInfo = publicData.visitors.find(v => v.id === visitorId);
-            if (!visitorInfo) {
-                // Jika ID ada tapi data hilang, buat data baru (kasus jarang)
-                visitorInfo = {
-                    id: visitorId,
-                    name: "Anonim",
-                    ip: await getPublicIP(),
-                    device: getDeviceName(),
-                    firstVisit: new Date().toLocaleString()
-                };
-                publicData.visitors.push(visitorInfo);
-                savePublicData();
-            }
-        }
-    }
-
 
     // Format Waktu
     function formatTime(seconds) {
@@ -667,83 +558,25 @@
       // Songs List
       currentPlaylist.forEach((song, index) => {
         const songElement = document.createElement('div');
-        songElement.classList.add('card', 'p-4', 'fade-in', 'flex', 'items-center', 'space-x-4');
+        songElement.classList.add('card', 'p-4', 'fade-in', 'flex', 'items-center', 'space-x-4', 'cursor-pointer');
         songElement.style.animationDelay = `${index * 0.1}s`;
         songElement.dataset.songIndex = index;
         songElement.innerHTML = `
-          <div class="flex-1 flex items-center space-x-4 cursor-pointer" onclick="playSong(currentPlaylist[${index}], ${index})">
-            <div class="text-yellow-400 text-xl">
-              <i class="fas fa-play-circle"></i>
-            </div>
-            <div>
-              <h4 class="text-base font-medium text-white">${song.title}</h4>
-              <p class="text-gray-300 text-sm">${song.artist}</p>
-            </div>
+          <div class="text-yellow-400 text-xl">
+            <i class="fas fa-play-circle"></i>
           </div>
-          <div class="flex items-center space-x-2">
-            <span class="text-gray-400 text-sm like-count">${publicData.likes[song.id] || 0}</span>
-            <button class="like-btn" data-song-id="${song.id}">
-              <i class="${userLikes[song.id] ? 'fas fa-heart liked' : 'far fa-heart'}"></i>
-            </button>
+          <div class="flex-1">
+            <h4 class="text-base font-medium text-white">${song.title}</h4>
+            <p class="text-gray-300 text-sm">${song.artist}</p>
+          </div>
+          <div class="text-gray-400 text-sm">
+            ${index + 1}/${currentPlaylist.length}
           </div>
         `;
-        
-        const likeButton = songElement.querySelector('.like-btn');
-        likeButton.addEventListener('click', () => {
-          toggleLike(song.id);
-          updateAllLikesDisplay();
+        songElement.addEventListener('click', () => {
+          playSong(song, index);
         });
-
         playlistContainer.appendChild(songElement);
-      });
-    }
-
-    // Toggle Like
-    function toggleLike(songId) {
-      if (userLikes[songId]) {
-        delete userLikes[songId];
-        publicData.likes[songId] = (publicData.likes[songId] || 1) - 1;
-        
-        // Hapus entri dari like record
-        publicData.likesRecord = publicData.likesRecord.filter(record => !(record.songId === songId && record.visitorId === visitorInfo.id));
-
-      } else {
-        userLikes[songId] = true;
-        publicData.likes[songId] = (publicData.likes[songId] || 0) + 1;
-
-        // Tambahkan entri baru ke like record
-        const likedSong = playlist.find(s => s.id === songId);
-        if (likedSong) {
-          publicData.likesRecord.push({
-            visitorId: visitorInfo.id,
-            songId: songId,
-            songTitle: likedSong.title,
-            ip: visitorInfo.ip,
-            device: visitorInfo.device,
-            likeTime: new Date().toLocaleString()
-          });
-        }
-      }
-      
-      localStorage.setItem('userLikes', JSON.stringify(userLikes));
-      savePublicData();
-    }
-    
-    function updateAllLikesDisplay() {
-      document.querySelectorAll('#playlist > div.card').forEach(songElement => {
-        const likeButton = songElement.querySelector('.like-btn');
-        if (likeButton) {
-          const songId = likeButton.dataset.songId;
-          const likeCountEl = songElement.querySelector('.like-count');
-          const likeBtnIcon = songElement.querySelector('.like-btn i');
-          
-          likeCountEl.textContent = publicData.likes[songId] || 0;
-          if (userLikes[songId]) {
-            likeBtnIcon.className = 'fas fa-heart liked';
-          } else {
-            likeBtnIcon.className = 'far fa-heart';
-          }
-        }
       });
     }
 
@@ -858,10 +691,8 @@
       if (!currentLyrics || !Array.isArray(currentLyrics)) {
         lyricsContainer.innerHTML = `
           <div class="empty-state">
-            <h3 class="initial-message font-['Inter']">
-              <i class="fas fa-headphones-alt text-gray-400 mr-2"></i>
-              Tidak ada lirik untuk ditampilkan
-            </h3>
+            <i class="fas fa-music text-xl text-gray-400 mb-3"></i>
+            <p class="text-gray-300">Tidak ada lirik untuk ditampilkan.</p>
           </div>
         `;
         return;
@@ -1032,11 +863,8 @@
       nowPlaying.textContent = '';
       lyricsContainer.innerHTML = `
         <div class="empty-state">
-          <h3 class="initial-message font-['Inter']">
-            <i class="fas fa-headphones-alt text-yellow-400 mr-2"></i>
-            Pilih Artis dan Lagu
-          </h3>
-          <p class="text-gray-400 text-sm mt-2">untuk menampilkan lirik</p>
+          <i class="fas fa-headphones text-3xl text-gray-400 mb-3"></i>
+          <p class="text-gray-300">Pilih artis dan lagu untuk melihat lirik</p>
         </div>
       `;
       currentLyrics = [];
@@ -1066,67 +894,9 @@
       audioPlayer.volume = volumeSlider.value;
     });
 
-    // Admin Panel (Sangat sederhana, hanya untuk demonstrasi)
-    function checkAdminAccess() {
-      if (window.location.pathname.endsWith('/admin')) {
-        openAdminPanel();
-      }
-    }
-
-    function openAdminPanel() {
-      adminPanel.classList.remove('hidden');
-      document.getElementById('adminVisitorCount').textContent = publicData.visitors.length;
-      
-      const totalLikes = Object.values(publicData.likes).reduce((sum, val) => sum + val, 0);
-      document.getElementById('adminTotalLikes').textContent = totalLikes;
-
-      renderVisitorList();
-      renderLikeList();
-    }
-
-    function renderVisitorList() {
-      visitorListEl.innerHTML = '';
-      publicData.visitors.forEach(visitor => {
-        const row = document.createElement('tr');
-        row.classList.add('bg-gray-800/20', 'hover:bg-gray-700/50', 'transition-colors');
-        row.innerHTML = `
-          <td class="py-4 px-6">${visitor.ip}</td>
-          <td class="py-4 px-6">${visitor.device}</td>
-          <td class="py-4 px-6">${visitor.firstVisit}</td>
-        `;
-        visitorListEl.appendChild(row);
-      });
-    }
-
-    function renderLikeList() {
-      likeListEl.innerHTML = '';
-      publicData.likesRecord.forEach(record => {
-        const row = document.createElement('tr');
-        row.classList.add('bg-gray-800/20', 'hover:bg-gray-700/50', 'transition-colors');
-        row.innerHTML = `
-          <td class="py-4 px-6">${record.ip}</td>
-          <td class="py-4 px-6">${record.device}</td>
-          <td class="py-4 px-6">${record.songTitle}</td>
-          <td class="py-4 px-6">${record.likeTime}</td>
-        `;
-        likeListEl.appendChild(row);
-      });
-    }
-
-    function closeAdminPanel() {
-      adminPanel.classList.add('hidden');
-    }
-
-    // Inisialisasi Tampilan
-    async function initializeApp() {
-      await initializeVisitor(); // Tunggu hingga data pengunjung terisi
-      initParticles();
-      loadArtists();
-      visitorCountEl.textContent = publicData.visitors.length;
-      checkAdminAccess();
-    }
-
-    initializeApp();
+    // Inisialisasi
+    initParticles();
+    loadArtists();
   </script>
 </body>
 </html>
