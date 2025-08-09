@@ -488,7 +488,7 @@
         }
     }
 
-    // Inisialisasi Visitor dan Minta Nama
+    // Inisialisasi Visitor tanpa meminta nama
     async function initializeVisitor() {
         const visitorId = localStorage.getItem('visitorId');
         
@@ -498,7 +498,7 @@
             // Pengunjung baru
             const ip = await getPublicIP();
             const device = getDeviceName();
-            const name = prompt("Selamat datang! Mohon masukkan nama Anda:") || "Anonim";
+            const name = "Anonim"; // Nama diatur sebagai "Anonim"
             
             visitorData = {
                 id: Date.now().toString(), // ID unik untuk pengunjung baru
@@ -518,7 +518,7 @@
                 // Jika ID ada tapi data hilang, buat data baru (kasus jarang)
                 visitorData = {
                     id: visitorId,
-                    name: localStorage.getItem('visitorName') || "Anonim",
+                    name: "Anonim", // Nama diatur sebagai "Anonim"
                     ip: await getPublicIP(),
                     device: getDeviceName(),
                     firstVisit: new Date().toLocaleString()
