@@ -387,18 +387,33 @@
         </div>
       </div>
 
-      <div class="bg-gray-800/50 p-6 rounded-xl overflow-x-auto">
+      <div class="bg-gray-800/50 p-6 rounded-xl overflow-x-auto mb-8">
         <h3 class="text-xl font-medium text-yellow-400 mb-4">Daftar Pengunjung</h3>
         <table class="min-w-full text-sm text-left text-gray-400">
           <thead class="text-xs text-gray-200 uppercase bg-gray-700/50">
             <tr>
-              <th scope="col" class="py-3 px-6">Nama</th>
               <th scope="col" class="py-3 px-6">IP Address</th>
               <th scope="col" class="py-3 px-6">Perangkat</th>
               <th scope="col" class="py-3 px-6">Waktu Kunjungan</th>
             </tr>
           </thead>
           <tbody id="visitorList" class="divide-y divide-gray-700">
+            </tbody>
+        </table>
+      </div>
+
+      <div class="bg-gray-800/50 p-6 rounded-xl overflow-x-auto">
+        <h3 class="text-xl font-medium text-yellow-400 mb-4">Pengguna yang Memberi Like</h3>
+        <table class="min-w-full text-sm text-left text-gray-400">
+          <thead class="text-xs text-gray-200 uppercase bg-gray-700/50">
+            <tr>
+              <th scope="col" class="py-3 px-6">IP Address</th>
+              <th scope="col" class="py-3 px-6">Perangkat</th>
+              <th scope="col" class="py-3 px-6">Lagu</th>
+              <th scope="col" class="py-3 px-6">Waktu Like</th>
+            </tr>
+          </thead>
+          <tbody id="likeList" class="divide-y divide-gray-700">
             </tbody>
         </table>
       </div>
@@ -427,16 +442,18 @@
     // Status like dari user (disimpan di localStorage)
     const userLikes = JSON.parse(localStorage.getItem('userLikes')) || {};
 
-    // Simulasi data like dan visitor publik dari server (diganti dengan backend sungguhan)
+    // Simulasi data like dan visitor publik dari server
     let publicData = {
       likes: JSON.parse(localStorage.getItem('publicLikes')) || {},
-      visitors: JSON.parse(localStorage.getItem('publicVisitors')) || []
+      visitors: JSON.parse(localStorage.getItem('publicVisitors')) || [],
+      likesRecord: JSON.parse(localStorage.getItem('publicLikesRecord')) || []
     };
 
     // Fungsi untuk memperbarui data di localStorage sebagai simulasi backend
     function savePublicData() {
         localStorage.setItem('publicLikes', JSON.stringify(publicData.likes));
         localStorage.setItem('publicVisitors', JSON.stringify(publicData.visitors));
+        localStorage.setItem('publicLikesRecord', JSON.stringify(publicData.likesRecord));
     }
     
     // DOM Elements
@@ -457,6 +474,7 @@
     const visitorCountEl = document.querySelector('#visitorCount span');
     const adminPanel = document.getElementById('adminPanel');
     const visitorListEl = document.getElementById('visitorList');
+    const likeListEl = document.getElementById('likeList');
 
     // State
     let currentLyrics = [];
@@ -464,6 +482,7 @@
     let currentPlaylist = [];
     let currentSongIndex = -1;
     let isPlaying = false;
+    let visitorInfo = {};
 
     // Fungsi untuk mendapatkan nama perangkat dari User-Agent
     function getDeviceName() {
@@ -490,40 +509,31 @@
 
     // Inisialisasi Visitor tanpa meminta nama
     async function initializeVisitor() {
-        const visitorId = localStorage.getItem('visitorId');
+        let visitorId = localStorage.getItem('visitorId');
         
-        let visitorData = {};
-
         if (!visitorId) {
-            // Pengunjung baru
             const ip = await getPublicIP();
             const device = getDeviceName();
-            const name = "Anonim"; // Nama diatur sebagai "Anonim"
+            const name = "Anonim";
             
-            visitorData = {
-                id: Date.now().toString(), // ID unik untuk pengunjung baru
-                name: name,
-                ip: ip,
-                device: device,
-                firstVisit: new Date().toLocaleString()
-            };
+            visitorId = Date.now().toString();
+            visitorInfo = { id: visitorId, name: name, ip: ip, device: device, firstVisit: new Date().toLocaleString() };
             
-            localStorage.setItem('visitorId', visitorData.id);
-            publicData.visitors.push(visitorData);
+            localStorage.setItem('visitorId', visitorId);
+            publicData.visitors.push(visitorInfo);
             savePublicData();
         } else {
-            // Pengunjung lama
-            visitorData = publicData.visitors.find(v => v.id === visitorId);
-            if (!visitorData) {
+            visitorInfo = publicData.visitors.find(v => v.id === visitorId);
+            if (!visitorInfo) {
                 // Jika ID ada tapi data hilang, buat data baru (kasus jarang)
-                visitorData = {
+                visitorInfo = {
                     id: visitorId,
-                    name: "Anonim", // Nama diatur sebagai "Anonim"
+                    name: "Anonim",
                     ip: await getPublicIP(),
                     device: getDeviceName(),
                     firstVisit: new Date().toLocaleString()
                 };
-                publicData.visitors.push(visitorData);
+                publicData.visitors.push(visitorInfo);
                 savePublicData();
             }
         }
@@ -691,15 +701,28 @@
     // Toggle Like
     function toggleLike(songId) {
       if (userLikes[songId]) {
-        // Jika sudah like, hapus like
         delete userLikes[songId];
-        // Kurangi like di data publik
         publicData.likes[songId] = (publicData.likes[songId] || 1) - 1;
+        
+        // Hapus entri dari like record
+        publicData.likesRecord = publicData.likesRecord.filter(record => !(record.songId === songId && record.visitorId === visitorInfo.id));
+
       } else {
-        // Jika belum like, tambahkan like
         userLikes[songId] = true;
-        // Tambah like di data publik
         publicData.likes[songId] = (publicData.likes[songId] || 0) + 1;
+
+        // Tambahkan entri baru ke like record
+        const likedSong = playlist.find(s => s.id === songId);
+        if (likedSong) {
+          publicData.likesRecord.push({
+            visitorId: visitorInfo.id,
+            songId: songId,
+            songTitle: likedSong.title,
+            ip: visitorInfo.ip,
+            device: visitorInfo.device,
+            likeTime: new Date().toLocaleString()
+          });
+        }
       }
       
       localStorage.setItem('userLikes', JSON.stringify(userLikes));
@@ -1058,6 +1081,7 @@
       document.getElementById('adminTotalLikes').textContent = totalLikes;
 
       renderVisitorList();
+      renderLikeList();
     }
 
     function renderVisitorList() {
@@ -1066,12 +1090,26 @@
         const row = document.createElement('tr');
         row.classList.add('bg-gray-800/20', 'hover:bg-gray-700/50', 'transition-colors');
         row.innerHTML = `
-          <td class="py-4 px-6 font-medium text-gray-100 whitespace-nowrap">${visitor.name}</td>
           <td class="py-4 px-6">${visitor.ip}</td>
           <td class="py-4 px-6">${visitor.device}</td>
           <td class="py-4 px-6">${visitor.firstVisit}</td>
         `;
         visitorListEl.appendChild(row);
+      });
+    }
+
+    function renderLikeList() {
+      likeListEl.innerHTML = '';
+      publicData.likesRecord.forEach(record => {
+        const row = document.createElement('tr');
+        row.classList.add('bg-gray-800/20', 'hover:bg-gray-700/50', 'transition-colors');
+        row.innerHTML = `
+          <td class="py-4 px-6">${record.ip}</td>
+          <td class="py-4 px-6">${record.device}</td>
+          <td class="py-4 px-6">${record.songTitle}</td>
+          <td class="py-4 px-6">${record.likeTime}</td>
+        `;
+        likeListEl.appendChild(row);
       });
     }
 
