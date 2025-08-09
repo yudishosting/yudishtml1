@@ -273,23 +273,41 @@
     let currentSongIndex = -1;
 
     function getArtists() {
-      return [...new Set(playlist.map(song => song.artist))];
+      const artistsData = {};
+      playlist.forEach(song => {
+        if (!artistsData[song.artist]) {
+          artistsData[song.artist] = {
+            name: song.artist,
+            songCount: 0,
+            photo: song.artistPhoto
+          };
+        }
+        artistsData[song.artist].songCount++;
+      });
+      return Object.values(artistsData);
     }
 
     function loadArtists() {
       artistList.innerHTML = '';
       const artists = getArtists();
-      artists.forEach(artist => {
+      artists.forEach(artistData => {
         const artistElement = document.createElement('div');
         artistElement.classList.add('artist-card', 'card-gradient', 'p-6', 'rounded-2xl', 'cursor-pointer', 'transition-all', 'duration-500', 'fade-in', 'text-center', 'group');
         artistElement.innerHTML = `
-          <div class="text-4xl mb-4 text-yellow-400 group-hover:scale-110 transition-transform duration-300">
-            <i class="fas fa-user-music"></i>
-          </div>
-          <h3 class="text-xl font-semibold text-white mb-2">${artist}</h3>
-          <p class="text-white/70 text-sm">${playlist.filter(song => song.artist === artist).length} lagu</p>
+          ${artistData.photo ? `
+            <div class="mb-4 flex justify-center">
+              <img src="${artistData.photo}" alt="${artistData.name}" 
+                   class="w-20 h-20 rounded-full object-cover border-3 border-yellow-400/50 shadow-xl group-hover:scale-110 transition-transform duration-300">
+            </div>
+          ` : `
+            <div class="text-4xl mb-4 text-yellow-400 group-hover:scale-110 transition-transform duration-300">
+              <i class="fas fa-user-music"></i>
+            </div>
+          `}
+          <h3 class="text-xl font-semibold text-white mb-2">${artistData.name}</h3>
+          <p class="text-white/70 text-sm">${artistData.songCount} lagu</p>
         `;
-        artistElement.addEventListener('click', () => showArtistSongs(artist));
+        artistElement.addEventListener('click', () => showArtistSongs(artistData.name));
         artistList.appendChild(artistElement);
       });
     }
