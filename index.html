@@ -23,7 +23,7 @@
       min-height: 100vh;
       color: #ffffff;
       overflow-x: hidden;
-      perspective: 1000px; /* Menambah perspektif 3D ke body */
+      position: relative;
     }
 
     /* Glassmorphism Effect */
@@ -40,21 +40,13 @@
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
-      transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      transform-style: preserve-3d;
-      position: relative;
-      z-index: 2;
-      transform: translateZ(0);
+      transition: all 0.3s ease;
     }
-    
+
     .card:hover {
       background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-8px) rotateX(6deg) rotateY(4deg);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    }
-    
-    .card > * {
-      transform: translateZ(10px);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
     }
 
     /* Animasi */
@@ -70,11 +62,6 @@
     @keyframes float {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
-    }
-    
-    /* Efek Parallax Mouse */
-    #mainContent {
-      transform-style: preserve-3d;
     }
 
     /* Scrollbar */
@@ -165,14 +152,13 @@
 
     /* Partikel Animasi */
     #particleCanvas {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       pointer-events: none;
       z-index: 0;
-      transform: translateZ(-200px) scale(2); /* Efek Parallax mouse yang lebih dalam */
     }
 
     /* Loading Animation */
@@ -248,20 +234,24 @@
   </style>
 </head>
 <body>
+  <!-- Partikel Latar Belakang -->
   <canvas id="particleCanvas"></canvas>
 
-  <div class="floating-note absolute text-xl text-yellow-300/10 animate-[float_8s_ease-in-out_infinite]" style="top: 10%; left: 5%;">
+  <!-- Floating Notes -->
+  <div class="absolute text-xl text-yellow-300/10 animate-[float_8s_ease-in-out_infinite]" style="top: 10%; left: 5%;">
     <i class="fas fa-music"></i>
   </div>
-  <div class="floating-note absolute text-xl text-yellow-300/10 animate-[float_8s_ease-in-out_infinite_-4s]" style="top: 25%; right: 8%;">
+  <div class="absolute text-xl text-yellow-300/10 animate-[float_8s_ease-in-out_infinite_-4s]" style="top: 25%; right: 8%;">
     <i class="fas fa-musical-note"></i>
   </div>
-  <div class="floating-note absolute text-xl text-yellow-300/10 animate-[float_8s_ease-in-out_infinite_-2s]" style="bottom: 15%; left: 10%;">
+  <div class="absolute text-xl text-yellow-300/10 animate-[float_8s_ease-in-out_infinite_-2s]" style="bottom: 15%; left: 10%;">
     <i class="fas fa-compact-disc"></i>
   </div>
 
+  <!-- Main Content -->
   <div id="mainContent" class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="glass-effect rounded-2xl p-6 sm:p-8 lg:p-10 relative z-10">
+      <!-- Header -->
       <div class="flex justify-between items-center mb-10">
         <div>
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 font-['Playfair_Display']">
@@ -272,17 +262,22 @@
         </div>
       </div>
 
+      <!-- Back Button -->
       <button id="backButton" class="hidden mb-6 px-5 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium text-sm">
         <i class="fas fa-arrow-left mr-2"></i>
         Kembali ke Daftar Artis
       </button>
 
+      <!-- Artist List -->
       <div id="artistList" class="grid-responsive"></div>
 
+      <!-- Playlist -->
       <div id="playlist" class="hidden space-y-4"></div>
 
+      <!-- Audio Player (Hidden) -->
       <audio id="audioPlayer" class="hidden"></audio>
 
+      <!-- Music Controls -->
       <div id="musicControls" class="hidden mt-8">
         <div class="glass-effect rounded-2xl p-6">
           <div id="nowPlaying" class="text-lg font-medium now-playing-text mb-4"></div>
@@ -317,6 +312,7 @@
         </div>
       </div>
 
+      <!-- Lyrics -->
       <div id="lyrics" class="mt-8 p-6 glass-effect rounded-2xl text-white text-base max-h-96 overflow-y-auto">
         <div class="empty-state">
           <i class="fas fa-headphones text-3xl text-gray-400 mb-3"></i>
@@ -324,6 +320,7 @@
         </div>
       </div>
 
+      <!-- Footer -->
       <footer class="mt-12 pt-6 border-t border-gray-700">
         <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
           <div class="text-gray-300 text-sm">
@@ -426,8 +423,6 @@
     const currentTimeEl = document.getElementById('currentTime');
     const durationEl = document.getElementById('duration');
     const volumeSlider = document.getElementById('volumeSlider');
-    const mainContent = document.getElementById('mainContent');
-    const floatingNotes = document.querySelectorAll('.floating-note');
 
     // State
     let currentLyrics = [];
@@ -897,17 +892,6 @@
     // Volume Control
     volumeSlider.addEventListener('input', () => {
       audioPlayer.volume = volumeSlider.value;
-    });
-    
-    // Parallax Efek Berdasarkan Mouse Position
-    window.addEventListener('mousemove', (e) => {
-      const x = (e.clientX / window.innerWidth) - 0.5;
-      const y = (e.clientY / window.innerHeight) - 0.5;
-
-      mainContent.style.transform = `rotateX(${y * 5}deg) rotateY(${x * -5}deg) translateZ(0)`;
-      floatingNotes.forEach(note => {
-        note.style.transform = `translate(${x * 50}px, ${y * 50}px)`;
-      });
     });
 
     // Inisialisasi
