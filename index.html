@@ -83,11 +83,10 @@
     }
 
     /* Lirik Styles */
-    /* Menghapus border, background, dan padding dari setiap baris lirik */
     .lyric-line {
-      padding: 0; /* Menghilangkan padding */
-      margin: 12px 0; /* Mengatur jarak antar baris */
-      border-radius: 0; /* Menghilangkan radius */
+      padding: 0;
+      margin: 12px 0;
+      border-radius: 0;
       transition: all 0.3s ease;
       opacity: 0.7;
       font-size: 0.95rem;
@@ -98,9 +97,9 @@
       color: #facc15;
       font-weight: 500;
       opacity: 1;
-      background: none; /* Menghilangkan latar belakang */
-      border-left: 3px solid #facc15; /* Border kiri tetap dipertahankan sebagai penanda */
-      padding-left: 16px; /* Menambahkan padding agar teks tidak terlalu dekat dengan border */
+      background: none;
+      border-left: 3px solid #facc15;
+      padding-left: 16px;
       transform: translateX(4px);
     }
 
@@ -145,9 +144,8 @@
 
     /* Empty State */
     .empty-state {
-      background: none; /* Menghilangkan background */
-      border: none; /* Menghilangkan border */
-      border-radius: 12px;
+      background: none;
+      border: none;
       padding: 2.5rem;
       text-align: center;
     }
@@ -217,14 +215,14 @@
 
     /* Tampilan Font Awal Lirik */
     .initial-message {
-        font-size: 2.5rem;
-        font-weight: 800;
-        background: linear-gradient(90deg, #facc15, #fef08a);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        line-height: 1.2;
-        font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; /* Ukuran font disamakan */
+      font-weight: 500;  /* Tebal sedang */
+      background: none;
+      -webkit-background-clip: unset;
+      -webkit-text-fill-color: unset;
+      color: #ffffff; /* Warna disamakan */
+      line-height: 1.2;
+      font-family: 'Inter', sans-serif; /* Font disamakan */
     }
 
     /* Responsive Adjustments */
@@ -245,7 +243,7 @@
         padding: 1rem;
       }
       .initial-message {
-        font-size: 1.8rem;
+        font-size: 1.2rem;
       }
     }
   </style>
@@ -322,7 +320,7 @@
 
       <div id="lyrics" class="mt-8 p-6 glass-effect rounded-2xl text-white text-base max-h-96 overflow-y-auto">
         <div class="empty-state">
-          <h3 class="initial-message font-['Playfair_Display']">
+          <h3 class="initial-message font-['Inter']">
             <i class="fas fa-headphones-alt text-yellow-400 mr-2"></i>
             Pilih Artis dan Lagu
           </h3>
@@ -707,8 +705,10 @@
       if (!currentLyrics || !Array.isArray(currentLyrics)) {
         lyricsContainer.innerHTML = `
           <div class="empty-state">
-            <i class="fas fa-music text-xl text-gray-400 mb-3"></i>
-            <p class="text-gray-300">Tidak ada lirik untuk ditampilkan.</p>
+            <h3 class="initial-message font-['Inter']">
+              <i class="fas fa-headphones-alt text-gray-400 mr-2"></i>
+              Tidak ada lirik untuk ditampilkan
+            </h3>
           </div>
         `;
         return;
@@ -879,7 +879,7 @@
       nowPlaying.textContent = '';
       lyricsContainer.innerHTML = `
         <div class="empty-state">
-          <h3 class="initial-message font-['Playfair_Display']">
+          <h3 class="initial-message font-['Inter']">
             <i class="fas fa-headphones-alt text-yellow-400 mr-2"></i>
             Pilih Artis dan Lagu
           </h3>
