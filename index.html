@@ -217,19 +217,22 @@
     artist: "Nina",
     title: "Feast",
     mp3: "music/nina/feast.mp3",
-    lyric: "lyrics/nina/feast.js"
+    lyric: "lyrics/nina/feast.js",
+    artistPhoto: "https://example.com/nina.jpg" // Ganti dengan URL foto Nina
   },
   {
     artist: "Nina",
     title: "Tarot",
     mp3: "music/nina/tarot.mp3",
-    lyric: "lyrics/nina/tarot.js"
+    lyric: "lyrics/nina/tarot.js",
+    artistPhoto: "https://example.com/nina.jpg"
   },
   {
     artist: "Nina",
     title: "o,Tuan",
     mp3: "music/nina/otuan.mp3",
-    lyric: "lyrics/nina/otuan.js"
+    lyric: "lyrics/nina/otuan.js",
+    artistPhoto: "https://example.com/nina.jpg"
   },
   
   //==================================================\\
@@ -238,19 +241,22 @@
     artist: "Hindia",
     title: "Evaluasi",
     mp3: "music/hindia/evaluasi.mp3",
-    lyric: "lyrics/hindia/evaluasi.js"
+    lyric: "lyrics/hindia/evaluasi.js",
+    artistPhoto: "https://files.catbox.moe/ln8c0r.jpg"
   },
   {
     artist: "Hindia",
     title: "Cincin",
     mp3: "music/hindia/cincin.mp3",
-    lyric: "lyrics/hindia/cincin.js"
+    lyric: "lyrics/hindia/cincin.js",
+    artistPhoto: "https://files.catbox.moe/ln8c0r.jpg"
   },
   {
     artist: "Hindia",
     title: "Kita Kesana",
     mp3: "music/hindia/kitakesana.mp3",
-    lyric: "lyrics/hindia/kitakesana.js"
+    lyric: "lyrics/hindia/kitakesana.js",
+    artistPhoto: "https://files.catbox.moe/ln8c0r.jpg"
   }
   
 ];
@@ -297,6 +303,33 @@
       currentPlaylist = playlist.filter(song => song.artist === artist);
       currentSongIndex = -1;
       
+      // Artist Header dengan foto
+      const artistHeader = document.createElement('div');
+      artistHeader.classList.add('text-center', 'mb-8', 'fade-in');
+      
+      const artistPhoto = currentPlaylist[0]?.artistPhoto;
+      artistHeader.innerHTML = `
+        <div class="flex flex-col items-center space-y-4">
+          ${artistPhoto ? `
+            <div class="relative">
+              <img src="${artistPhoto}" alt="${artist}" 
+                   class="w-32 h-32 rounded-full object-cover border-4 border-yellow-400/50 shadow-2xl hover:scale-105 transition-transform duration-300">
+              <div class="absolute inset-0 rounded-full bg-gradient-to-t from-black/20 to-transparent"></div>
+            </div>
+          ` : `
+            <div class="w-32 h-32 rounded-full bg-gradient-to-br from-yellow-400/30 to-purple-500/30 flex items-center justify-center border-4 border-yellow-400/50 shadow-2xl">
+              <i class="fas fa-user-music text-4xl text-white"></i>
+            </div>
+          `}
+          <div>
+            <h2 class="text-3xl font-bold text-white mb-2">${artist}</h2>
+            <p class="text-white/70 text-lg">${currentPlaylist.length} lagu tersedia</p>
+          </div>
+        </div>
+      `;
+      playlistContainer.appendChild(artistHeader);
+      
+      // Songs List
       currentPlaylist.forEach((song, index) => {
         const songElement = document.createElement('div');
         songElement.classList.add('song-card', 'card-gradient', 'p-5', 'rounded-xl', 'cursor-pointer', 'transition-all', 'duration-300', 'fade-in', 'flex', 'items-center', 'space-x-4', 'group');
@@ -324,8 +357,8 @@
         currentSongIndex = index;
       }
       
-      // Update visual selection
-      document.querySelectorAll('#playlist > div').forEach(el => {
+      // Update visual selection (skip the header)
+      document.querySelectorAll('#playlist > div.song-card').forEach(el => {
         el.classList.remove('bg-gradient-to-r', 'from-yellow-400/20', 'to-orange-400/20');
         el.classList.add('card-gradient');
       });
@@ -346,9 +379,25 @@
       });
 
       nowPlaying.innerHTML = `
-        <i class="fas fa-music mr-2"></i>
-        Sedang diputar: <span class="font-bold">${song.artist} - ${song.title}</span>
-        <span class="text-white/70 ml-2">(${currentSongIndex + 1}/${currentPlaylist.length})</span>
+        <div class="flex items-center justify-center space-x-4 mb-4">
+          <button onclick="audioPlayer.pause()" class="px-4 py-2 bg-red-500/80 hover:bg-red-600/80 text-white rounded-full transition duration-300">
+            <i class="fas fa-pause mr-2"></i>Pause
+          </button>
+          <button onclick="audioPlayer.play()" class="px-4 py-2 bg-green-500/80 hover:bg-green-600/80 text-white rounded-full transition duration-300">
+            <i class="fas fa-play mr-2"></i>Play
+          </button>
+          <button onclick="playPreviousSong()" class="px-3 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white rounded-full transition duration-300">
+            <i class="fas fa-step-backward"></i>
+          </button>
+          <button onclick="playNextSongManual()" class="px-3 py-2 bg-blue-500/80 hover:bg-blue-600/80 text-white rounded-full transition duration-300">
+            <i class="fas fa-step-forward"></i>
+          </button>
+        </div>
+        <div class="text-center">
+          <i class="fas fa-music mr-2"></i>
+          Sedang diputar: <span class="font-bold">${song.artist} - ${song.title}</span>
+          <span class="text-white/70 ml-2">(${currentSongIndex + 1}/${currentPlaylist.length})</span>
+        </div>
       `;
       loadLyrics(song.lyric);
     }
@@ -475,6 +524,31 @@
       playNextSong();
     }
 
+    function playNextSongManual() {
+      if (currentPlaylist.length > 0 && currentSongIndex < currentPlaylist.length - 1) {
+        const nextIndex = currentSongIndex + 1;
+        const nextSong = currentPlaylist[nextIndex];
+        playSong(nextSong, nextIndex);
+      } else if (currentPlaylist.length > 0) {
+        // Loop to first song
+        const firstSong = currentPlaylist[0];
+        playSong(firstSong, 0);
+      }
+    }
+
+    function playPreviousSong() {
+      if (currentPlaylist.length > 0 && currentSongIndex > 0) {
+        const prevIndex = currentSongIndex - 1;
+        const prevSong = currentPlaylist[prevIndex];
+        playSong(prevSong, prevIndex);
+      } else if (currentPlaylist.length > 0) {
+        // Loop to last song
+        const lastIndex = currentPlaylist.length - 1;
+        const lastSong = currentPlaylist[lastIndex];
+        playSong(lastSong, lastIndex);
+      }
+    }
+
     function playNextSong() {
       if (currentPlaylist.length > 0 && currentSongIndex < currentPlaylist.length - 1) {
         // Play next song
@@ -490,8 +564,8 @@
           Playlist selesai - Semua lagu telah diputar
         `;
         currentSongIndex = -1;
-        // Reset visual selection
-        document.querySelectorAll('#playlist > div').forEach(el => {
+        // Reset visual selection (skip the header)
+        document.querySelectorAll('#playlist > div.song-card').forEach(el => {
           el.classList.remove('bg-gradient-to-r', 'from-yellow-400/20', 'to-orange-400/20');
           el.classList.add('card-gradient');
         });
