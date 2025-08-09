@@ -10,7 +10,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap');
 
-    /* === Reset dan Base Styles === */
+    /* Reset dan Base Styles */
     * {
       margin: 0;
       padding: 0;
@@ -26,61 +26,37 @@
       position: relative;
     }
 
-    /* === Efek Glassmorphism yang Diperbarui === */
+    /* Glassmorphism Effect */
     .glass-effect {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
-      border-radius: 20px;
-      transform-style: preserve-3d;
-      perspective: 1000px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      border-radius: 16px;
     }
 
-    /* === Card Styles (dengan efek 3D) === */
+    /* Card Styles */
     .card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      transition: all 0.4s ease;
-      transform-style: preserve-3d;
-      position: relative;
-      overflow: hidden;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      transition: all 0.3s ease;
     }
 
     .card:hover {
-      background: rgba(255, 255, 255, 0.15);
-      transform: translateY(-8px) rotateX(5deg);
-      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.3), 0 0 15px rgba(250, 204, 21, 0.5);
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
     }
 
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, rgba(250, 204, 21, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.02) 100%);
-      z-index: -1;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-
-    .card:hover::before {
-      opacity: 1;
-    }
-
-    /* === Animasi === */
+    /* Animasi */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 8px rgba(250, 204, 21, 0.4), 0 0 16px rgba(250, 204, 21, 0.2); }
-      50% { box-shadow: 0 0 12px rgba(250, 204, 21, 0.6), 0 0 24px rgba(250, 204, 21, 0.3); }
-      100% { box-shadow: 0 0 8px rgba(250, 204, 21, 0.4), 0 0 16px rgba(250, 204, 21, 0.2); }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease-out forwards;
     }
 
     @keyframes float {
@@ -88,38 +64,25 @@
       50% { transform: translateY(-10px); }
     }
 
-    .fade-in {
-      animation: fadeIn 0.6s ease-out forwards;
-    }
-
-    .loading {
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    
-    /* === Scrollbar === */
+    /* Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
     }
-    
+
     ::-webkit-scrollbar-track {
       background: transparent;
     }
-    
+
     ::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.2);
       border-radius: 10px;
     }
-    
+
     ::-webkit-scrollbar-thumb:hover {
       background: rgba(255, 255, 255, 0.3);
     }
-    
-    /* === Lirik Styles === */
+
+    /* Lirik Styles */
     .lyric-line {
       padding: 12px 16px;
       margin: 4px 0;
@@ -129,60 +92,40 @@
       font-size: 0.95rem;
       line-height: 1.6;
     }
-    
+
     .lyric-line.current {
-      background: rgba(250, 204, 21, 0.15);
-      border-left: 4px solid #facc15;
-      transform: translateX(8px);
       color: #facc15;
       font-weight: 500;
       opacity: 1;
+      background: rgba(250, 204, 21, 0.1);
+      border-left: 3px solid #facc15;
+      transform: translateX(4px);
     }
-    
+
     .lyric-line.passed {
       opacity: 0.4;
       color: rgba(255, 255, 255, 0.5);
     }
-    
+
     .lyric-line.upcoming {
       opacity: 0.8;
       color: rgba(255, 255, 255, 0.9);
     }
-    
-    /* === Control Buttons (Tombol Play/Pause) === */
+
+    /* Control Buttons */
     .control-btn {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
       transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      will-change: transform, box-shadow;
     }
-    
+
     .control-btn:hover {
-      background: rgba(255, 255, 255, 0.25);
-      transform: scale(1.1) translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 10px rgba(250, 204, 21, 0.6);
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.05);
     }
-    
-    .control-btn:active {
-      transform: scale(0.95);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-    
-    #playPauseBtn {
-      background: linear-gradient(135deg, #facc15, #fef08a);
-      color: #1e1e4a;
-      box-shadow: 0 6px 15px rgba(250, 204, 21, 0.4);
-    }
-    
-    #playPauseBtn:hover {
-      transform: scale(1.1) translateY(-4px);
-      box-shadow: 0 10px 25px rgba(250, 204, 21, 0.6), 0 0 15px #fef08a;
-    }
-    
-    /* === Now Playing Text === */
+
+    /* Now Playing Text */
     .now-playing-text {
       background: linear-gradient(90deg, #facc15, #fef08a);
       -webkit-background-clip: text;
@@ -190,30 +133,68 @@
       background-clip: text;
       font-weight: 600;
     }
-    
-    /* === Progress Bar === */
+
+    /* Grid Responsif */
+    .grid-responsive {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    /* Empty State */
+    .empty-state {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    /* Partikel Animasi */
+    #particleCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Loading Animation */
+    .loading {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Progress Bar */
     .progress-container {
-      height: 6px;
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
       cursor: pointer;
     }
-    
+
     .progress-bar {
-      background: linear-gradient(90deg, #facc15, #fef08a);
-      box-shadow: 0 0 8px rgba(250, 204, 21, 0.5);
-      width: 0;
       height: 100%;
+      background: linear-gradient(90deg, #facc15, #fef08a);
+      width: 0;
       transition: width 0.1s linear;
     }
 
-    /* === Volume Slider === */
+    /* Volume Slider */
     .volume-container {
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
-    
+
     .volume-slider {
       -webkit-appearance: none;
       width: 100px;
@@ -222,7 +203,7 @@
       border-radius: 4px;
       outline: none;
     }
-    
+
     .volume-slider::-webkit-slider-thumb {
       -webkit-appearance: none;
       width: 12px;
@@ -232,44 +213,19 @@
       cursor: pointer;
     }
 
-    /* === Foto Artis === */
-    .artist-photo {
-      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    /* Responsive Adjustments */
+    @media (min-width: 640px) {
+      .grid-responsive {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    .artist-photo:hover {
-      transform: scale(1.05) rotate(2deg);
-      box-shadow: 0 0 20px rgba(250, 204, 21, 0.6);
+    @media (min-width: 1024px) {
+      .grid-responsive {
+        grid-template-columns: repeat(3, 1fr);
+      }
     }
-    
-    /* === Grid Responsif === */
-    .grid-responsive {
-      display: grid;
-      gap: 1.5rem;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    }
-    
-    /* === Empty State === */
-    .empty-state {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px dashed rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      padding: 2.5rem;
-      text-align: center;
-    }
-    
-    /* === Partikel Animasi === */
-    #particleCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
-    
-    /* === Responsive Adjustments === */
+
     @media (max-width: 640px) {
       .container {
         padding: 1rem;
@@ -278,8 +234,10 @@
   </style>
 </head>
 <body>
+  <!-- Partikel Latar Belakang -->
   <canvas id="particleCanvas"></canvas>
 
+  <!-- Floating Notes -->
   <div class="absolute text-xl text-yellow-300/10 animate-[float_8s_ease-in-out_infinite]" style="top: 10%; left: 5%;">
     <i class="fas fa-music"></i>
   </div>
@@ -290,8 +248,10 @@
     <i class="fas fa-compact-disc"></i>
   </div>
 
+  <!-- Main Content -->
   <div id="mainContent" class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="glass-effect rounded-2xl p-6 sm:p-8 lg:p-10 relative z-10">
+      <!-- Header -->
       <div class="flex justify-between items-center mb-10">
         <div>
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 font-['Playfair_Display']">
@@ -302,17 +262,22 @@
         </div>
       </div>
 
+      <!-- Back Button -->
       <button id="backButton" class="hidden mb-6 px-5 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium text-sm">
         <i class="fas fa-arrow-left mr-2"></i>
         Kembali ke Daftar Artis
       </button>
 
+      <!-- Artist List -->
       <div id="artistList" class="grid-responsive"></div>
 
+      <!-- Playlist -->
       <div id="playlist" class="hidden space-y-4"></div>
 
+      <!-- Audio Player (Hidden) -->
       <audio id="audioPlayer" class="hidden"></audio>
 
+      <!-- Music Controls -->
       <div id="musicControls" class="hidden mt-8">
         <div class="glass-effect rounded-2xl p-6">
           <div id="nowPlaying" class="text-lg font-medium now-playing-text mb-4"></div>
@@ -347,6 +312,7 @@
         </div>
       </div>
 
+      <!-- Lyrics -->
       <div id="lyrics" class="mt-8 p-6 glass-effect rounded-2xl text-white text-base max-h-96 overflow-y-auto">
         <div class="empty-state">
           <i class="fas fa-headphones text-3xl text-gray-400 mb-3"></i>
@@ -354,6 +320,7 @@
         </div>
       </div>
 
+      <!-- Footer -->
       <footer class="mt-12 pt-6 border-t border-gray-700">
         <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
           <div class="text-gray-300 text-sm">
@@ -537,7 +504,7 @@
           ${artistData.photo ? `
             <div class="mb-4 flex justify-center">
               <img src="${artistData.photo}" alt="${artistData.name}" 
-                   class="artist-photo w-24 h-24 rounded-full object-cover border-2 border-yellow-400/30 shadow-lg">
+                   class="w-24 h-24 rounded-full object-cover border-2 border-yellow-400/30 shadow-lg">
             </div>
           ` : `
             <div class="mb-4 flex justify-center">
@@ -574,7 +541,7 @@
         <div class="flex flex-col items-center space-y-4">
           ${artistPhoto ? `
             <img src="${artistPhoto}" alt="${artist}" 
-                 class="artist-photo w-32 h-32 rounded-full object-cover border-2 border-yellow-400/30 shadow-xl">
+                 class="w-32 h-32 rounded-full object-cover border-2 border-yellow-400/30 shadow-xl">
           ` : `
             <div class="w-32 h-32 rounded-full bg-yellow-400/10 flex items-center justify-center">
               <i class="fas fa-user-music text-3xl text-yellow-400"></i>
