@@ -212,19 +212,7 @@
       border-radius: 50%;
       cursor: pointer;
     }
-
-    /* Tampilan Font Awal Lirik */
-    .initial-message {
-      font-size: 1.5rem; /* Ukuran font disamakan */
-      font-weight: 500;  /* Tebal sedang */
-      background: none;
-      -webkit-background-clip: unset;
-      -webkit-text-fill-color: unset;
-      color: #ffffff; /* Warna disamakan */
-      line-height: 1.2;
-      font-family: 'Inter', sans-serif; /* Font disamakan */
-    }
-
+    
     /* Responsive Adjustments */
     @media (min-width: 640px) {
       .grid-responsive {
@@ -241,9 +229,6 @@
     @media (max-width: 640px) {
       .container {
         padding: 1rem;
-      }
-      .initial-message {
-        font-size: 1.2rem;
       }
     }
   </style>
@@ -267,7 +252,7 @@
         <div>
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 font-['Playfair_Display']">
             <i class="fas fa-headphones-alt mr-2 text-yellow-400"></i>
-            Playlist Musik Favorit
+            PILIH ARTIS DAN LAGU
           </h1>
           <p class="text-gray-300 text-base sm:text-lg">Nikmati koleksi musik pilihan dengan pengalaman premium</p>
         </div>
@@ -320,11 +305,7 @@
 
       <div id="lyrics" class="mt-8 p-6 glass-effect rounded-2xl text-white text-base max-h-96 overflow-y-auto">
         <div class="empty-state">
-          <h3 class="initial-message font-['Inter']">
-            <i class="fas fa-headphones-alt text-yellow-400 mr-2"></i>
-            Pilih Artis dan Lagu
-          </h3>
-          <p class="text-gray-400 text-sm mt-2">untuk menampilkan lirik</p>
+          <p class="text-gray-400 text-sm mt-2">Pilih artis dan lagu untuk memulai</p>
         </div>
       </div>
 
@@ -705,10 +686,7 @@
       if (!currentLyrics || !Array.isArray(currentLyrics)) {
         lyricsContainer.innerHTML = `
           <div class="empty-state">
-            <h3 class="initial-message font-['Inter']">
-              <i class="fas fa-headphones-alt text-gray-400 mr-2"></i>
-              Tidak ada lirik untuk ditampilkan
-            </h3>
+            <p class="text-gray-400 text-sm mt-2">Tidak ada lirik untuk ditampilkan</p>
           </div>
         `;
         return;
@@ -879,11 +857,7 @@
       nowPlaying.textContent = '';
       lyricsContainer.innerHTML = `
         <div class="empty-state">
-          <h3 class="initial-message font-['Inter']">
-            <i class="fas fa-headphones-alt text-yellow-400 mr-2"></i>
-            Pilih Artis dan Lagu
-          </h3>
-          <p class="text-gray-400 text-sm mt-2">untuk menampilkan lirik</p>
+          <p class="text-gray-400 text-sm mt-2">Pilih artis dan lagu untuk memulai</p>
         </div>
       `;
       currentLyrics = [];
