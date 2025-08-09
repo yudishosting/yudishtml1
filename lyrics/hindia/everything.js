@@ -32,5 +32,5 @@ var lyrics = [
   { time: 109.8, text: "Got beat down by the world sometimes I wanna fold" },
   { time: 114.1, text: "Namun suratmu kan ku ceritakan ke anak-anakku nanti" },
   { time: 118.8, text: "Bahwa aku pernah dicintai with everything u are" },
-  { time: 123.1, text: "Fully as I am with everything u are" },
+  { time: 20, text: "Fully as I am with everything u are" },
 ];
