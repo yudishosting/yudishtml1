@@ -172,10 +172,10 @@
     <!-- Playlist -->
     <div id="playlist" class="hidden space-y-4"></div>
 
-    <!-- Audio Player -->
+    <!-- Audio Player (Hidden) -->
     <div id="player" class="mt-8">
       <div class="audio-controls">
-        <audio id="audioPlayer" controls class="w-full rounded-lg shadow-lg" style="filter: hue-rotate(230deg) saturate(1.5);"></audio>
+        <audio id="audioPlayer" class="hidden"></audio>
         <div id="nowPlaying" class="text-center mt-4 text-lg font-semibold now-playing-animation"></div>
       </div>
     </div>
@@ -339,7 +339,10 @@
       audioPlayer.src = song.mp3;
       audioPlayer.play().catch(error => {
         console.error('Gagal memutar audio:', error);
-        nowPlaying.textContent = 'Gagal memutar lagu.';
+        nowPlaying.innerHTML = `
+          <i class="fas fa-exclamation-triangle mr-2 text-red-400"></i>
+          Gagal memutar lagu. <span class="text-white/70">Pastikan file audio tersedia.</span>
+        `;
       });
 
       nowPlaying.innerHTML = `
