@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Playlist musik favorit dengan pengalaman premium dan panel admin">
+  <meta name="description" content="Playlist musik favorit dengan pengalaman premium">
   <title>Playlist Musik Favorit</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -213,38 +213,6 @@
       cursor: pointer;
     }
 
-    /* Form Input */
-    .form-input {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #ffffff;
-      padding: 0.75rem;
-      border-radius: 8px;
-      width: 100%;
-      outline: none;
-      transition: all 0.3s ease;
-    }
-
-    .form-input:focus {
-      border-color: #facc15;
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    /* File Input */
-    .file-input-label {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .file-input-label:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
     /* Responsive Adjustments */
     @media (min-width: 640px) {
       .grid-responsive {
@@ -278,82 +246,6 @@
   </div>
   <div class="absolute text-xl text-yellow-300/10 animate-[float_8s_ease-in-out_infinite_-2s]" style="bottom: 15%; left: 10%;">
     <i class="fas fa-compact-disc"></i>
-  </div>
-
-  <!-- Login Modal -->
-  <div id="loginModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
-    <div class="glass-effect rounded-2xl p-8 max-w-md w-full">
-      <h2 class="text-2xl font-semibold text-white mb-6 font-['Playfair_Display']">Login Admin</h2>
-      <div class="space-y-4">
-        <div>
-          <label class="text-gray-300 text-sm mb-2 block">Username</label>
-          <input id="adminUsername" type="text" class="form-input" placeholder="Masukkan username">
-        </div>
-        <div>
-          <label class="text-gray-300 text-sm mb-2 block">Password</label>
-          <input id="adminPassword" type="password" class="form-input" placeholder="Masukkan password">
-        </div>
-        <div id="loginError" class="text-red-400 text-sm hidden">Username atau password salah</div>
-        <button id="loginSubmit" class="w-full px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium">
-          Login
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Admin Panel -->
-  <div id="adminPanel" class="hidden mb-8">
-    <div class="glass-effect rounded-2xl p-6">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-semibold text-white font-['Playfair_Display']">Panel Admin</h2>
-        <button id="logoutBtn" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-300 font-medium text-sm">
-          Logout
-        </button>
-      </div>
-      <div class="space-y-6">
-        <!-- Form Tambah Lagu -->
-        <div>
-          <h3 class="text-lg font-medium text-white mb-4">Tambah Lagu Baru</h3>
-          <div class="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label class="text-gray-300 text-sm mb-2 block">Judul Lagu</label>
-              <input id="songTitle" type="text" class="form-input" placeholder="Masukkan judul lagu">
-            </div>
-            <div>
-              <label class="text-gray-300 text-sm mb-2 block">Artis</label>
-              <input id="songArtist" type="text" class="form-input" placeholder="Masukkan nama artis">
-            </div>
-            <div>
-              <label class="text-gray-300 text-sm mb-2 block">File MP3</label>
-              <label class="file-input-label">
-                Pilih File MP3
-                <input id="songMp3" type="file" accept="audio/mp3" class="hidden">
-              </label>
-              <p id="songMp3Name" class="text-gray-400 text-sm mt-2"></p>
-            </div>
-            <div>
-              <label class="text-gray-300 text-sm mb-2 block">File Lirik (JS)</label>
-              <label class="file-input-label">
-                Pilih File Lirik
-                <input id="songLyric" type="file" accept=".js" class="hidden">
-              </label>
-              <p id="songLyricName" class="text-gray-400 text-sm mt-2"></p>
-            </div>
-            <div>
-              <label class="text-gray-300 text-sm mb-2 block">Foto Artis</label>
-              <label class="file-input-label">
-                Pilih Foto
-                <input id="songPhoto" type="file" accept="image/*" class="hidden">
-              </label>
-              <p id="songPhotoName" class="text-gray-400 text-sm mt-2"></p>
-            </div>
-          </div>
-          <button id="addSongBtn" class="mt-4 px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium">
-            Tambah Lagu
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- Main Content -->
@@ -517,23 +409,6 @@
     ];
 
     // DOM Elements
-    const loginModal = document.getElementById('loginModal');
-    const adminUsername = document.getElementById('adminUsername');
-    const adminPassword = document.getElementById('adminPassword');
-    const loginSubmit = document.getElementById('loginSubmit');
-    const loginError = document.getElementById('loginError');
-    const adminPanel = document.getElementById('adminPanel');
-    const mainContent = document.getElementById('mainContent');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const addSongBtn = document.getElementById('addSongBtn');
-    const songTitle = document.getElementById('songTitle');
-    const songArtist = document.getElementById('songArtist');
-    const songMp3 = document.getElementById('songMp3');
-    const songLyric = document.getElementById('songLyric');
-    const songPhoto = document.getElementById('songPhoto');
-    const songMp3Name = document.getElementById('songMp3Name');
-    const songLyricName = document.getElementById('songLyricName');
-    const songPhotoName = document.getElementById('songPhotoName');
     const artistList = document.getElementById('artistList');
     const playlistContainer = document.getElementById('playlist');
     const audioPlayer = document.getElementById('audioPlayer');
@@ -555,14 +430,6 @@
     let currentPlaylist = [];
     let currentSongIndex = -1;
     let isPlaying = false;
-    let isAdmin = false;
-    let uploadedFiles = {};
-
-    // Kredensial Admin (Sementara, untuk produksi gunakan backend)
-    const ADMIN_CREDENTIALS = {
-      username: "admin",
-      password: "admin123"
-    };
 
     // Format Waktu
     function formatTime(seconds) {
@@ -610,128 +477,6 @@
       });
     }
 
-    // Handle Rute /admin
-    function checkRoute() {
-      const isAdminRoute = window.location.pathname.includes('/admin');
-      if (isAdminRoute && !isAdmin) {
-        loginModal.classList.remove('hidden');
-        mainContent.classList.add('hidden');
-      } else {
-        loginModal.classList.add('hidden');
-        mainContent.classList.remove('hidden');
-        if (isAdmin) {
-          adminPanel.classList.remove('hidden');
-        }
-      }
-    }
-
-    // Login Admin
-    function handleLogin() {
-      const username = adminUsername.value.trim();
-      const password = adminPassword.value.trim();
-
-      if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-        isAdmin = true;
-        loginModal.classList.add('hidden');
-        mainContent.classList.remove('hidden');
-        adminPanel.classList.remove('hidden');
-        loginError.classList.add('hidden');
-        adminUsername.value = '';
-        adminPassword.value = '';
-        loadArtists();
-      } else {
-        loginError.classList.remove('hidden');
-      }
-    }
-
-    // Logout
-    function handleLogout() {
-      isAdmin = false;
-      adminPanel.classList.add('hidden');
-      loadArtists();
-      if (window.location.pathname.includes('/admin')) {
-        window.history.pushState({}, '', '/');
-        checkRoute();
-      }
-    }
-
-    // Handle File Upload
-    function handleFileUpload(input, type, nameElement) {
-      const file = input.files[0];
-      if (file) {
-        nameElement.textContent = file.name;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          uploadedFiles[type] = e.target.result;
-        };
-        if (type === 'lyric') {
-          reader.readAsText(file);
-        } else {
-          reader.readAsDataURL(file);
-        }
-      } else {
-        nameElement.textContent = '';
-        delete uploadedFiles[type];
-      }
-    }
-
-    // Validasi File Lirik
-    function validateLyricFile(content) {
-      try {
-        // Simulasi evaluasi file JS untuk mendapatkan array lyrics
-        const match = content.match(/var\s+lyrics\s*=\s*(\[\s*{[^}]*}\s*\])/);
-        if (!match) return false;
-        const lyrics = eval(match[1]);
-        return Array.isArray(lyrics) && lyrics.every(line => 
-          typeof line === 'object' && 
-          typeof line.time === 'number' && 
-          typeof line.text === 'string'
-        );
-      } catch (e) {
-        console.error('Error validating lyric file:', e);
-        return false;
-      }
-    }
-
-    // Tambah Lagu
-    function addSong() {
-      const title = songTitle.value.trim();
-      const artist = songArtist.value.trim();
-      const mp3 = uploadedFiles.mp3;
-      const lyric = uploadedFiles.lyric;
-      const photo = uploadedFiles.photo;
-
-      if (title && artist && mp3 && lyric) {
-        if (!validateLyricFile(lyric)) {
-          alert('File lirik tidak valid. Pastikan formatnya seperti: var lyrics = [{ time: number, text: string }, ...]');
-          return;
-        }
-
-        const newSong = {
-          artist,
-          title,
-          mp3,
-          lyric: URL.createObjectURL(new Blob([lyric], { type: 'application/javascript' })),
-          artistPhoto: photo || 'https://via.placeholder.com/150'
-        };
-        playlist.push(newSong);
-        localStorage.setItem('playlist', JSON.stringify(playlist));
-        loadArtists();
-        songTitle.value = '';
-        songArtist.value = '';
-        songMp3.value = '';
-        songLyric.value = '';
-        songPhoto.value = '';
-        songMp3Name.textContent = '';
-        songLyricName.textContent = '';
-        songPhotoName.textContent = '';
-        uploadedFiles = {};
-        alert('Lagu berhasil ditambahkan!');
-      } else {
-        alert('Harap isi semua kolom dan unggah file yang diperlukan.');
-      }
-    }
-
     // Load Daftar Artis
     function getArtists() {
       const artistsData = {};
@@ -770,30 +515,12 @@
           `}
           <h3 class="text-xl font-medium text-white text-center">${artistData.name}</h3>
           <p class="text-gray-300 text-sm text-center">${artistData.songCount} lagu</p>
-          ${isAdmin ? `
-            <button class="delete-artist mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-300 font-medium text-sm" data-artist="${artistData.name}">
-              Hapus Artis
-            </button>
-          ` : ''}
         `;
-        artistElement.addEventListener('click', (e) => {
-          if (e.target.classList.contains('delete-artist')) {
-            deleteArtist(artistData.name);
-          } else {
-            showArtistSongs(artistData.name);
-          }
+        artistElement.addEventListener('click', () => {
+          showArtistSongs(artistData.name);
         });
         artistList.appendChild(artistElement);
       });
-    }
-
-    // Hapus Artis
-    function deleteArtist(artistName) {
-      if (confirm(`Yakin ingin menghapus semua lagu dari ${artistName}?`)) {
-        playlist = playlist.filter(song => song.artist !== artistName);
-        localStorage.setItem('playlist', JSON.stringify(playlist));
-        loadArtists();
-      }
     }
 
     // Tampilkan Lagu per Artis
@@ -824,17 +551,6 @@
             <h2 class="text-2xl sm:text-3xl font-semibold text-white font-['Playfair_Display']">${artist}</h2>
             <p class="text-gray-300 text-base">${currentPlaylist.length} lagu tersedia</p>
           </div>
-          ${isAdmin ? `
-            <div class="flex space-x-2">
-              <button id="editArtistPhoto" class="px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium text-sm">
-                Ubah Foto Artis
-              </button>
-              <label class="px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium text-sm cursor-pointer">
-                Upload Foto Baru
-                <input id="newArtistPhoto" type="file" accept="image/*" class="hidden">
-              </label>
-            </div>
-          ` : ''}
         </div>
       `;
       playlistContainer.appendChild(artistHeader);
@@ -844,6 +560,7 @@
         const songElement = document.createElement('div');
         songElement.classList.add('card', 'p-4', 'fade-in', 'flex', 'items-center', 'space-x-4', 'cursor-pointer');
         songElement.style.animationDelay = `${index * 0.1}s`;
+        songElement.dataset.songIndex = index;
         songElement.innerHTML = `
           <div class="text-yellow-400 text-xl">
             <i class="fas fa-play-circle"></i>
@@ -855,74 +572,17 @@
           <div class="text-gray-400 text-sm">
             ${index + 1}/${currentPlaylist.length}
           </div>
-          ${isAdmin ? `
-            <button class="delete-song text-red-400 hover:text-red-300" data-index="${index}">
-              <i class="fas fa-trash"></i>
-            </button>
-          ` : ''}
         `;
-        songElement.addEventListener('click', (e) => {
-          if (e.target.closest('.delete-song')) {
-            deleteSong(index);
-          } else {
-            playSong(song, index);
-          }
+        songElement.addEventListener('click', () => {
+          playSong(song, index);
         });
         playlistContainer.appendChild(songElement);
       });
-
-      // Event Listener untuk Ubah Foto Artis
-      if (isAdmin) {
-        document.getElementById('editArtistPhoto').addEventListener('click', () => {
-          const newPhoto = prompt('Masukkan URL foto artis baru:');
-          if (newPhoto) {
-            playlist = playlist.map(song => {
-              if (song.artist === artist) {
-                return { ...song, artistPhoto: newPhoto };
-              }
-              return song;
-            });
-            localStorage.setItem('playlist', JSON.stringify(playlist));
-            showArtistSongs(artist);
-          }
-        });
-
-        const newArtistPhoto = document.getElementById('newArtistPhoto');
-        newArtistPhoto.addEventListener('change', () => {
-          const file = newArtistPhoto.files[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              playlist = playlist.map(song => {
-                if (song.artist === artist) {
-                  return { ...song, artistPhoto: e.target.result };
-                }
-                return song;
-              });
-              localStorage.setItem('playlist', JSON.stringify(playlist));
-              showArtistSongs(artist);
-            };
-            reader.readAsDataURL(file);
-          }
-        });
-      }
-    }
-
-    // Hapus Lagu
-    function deleteSong(index) {
-      if (confirm(`Yakin ingin menghapus lagu ${currentPlaylist[index].title}?`)) {
-        const song = currentPlaylist[index];
-        playlist = playlist.filter(s => !(s.artist === song.artist && s.title === song.title));
-        localStorage.setItem('playlist', JSON.stringify(playlist));
-        showArtistSongs(song.artist);
-      }
     }
 
     // Mainkan Lagu
-    function playSong(song, index = -1) {
-      if (index !== -1) {
-        currentSongIndex = index;
-      }
+    function playSong(song, index) {
+      currentSongIndex = index;
 
       document.querySelectorAll('#playlist > div.card').forEach(el => {
         el.classList.remove('bg-yellow-400/10');
@@ -968,11 +628,7 @@
     }
 
     function updatePlayPauseButton() {
-      if (isPlaying) {
-        playPauseIcon.className = 'fas fa-pause';
-      } else {
-        playPauseIcon.className = 'fas fa-play';
-      }
+      playPauseIcon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
     }
 
     // Load Lirik
@@ -1238,26 +894,8 @@
       audioPlayer.volume = volumeSlider.value;
     });
 
-    // Login Submit
-    loginSubmit.addEventListener('click', handleLogin);
-    adminPassword.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') handleLogin();
-    });
-
-    // Logout
-    logoutBtn.addEventListener('click', handleLogout);
-
-    // File Upload Handlers
-    songMp3.addEventListener('change', () => handleFileUpload(songMp3, 'mp3', songMp3Name));
-    songLyric.addEventListener('change', () => handleFileUpload(songLyric, 'lyric', songLyricName));
-    songPhoto.addEventListener('change', () => handleFileUpload(songPhoto, 'photo', songPhotoName));
-
-    // Add Song Button
-    addSongBtn.addEventListener('click', addSong);
-
     // Inisialisasi
     initParticles();
-    checkRoute();
     loadArtists();
   </script>
 </body>
