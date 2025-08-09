@@ -83,10 +83,11 @@
     }
 
     /* Lirik Styles */
+    /* Menghapus border, background, dan padding dari setiap baris lirik */
     .lyric-line {
-      padding: 12px 16px;
-      margin: 4px 0;
-      border-radius: 8px;
+      padding: 0; /* Menghilangkan padding */
+      margin: 12px 0; /* Mengatur jarak antar baris */
+      border-radius: 0; /* Menghilangkan radius */
       transition: all 0.3s ease;
       opacity: 0.7;
       font-size: 0.95rem;
@@ -97,8 +98,9 @@
       color: #facc15;
       font-weight: 500;
       opacity: 1;
-      background: rgba(250, 204, 21, 0.1);
-      border-left: 3px solid #facc15;
+      background: none; /* Menghilangkan latar belakang */
+      border-left: 3px solid #facc15; /* Border kiri tetap dipertahankan sebagai penanda */
+      padding-left: 16px; /* Menambahkan padding agar teks tidak terlalu dekat dengan border */
       transform: translateX(4px);
     }
 
@@ -143,8 +145,8 @@
 
     /* Empty State */
     .empty-state {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px dashed rgba(255, 255, 255, 0.15);
+      background: none; /* Menghilangkan background */
+      border: none; /* Menghilangkan border */
       border-radius: 12px;
       padding: 2.5rem;
       text-align: center;
