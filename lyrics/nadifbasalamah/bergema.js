@@ -1,4 +1,4 @@
-const lyrics2 = [
+const lyrics = [
   { time: 3, text: "Aku ingin jadi teman nyamanmu" },
   { time: 9, text: "Tempat kauhilangkan keluh kesahmu" },
   { time: 14, text: "Kita berbincang tak karuan tanpa beban" },
