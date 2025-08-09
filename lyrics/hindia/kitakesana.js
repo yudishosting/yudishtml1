@@ -1,8 +1,8 @@
 var lyrics = [
   { time: 0, text: "[Intro Instrumental]" },
-  { time: 15, text: "Rayakan hari ini" },
-  { time: 18, text: "Besok sisa sengsara" },
-  { time: 22, text: "Belum pulan kau pun di sini" },
+  { time: 35, text: "Rayakan hari ini" },
+  { time: 40, text: "Besok sisa sengsara" },
+  { time: 44, text: "Belum pulan kau pun di sini" },
   { time: 26, text: "Temani diriku" },
   { time: 30, text: "Kita bersandiwara" },
   { time: 34, text: "Bicara tak semestinya" },
