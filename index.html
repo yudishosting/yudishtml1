@@ -215,14 +215,25 @@
 
     /* Tampilan Font Awal Lirik */
     .initial-message {
-      font-size: 1.5rem; /* Ukuran font disamakan */
-      font-weight: 500;  /* Tebal sedang */
+      font-size: 1.5rem;
+      font-weight: 500;
       background: none;
       -webkit-background-clip: unset;
       -webkit-text-fill-color: unset;
-      color: #ffffff; /* Warna disamakan */
+      color: #ffffff;
       line-height: 1.2;
-      font-family: 'Inter', sans-serif; /* Font disamakan */
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Like Button Styles */
+    .like-btn {
+      color: #ccc;
+      transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+    .like-btn.liked {
+      color: #e53e3e;
+      transform: scale(1.1);
     }
 
     /* Responsive Adjustments */
@@ -330,8 +341,12 @@
 
       <footer class="mt-12 pt-6 border-t border-gray-700">
         <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-          <div class="text-gray-300 text-sm">
+          <div class="text-gray-300 text-sm flex items-center space-x-4">
             <p>&copy; 2025 <span class="font-medium text-yellow-400">Yudis</span>. All rights reserved.</p>
+            <p id="visitorCount" class="flex items-center space-x-1">
+              <i class="fas fa-users"></i>
+              <span class="font-medium">0</span>
+            </p>
           </div>
           
           <div class="flex items-center space-x-3">
@@ -358,70 +373,105 @@
     // Data Playlist (Disimpan di localStorage)
     let playlist = JSON.parse(localStorage.getItem('playlist')) || [
       {
+        id: "nina-feast",
         artist: "Nina",
         title: "Feast",
         mp3: "music/nina/feast.mp3",
         lyric: "lyrics/nina/feast.js",
-        artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg"
+        artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg",
+        likes: 0
       },
       {
+        id: "nina-tarot",
         artist: "Nina",
         title: "Tarot",
         mp3: "music/nina/tarot.mp3",
         lyric: "lyrics/nina/tarot.js",
-        artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg"
+        artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg",
+        likes: 0
       },
       {
+        id: "nina-otuan",
         artist: "Nina",
         title: "o,Tuan",
         mp3: "music/nina/otuan.mp3",
         lyric: "lyrics/nina/otuan.js",
-        artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg"
+        artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg",
+        likes: 0
       },
       {
+        id: "hindia-evaluasi",
         artist: "Hindia",
         title: "Evaluasi",
         mp3: "music/hindia/evaluasi.mp3",
         lyric: "lyrics/hindia/evaluasi.js",
-        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg"
+        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg",
+        likes: 0
       },
       {
+        id: "hindia-cincin",
         artist: "Hindia",
         title: "Cincin",
         mp3: "music/hindia/cincin.mp3",
         lyric: "lyrics/hindia/cincin.js",
-        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg"
+        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg",
+        likes: 0
       },
       {
+        id: "hindia-kitakesana",
         artist: "Hindia",
         title: "Kita Kesana",
         mp3: "music/hindia/kitakesana.mp3",
         lyric: "lyrics/hindia/kitakesana.js",
-        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg"
+        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg",
+        likes: 0
       },
       {
+        id: "hindia-everythinguare",
         artist: "Hindia",
         title: "Everything U Are",
         mp3: "music/hindia/everything.mp3",
         lyric: "lyrics/hindia/everything.js",
-        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg"
+        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg",
+        likes: 0
       },
       {
+        id: "nadhif-basalamah-bergema",
         artist: "Nadhif Basalamah",
         title: "Bergema Sampai Selamanya",
         mp3: "music/nadifbasalamah/bergema.mp3",
         lyric: "lyrics/nadifbasalamah/bergema.js",
-        artistPhoto: "https://files.catbox.moe/951vb9.jpeg"
+        artistPhoto: "https://files.catbox.moe/951vb9.jpeg",
+        likes: 0
       },
       {
+        id: "nadhif-basalamah-penjagahati",
         artist: "Nadhif Basalamah",
         title: "Penjaga Hati",
         mp3: "music/nadifbasalamah/penjagahati.mp3",
         lyric: "lyrics/nadifbasalamah/penjagahati.js",
-        artistPhoto: "https://files.catbox.moe/951vb9.jpeg"
+        artistPhoto: "https://files.catbox.moe/951vb9.jpeg",
+        likes: 0
       }
     ];
-
+    
+    // Inisialisasi data likes dari localStorage
+    const likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || {};
+    // Gabungkan data playlist dengan likes dari localStorage
+    playlist = playlist.map(song => ({
+      ...song,
+      likes: likedSongs[song.id] || 0
+    }));
+    
+    // Inisialisasi Visitor Count
+    let visitorCount = parseInt(localStorage.getItem('visitorCount')) || 0;
+    const sessionVisited = sessionStorage.getItem('sessionVisited');
+    if (!sessionVisited) {
+      visitorCount++;
+      localStorage.setItem('visitorCount', visitorCount);
+      sessionStorage.setItem('sessionVisited', 'true');
+    }
+    
     // DOM Elements
     const artistList = document.getElementById('artistList');
     const playlistContainer = document.getElementById('playlist');
@@ -437,6 +487,7 @@
     const currentTimeEl = document.getElementById('currentTime');
     const durationEl = document.getElementById('duration');
     const volumeSlider = document.getElementById('volumeSlider');
+    const visitorCountEl = document.querySelector('#visitorCount span');
 
     // State
     let currentLyrics = [];
@@ -510,19 +561,6 @@
     function loadArtists() {
       artistList.innerHTML = '';
       const artists = getArtists();
-      
-      // Menambahkan pesan "Pilih artis dan musik untuk memulai" di dalam elemen artistList
-      const introMessage = document.createElement('div');
-      introMessage.classList.add('empty-state', 'p-6', 'glass-effect', 'rounded-2xl', 'col-span-full', 'mb-6');
-      introMessage.innerHTML = `
-          <h3 class="initial-message font-['Inter'] text-yellow-400">
-            <i class="fas fa-headphones-alt text-yellow-400 mr-2"></i>
-            Pilih artis dan musik untuk memulai
-          </h3>
-      `;
-      artistList.appendChild(introMessage);
-      
-      // Membuat dan menambahkan kartu artis
       artists.forEach((artistData, index) => {
         const artistElement = document.createElement('div');
         artistElement.classList.add('card', 'p-6', 'fade-in');
@@ -585,25 +623,81 @@
       // Songs List
       currentPlaylist.forEach((song, index) => {
         const songElement = document.createElement('div');
-        songElement.classList.add('card', 'p-4', 'fade-in', 'flex', 'items-center', 'space-x-4', 'cursor-pointer');
+        songElement.classList.add('card', 'p-4', 'fade-in', 'flex', 'items-center', 'space-x-4');
         songElement.style.animationDelay = `${index * 0.1}s`;
         songElement.dataset.songIndex = index;
         songElement.innerHTML = `
-          <div class="text-yellow-400 text-xl">
-            <i class="fas fa-play-circle"></i>
+          <div class="flex-1 flex items-center space-x-4 cursor-pointer" onclick="playSong(currentPlaylist[${index}], ${index})">
+            <div class="text-yellow-400 text-xl">
+              <i class="fas fa-play-circle"></i>
+            </div>
+            <div>
+              <h4 class="text-base font-medium text-white">${song.title}</h4>
+              <p class="text-gray-300 text-sm">${song.artist}</p>
+            </div>
           </div>
-          <div class="flex-1">
-            <h4 class="text-base font-medium text-white">${song.title}</h4>
-            <p class="text-gray-300 text-sm">${song.artist}</p>
-          </div>
-          <div class="text-gray-400 text-sm">
-            ${index + 1}/${currentPlaylist.length}
+          <div class="flex items-center space-x-2">
+            <span class="text-gray-400 text-sm like-count">${song.likes}</span>
+            <button class="like-btn" data-song-id="${song.id}">
+              <i class="${isLiked(song.id) ? 'fas fa-heart liked' : 'far fa-heart'}"></i>
+            </button>
           </div>
         `;
-        songElement.addEventListener('click', () => {
-          playSong(song, index);
+        
+        const likeButton = songElement.querySelector('.like-btn');
+        likeButton.addEventListener('click', () => {
+          toggleLike(song.id);
+          updateLikesDisplay(songElement, song.id);
         });
+
         playlistContainer.appendChild(songElement);
+      });
+    }
+
+    // Toggle Like
+    function toggleLike(songId) {
+      let isSongLiked = isLiked(songId);
+      const song = playlist.find(s => s.id === songId);
+      if (!song) return;
+
+      if (isSongLiked) {
+        likedSongs[songId] = false;
+        song.likes = Math.max(0, song.likes - 1);
+      } else {
+        likedSongs[songId] = true;
+        song.likes++;
+      }
+      
+      localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
+      updateAllLikesDisplay();
+    }
+    
+    function isLiked(songId) {
+      return likedSongs[songId] === true;
+    }
+    
+    function updateLikesDisplay(songElement, songId) {
+      const song = playlist.find(s => s.id === songId);
+      if (!song) return;
+      
+      const likeCountEl = songElement.querySelector('.like-count');
+      const likeBtnIcon = songElement.querySelector('.like-btn i');
+      
+      likeCountEl.textContent = song.likes;
+      if (isLiked(songId)) {
+        likeBtnIcon.className = 'fas fa-heart liked';
+      } else {
+        likeBtnIcon.className = 'far fa-heart';
+      }
+    }
+    
+    function updateAllLikesDisplay() {
+      document.querySelectorAll('#playlist > div.card').forEach(songElement => {
+        const likeButton = songElement.querySelector('.like-btn');
+        if (likeButton) {
+          const songId = likeButton.dataset.songId;
+          updateLikesDisplay(songElement, songId);
+        }
       });
     }
 
@@ -925,11 +1019,15 @@
     volumeSlider.addEventListener('input', () => {
       audioPlayer.volume = volumeSlider.value;
     });
+    
+    // Inisialisasi Tampilan
+    function initializeApp() {
+      initParticles();
+      loadArtists();
+      visitorCountEl.textContent = visitorCount;
+    }
 
-    // Inisialisasi
-    initParticles();
-    loadArtists();
+    initializeApp();
   </script>
 </body>
 </html>
-
