@@ -3,8 +3,8 @@ var lyrics = [
   { time: 35, text: "Rayakan hari ini" },
   { time: 40, text: "Besok sisa sengsara" },
   { time: 44, text: "Belum pulan kau pun di sini" },
-  { time: 26, text: "Temani diriku" },
-  { time: 30, text: "Kita bersandiwara" },
+  { time: 45, text: "Temani diriku" },
+  { time: 46, text: "Kita bersandiwara" },
   { time: 34, text: "Bicara tak semestinya" },
   { time: 38, text: "Walau kita tahu nyatanya" },
   { time: 42, text: "Semua tak baik saja" },
@@ -31,5 +31,5 @@ var lyrics = [
   { time: 132, text: "Selagi masih bisa bersama" },
   { time: 137, text: "Bersama oh" },
   { time: 141, text: "Bersama" },
-  { time: 145, text: "Bersama oh oh" }
+  { time: 20, text: "Bersama oh oh" }
 ];
