@@ -7,82 +7,181 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
     
     * {
       font-family: 'Poppins', sans-serif;
     }
     
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #667eea 50%, #764ba2 75%, #f093fb 100%);
+      background-size: 300% 300%;
+      animation: gradientMove 15s ease infinite;
       min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    @keyframes gradientMove {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    /* Animated Background Particles */
+    .particle {
+      position: fixed;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: particleFloat 20s linear infinite;
+      z-index: 1;
+    }
+    
+    @keyframes particleFloat {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(360deg);
+        opacity: 0;
+      }
     }
     
     .glass-effect {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(30px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 35px 80px rgba(0, 0, 0, 0.12), 
+                  0 15px 35px rgba(0, 0, 0, 0.1),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      position: relative;
+      z-index: 10;
+    }
+    
+    .glass-effect::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%);
+      border-radius: inherit;
+      z-index: -1;
     }
     
     .card-gradient {
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card-gradient::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #667eea);
+      background-size: 300% 300%;
+      animation: borderGlow 4s ease infinite;
+      z-index: -1;
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .card-gradient:hover::before {
+      opacity: 1;
+    }
+    
+    @keyframes borderGlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
     
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
     
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(251, 191, 36, 0.3); }
+      50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(251, 191, 36, 0.6); }
     }
     
     .fade-in {
-      animation: fadeIn 0.6s ease-out;
+      animation: fadeIn 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
     }
     
     .pulse-animation {
-      animation: pulse 2s infinite;
+      animation: pulse 3s ease-in-out infinite;
     }
     
     ::-webkit-scrollbar {
-      width: 8px;
+      width: 10px;
     }
     ::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
     }
     ::-webkit-scrollbar-thumb {
       background: linear-gradient(45deg, #667eea, #764ba2);
-      border-radius: 10px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(45deg, #764ba2, #667eea);
+      background: linear-gradient(45deg, #764ba2, #f093fb);
+      box-shadow: 0 0 15px rgba(240, 147, 251, 0.7);
     }
     
     .lyric-line {
-      padding: 10px 0;
-      transition: all 0.4s ease-in-out;
-      opacity: 0.6;
-      border-radius: 8px;
-      margin: 2px 0;
-      padding-left: 16px;
+      padding: 12px 0;
+      transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+      opacity: 0.5;
+      border-radius: 12px;
+      margin: 4px 0;
+      padding-left: 20px;
+      position: relative;
     }
     
     .lyric-line.current {
       color: #fbbf24;
-      font-weight: 600;
-      transform: translateX(10px) scale(1.02);
+      font-weight: 700;
+      transform: translateX(15px) scale(1.03);
       opacity: 1;
-      background: rgba(251, 191, 36, 0.1);
-      border-left: 4px solid #fbbf24;
+      background: linear-gradient(90deg, rgba(251, 191, 36, 0.15) 0%, rgba(251, 191, 36, 0.05) 100%);
+      border-left: 5px solid #fbbf24;
+      box-shadow: 0 4px 20px rgba(251, 191, 36, 0.3);
+    }
+    
+    .lyric-line.current::before {
+      content: '♪';
+      position: absolute;
+      left: -15px;
+      color: #fbbf24;
+      animation: noteFloat 2s ease-in-out infinite;
+    }
+    
+    @keyframes noteFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
     }
     
     .lyric-line.passed {
       opacity: 0.3;
-      color: rgba(255, 255, 255, 0.5);
+      color: rgba(255, 255, 255, 0.4);
+      transform: translateX(-5px) scale(0.98);
     }
     
     .lyric-line.upcoming {
@@ -90,74 +189,145 @@
       color: rgba(255, 255, 255, 0.8);
     }
     
+    .artist-card {
+      transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+      transform-origin: center;
+      cursor: pointer;
+    }
+    
     .artist-card:hover {
-      transform: translateY(-8px) scale(1.03);
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      transform: translateY(-12px) scale(1.05) rotateY(5deg);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.08));
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25),
+                  0 0 50px rgba(102, 126, 234, 0.3);
+    }
+    
+    .artist-card:hover .artist-photo {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 15px 40px rgba(251, 191, 36, 0.4);
+    }
+    
+    .song-card {
+      transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
     }
     
     .song-card:hover {
-      transform: translateY(-3px);
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+      transform: translateY(-5px) translateX(5px);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2),
+                  0 0 30px rgba(102, 126, 234, 0.2);
+    }
+    
+    .song-card:hover .play-icon {
+      color: #f093fb;
+      transform: scale(1.2) rotate(10deg);
+      filter: drop-shadow(0 0 10px rgba(240, 147, 251, 0.8));
     }
     
     .contact-icon {
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
     }
     
     .contact-icon:hover {
-      transform: scale(1.1);
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .contact-icon::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+    
+    .contact-icon:hover::before {
+      left: 100%;
     }
     
     .floating-music-note {
       position: absolute;
-      animation: float 6s ease-in-out infinite;
-      opacity: 0.08;
-      font-size: 1.5rem;
+      animation: musicFloat 8s ease-in-out infinite;
+      opacity: 0.06;
+      font-size: 2rem;
       color: white;
+      filter: blur(0.5px);
     }
     
-    @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-15px) rotate(180deg); }
+    @keyframes musicFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+      25% { transform: translateY(-15px) rotate(90deg) scale(1.1); }
+      50% { transform: translateY(-25px) rotate(180deg) scale(0.9); }
+      75% { transform: translateY(-15px) rotate(270deg) scale(1.1); }
     }
     
     .control-btn {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
     }
     
     .control-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3),
+                  0 0 30px rgba(102, 126, 234, 0.4);
+      border-color: rgba(102, 126, 234, 0.5);
     }
     
     .control-btn:active {
-      transform: translateY(0px) scale(0.95);
+      transform: translateY(-2px) scale(0.98);
+    }
+    
+    .control-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: radial-gradient(circle, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
+      transition: all 0.3s ease;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
+    .control-btn:hover::before {
+      width: 100px;
+      height: 100px;
     }
     
     .now-playing-text {
-      background: linear-gradient(270deg, #fbbf24, #f59e0b, #fbbf24);
-      background-size: 200% 200%;
-      animation: gradientShift 3s ease infinite;
+      background: linear-gradient(270deg, #fbbf24 0%, #f093fb 25%, #667eea 50%, #764ba2 75%, #fbbf24 100%);
+      background-size: 400% 400%;
+      animation: textGradient 4s ease infinite;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      font-weight: 700;
     }
     
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    @keyframes textGradient {
+      0%, 100% { background-position: 0% 50%; }
+      25% { background-position: 100% 50%; }
+      50% { background-position: 200% 50%; }
+      75% { background-position: 300% 50%; }
     }
     
     .grid-responsive {
       display: grid;
-      gap: 1.5rem;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
     
     @media (min-width: 768px) {
@@ -173,34 +343,115 @@
     }
     
     .empty-state {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 2px dashed rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(15px);
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      transition: all 0.3s ease;
+    }
+    
+    .empty-state:hover {
+      border-color: rgba(102, 126, 234, 0.3);
+      background: rgba(102, 126, 234, 0.05);
+    }
+    
+    /* Loading Animation */
+    .loading-spinner {
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Music Visualizer Effect */
+    .music-visualizer {
+      display: flex;
+      align-items: end;
+      height: 30px;
+      gap: 3px;
+      margin: 0 10px;
+    }
+    
+    .visualizer-bar {
+      width: 3px;
+      background: linear-gradient(to top, #667eea, #f093fb);
+      border-radius: 2px;
+      animation: visualize 1.5s ease-in-out infinite;
+    }
+    
+    .visualizer-bar:nth-child(1) { animation-delay: 0.1s; }
+    .visualizer-bar:nth-child(2) { animation-delay: 0.2s; }
+    .visualizer-bar:nth-child(3) { animation-delay: 0.3s; }
+    .visualizer-bar:nth-child(4) { animation-delay: 0.4s; }
+    .visualizer-bar:nth-child(5) { animation-delay: 0.5s; }
+    
+    @keyframes visualize {
+      0%, 100% { height: 5px; }
+      50% { height: 25px; }
+    }
+    
+    /* Glow Effect */
+    .glow-effect {
+      box-shadow: 0 0 20px rgba(102, 126, 234, 0.3),
+                  0 0 40px rgba(102, 126, 234, 0.2),
+                  0 0 60px rgba(102, 126, 234, 0.1);
+    }
+    
+    /* Header Animation */
+    .header-title {
+      background: linear-gradient(45deg, #fbbf24, #f093fb, #667eea, #764ba2);
+      background-size: 300% 300%;
+      animation: headerGradient 6s ease infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(251, 191, 36, 0.3);
+    }
+    
+    @keyframes headerGradient {
+      0%, 100% { background-position: 0% 50%; }
+      33% { background-position: 100% 0%; }
+      66% { background-position: 100% 100%; }
     }
   </style>
 </head>
 <body class="min-h-screen p-4 lg:p-6">
+  <!-- Animated Background Particles -->
+  <div id="particles"></div>
+
   <!-- Floating Music Notes -->
   <div class="floating-music-note" style="top: 15%; left: 8%;"><i class="fas fa-music"></i></div>
   <div class="floating-music-note" style="top: 25%; right: 12%; animation-delay: -2s;"><i class="fas fa-musical-note"></i></div>
   <div class="floating-music-note" style="bottom: 20%; left: 15%; animation-delay: -4s;"><i class="fas fa-music"></i></div>
   <div class="floating-music-note" style="bottom: 30%; right: 8%; animation-delay: -1s;"><i class="fas fa-musical-note"></i></div>
+  <div class="floating-music-note" style="top: 45%; left: 25%; animation-delay: -3s;"><i class="fas fa-compact-disc"></i></div>
+  <div class="floating-music-note" style="bottom: 45%; right: 25%; animation-delay: -5s;"><i class="fas fa-headphones"></i></div>
 
-  <div class="container max-w-6xl mx-auto">
+  <div class="container max-w-7xl mx-auto">
     <!-- Main Container -->
     <div class="glass-effect rounded-3xl p-6 lg:p-8 relative overflow-hidden">
       <!-- Header -->
-      <div class="text-center mb-8">
-        <h1 class="text-4xl lg:text-5xl font-bold text-white mb-4 pulse-animation">
-          <i class="fas fa-headphones mr-3 text-yellow-400"></i>
+      <div class="text-center mb-10">
+        <h1 class="text-4xl lg:text-6xl font-black text-white mb-4 pulse-animation header-title">
+          <i class="fas fa-headphones mr-4 text-yellow-400"></i>
           Playlist Musik Favorit
         </h1>
-        <p class="text-white/80 text-lg">Koleksi musik pilihan terbaik</p>
+        <p class="text-white/90 text-lg lg:text-xl font-medium">Koleksi musik pilihan terbaik dengan kualitas audio premium</p>
+        <div class="mt-4 flex justify-center">
+          <div class="music-visualizer">
+            <div class="visualizer-bar"></div>
+            <div class="visualizer-bar"></div>
+            <div class="visualizer-bar"></div>
+            <div class="visualizer-bar"></div>
+            <div class="visualizer-bar"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Back Button -->
-      <button id="backButton" class="hidden mb-6 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full hover:from-purple-600 hover:to-pink-600 transition duration-300 font-semibold shadow-lg">
-        <i class="fas fa-arrow-left mr-2"></i>
+      <button id="backButton" class="hidden mb-8 px-8 py-4 bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 text-white rounded-full hover:from-purple-700 hover:via-pink-600 hover:to-purple-700 transition-all duration-500 font-bold shadow-2xl glow-effect transform hover:scale-105">
+        <i class="fas fa-arrow-left mr-3"></i>
         Kembali ke Daftar Artis
       </button>
 
@@ -208,63 +459,63 @@
       <div id="artistList" class="grid-responsive"></div>
 
       <!-- Playlist -->
-      <div id="playlist" class="hidden space-y-4"></div>
+      <div id="playlist" class="hidden space-y-6"></div>
 
       <!-- Audio Player (Hidden) -->
       <audio id="audioPlayer" class="hidden"></audio>
 
       <!-- Music Controls -->
-      <div id="musicControls" class="hidden mt-8 text-center">
-        <div class="glass-effect rounded-2xl p-6 mb-6">
-          <div id="nowPlaying" class="text-lg font-semibold mb-6 now-playing-text"></div>
+      <div id="musicControls" class="hidden mt-10 text-center">
+        <div class="glass-effect rounded-3xl p-8 mb-8 glow-effect">
+          <div id="nowPlaying" class="text-xl lg:text-2xl font-bold mb-8 now-playing-text"></div>
           
           <!-- Elegant Control Buttons -->
-          <div class="flex items-center justify-center space-x-4">
-            <button onclick="playPreviousSong()" class="control-btn w-12 h-12 rounded-full text-white flex items-center justify-center">
-              <i class="fas fa-step-backward text-lg"></i>
+          <div class="flex items-center justify-center space-x-6">
+            <button onclick="playPreviousSong()" class="control-btn w-16 h-16 rounded-full text-white flex items-center justify-center text-xl hover:text-purple-300">
+              <i class="fas fa-step-backward"></i>
             </button>
             
-            <button id="playPauseBtn" onclick="togglePlayPause()" class="control-btn w-16 h-16 rounded-full text-white flex items-center justify-center text-xl">
+            <button id="playPauseBtn" onclick="togglePlayPause()" class="control-btn w-20 h-20 rounded-full text-white flex items-center justify-center text-2xl hover:text-pink-300">
               <i id="playPauseIcon" class="fas fa-play"></i>
             </button>
             
-            <button onclick="playNextSongManual()" class="control-btn w-12 h-12 rounded-full text-white flex items-center justify-center">
-              <i class="fas fa-step-forward text-lg"></i>
+            <button onclick="playNextSongManual()" class="control-btn w-16 h-16 rounded-full text-white flex items-center justify-center text-xl hover:text-blue-300">
+              <i class="fas fa-step-forward"></i>
             </button>
           </div>
         </div>
       </div>
 
       <!-- Lyrics -->
-      <div id="lyrics" class="mt-8 p-6 glass-effect rounded-2xl text-white font-medium text-base leading-relaxed max-h-96 overflow-y-auto">
-        <div class="empty-state rounded-xl p-8 text-center">
-          <i class="fas fa-headphones text-4xl text-white/30 mb-4"></i>
-          <p class="text-white/60">Pilih artis dan lagu untuk memulai</p>
+      <div id="lyrics" class="mt-10 p-8 glass-effect rounded-3xl text-white font-medium text-base lg:text-lg leading-relaxed max-h-96 overflow-y-auto">
+        <div class="empty-state rounded-2xl p-10 text-center">
+          <i class="fas fa-headphones text-5xl text-white/20 mb-6"></i>
+          <p class="text-white/60 text-lg">Pilih artis dan lagu untuk memulai perjalanan musik</p>
         </div>
       </div>
 
       <!-- Footer with Contact -->
-      <footer class="mt-12 pt-8 border-t border-white/20">
-        <div class="flex flex-col lg:flex-row items-center justify-between space-y-4 lg:space-y-0">
+      <footer class="mt-16 pt-10 border-t border-white/20">
+        <div class="flex flex-col lg:flex-row items-center justify-between space-y-6 lg:space-y-0">
           <div class="text-white/80">
-            <p class="text-sm">&copy; 2025 <span class="font-semibold text-yellow-400">Yudis</span>. All rights reserved.</p>
+            <p class="text-base font-medium">&copy; 2025 <span class="font-bold text-yellow-400 text-lg">Yudis</span>. All rights reserved.</p>
           </div>
           
-          <div class="flex items-center space-x-4">
-            <p class="text-white/80 text-sm font-medium">Contact Me:</p>
+          <div class="flex items-center space-x-6">
+            <p class="text-white/80 text-lg font-semibold">Contact Me:</p>
             
             <!-- Instagram -->
             <a href="https://instagram.com/yudis_299" target="_blank" 
-               class="contact-icon flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-full text-white hover:shadow-lg">
-              <i class="fab fa-instagram text-lg"></i>
-              <span class="font-medium text-sm">@yudis_299</span>
+               class="contact-icon flex items-center space-x-3 bg-gradient-to-r from-purple-600 to-pink-500 px-6 py-3 rounded-full text-white hover:shadow-2xl transform hover:scale-110">
+              <i class="fab fa-instagram text-xl"></i>
+              <span class="font-semibold">@yudis_299</span>
             </a>
             
             <!-- WhatsApp -->
             <a href="https://wa.me/6285124039070" target="_blank" 
-               class="contact-icon flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-500 px-4 py-2 rounded-full text-white hover:shadow-lg">
-              <i class="fab fa-whatsapp text-lg"></i>
-              <span class="font-medium text-sm">WhatsApp</span>
+               class="contact-icon flex items-center space-x-3 bg-gradient-to-r from-green-600 to-emerald-500 px-6 py-3 rounded-full text-white hover:shadow-2xl transform hover:scale-110">
+              <i class="fab fa-whatsapp text-xl"></i>
+              <span class="font-semibold">WhatsApp</span>
             </a>
           </div>
         </div>
@@ -295,8 +546,6 @@
         lyric: "lyrics/nina/otuan.js",
         artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg"
       },
-      
-//===============================================//
       {
         artist: "Hindia",
         title: "Evaluasi",
@@ -318,8 +567,6 @@
         lyric: "lyrics/hindia/kitakesana.js",
         artistPhoto: "https://files.catbox.moe/ln8c0r.jpg"
       },
-      
-//===============================================//
       {
         artist: "Nadhif Basalamah",
         title: "Bergema Sampai Selamanya",
@@ -352,6 +599,21 @@
     let currentSongIndex = -1;
     let isPlaying = false;
 
+    // Create animated particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.width = particle.style.height = Math.random() * 4 + 2 + 'px';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+        particlesContainer.appendChild(particle);
+      }
+    }
+
     function getArtists() {
       const artistsData = {};
       playlist.forEach(song => {
@@ -370,22 +632,24 @@
     function loadArtists() {
       artistList.innerHTML = '';
       const artists = getArtists();
-      artists.forEach(artistData => {
+      artists.forEach((artistData, index) => {
         const artistElement = document.createElement('div');
-        artistElement.classList.add('artist-card', 'card-gradient', 'p-6', 'rounded-2xl', 'cursor-pointer', 'transition-all', 'duration-500', 'fade-in', 'text-center', 'group');
+        artistElement.classList.add('artist-card', 'card-gradient', 'p-8', 'rounded-3xl', 'cursor-pointer', 'transition-all', 'duration-500', 'fade-in', 'text-center', 'group');
+        artistElement.style.animationDelay = (index * 0.1) + 's';
         artistElement.innerHTML = `
           ${artistData.photo ? `
-            <div class="mb-4 flex justify-center">
+            <div class="mb-6 flex justify-center">
               <img src="${artistData.photo}" alt="${artistData.name}" 
-                   class="w-20 h-20 lg:w-24 lg:h-24 rounded-full object-cover border-3 border-yellow-400/50 shadow-xl group-hover:scale-110 transition-transform duration-300">
+                   class="artist-photo w-24 h-24 lg:w-32 lg:h-32 rounded-full object-cover border-4 border-yellow-400/60 shadow-2xl transition-all duration-300">
             </div>
           ` : `
-            <div class="text-4xl mb-4 text-yellow-400 group-hover:scale-110 transition-transform duration-300">
+            <div class="text-5xl mb-6 text-yellow-400 transition-transform duration-300 group-hover:scale-110">
               <i class="fas fa-user-music"></i>
             </div>
           `}
-          <h3 class="text-xl font-semibold text-white mb-2">${artistData.name}</h3>
-          <p class="text-white/70 text-sm">${artistData.songCount} lagu</p>
+          <h3 class="text-xl lg:text-2xl font-bold text-white mb-3">${artistData.name}</h3>
+          <p class="text-white/80 text-base font-medium">${artistData.songCount} lagu premium</p>
+          <div class="mt-4 w-16 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full mx-auto transform scale-0 group-hover:scale-100 transition-transform duration-300"></div>
         `;
         artistElement.addEventListener('click', () => showArtistSongs(artistData.name));
         artistList.appendChild(artistElement);
@@ -403,25 +667,35 @@
       
       // Artist Header dengan foto
       const artistHeader = document.createElement('div');
-      artistHeader.classList.add('text-center', 'mb-8', 'fade-in');
+      artistHeader.classList.add('text-center', 'mb-10', 'fade-in');
       
       const artistPhoto = currentPlaylist[0]?.artistPhoto;
       artistHeader.innerHTML = `
-        <div class="flex flex-col items-center space-y-4">
+        <div class="flex flex-col items-center space-y-6">
           ${artistPhoto ? `
             <div class="relative">
               <img src="${artistPhoto}" alt="${artist}" 
-                   class="w-32 h-32 lg:w-40 lg:h-40 rounded-full object-cover border-4 border-yellow-400/50 shadow-2xl hover:scale-105 transition-transform duration-300">
-              <div class="absolute inset-0 rounded-full bg-gradient-to-t from-black/20 to-transparent"></div>
+                   class="w-40 h-40 lg:w-48 lg:h-48 rounded-full object-cover border-6 border-yellow-400/60 shadow-2xl hover:scale-105 transition-all duration-500 glow-effect">
+              <div class="absolute inset-0 rounded-full bg-gradient-to-t from-black/30 to-transparent"></div>
+              <div class="absolute -inset-2 rounded-full bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 hover:opacity-20 transition-opacity duration-500"></div>
             </div>
           ` : `
-            <div class="w-32 h-32 lg:w-40 lg:h-40 rounded-full bg-gradient-to-br from-yellow-400/30 to-purple-500/30 flex items-center justify-center border-4 border-yellow-400/50 shadow-2xl">
-              <i class="fas fa-user-music text-4xl text-white"></i>
+            <div class="w-40 h-40 lg:w-48 lg:h-48 rounded-full bg-gradient-to-br from-yellow-400/30 via-purple-500/30 to-pink-400/30 flex items-center justify-center border-6 border-yellow-400/60 shadow-2xl glow-effect">
+              <i class="fas fa-user-music text-6xl text-white"></i>
             </div>
           `}
           <div>
-            <h2 class="text-3xl lg:text-4xl font-bold text-white mb-2">${artist}</h2>
-            <p class="text-white/70 text-lg">${currentPlaylist.length} lagu tersedia</p>
+            <h2 class="text-4xl lg:text-5xl font-black text-white mb-4 header-title">${artist}</h2>
+            <p class="text-white/80 text-xl font-semibold">${currentPlaylist.length} lagu tersedia</p>
+            <div class="mt-4 flex justify-center">
+              <div class="music-visualizer">
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+                <div class="visualizer-bar"></div>
+              </div>
+            </div>
           </div>
         </div>
       `;
@@ -430,18 +704,20 @@
       // Songs List
       currentPlaylist.forEach((song, index) => {
         const songElement = document.createElement('div');
-        songElement.classList.add('song-card', 'card-gradient', 'p-5', 'rounded-xl', 'cursor-pointer', 'transition-all', 'duration-300', 'fade-in', 'flex', 'items-center', 'space-x-4', 'group');
+        songElement.classList.add('song-card', 'card-gradient', 'p-6', 'rounded-2xl', 'cursor-pointer', 'transition-all', 'duration-300', 'fade-in', 'flex', 'items-center', 'space-x-6', 'group');
+        songElement.style.animationDelay = ((index + 1) * 0.1) + 's';
         songElement.innerHTML = `
-          <div class="text-2xl text-yellow-400 group-hover:scale-110 transition-transform duration-300">
+          <div class="play-icon text-3xl text-yellow-400 transition-all duration-300">
             <i class="fas fa-play-circle"></i>
           </div>
           <div class="flex-1">
-            <h4 class="text-lg font-semibold text-white">${song.title}</h4>
-            <p class="text-white/70 text-sm">${song.artist}</p>
+            <h4 class="text-xl font-bold text-white mb-1">${song.title}</h4>
+            <p class="text-white/70 text-base font-medium">${song.artist}</p>
           </div>
-          <div class="text-white/50 text-sm">
+          <div class="text-white/60 text-base font-semibold">
             ${index + 1}/${currentPlaylist.length}
           </div>
+          <div class="w-2 h-12 bg-gradient-to-b from-purple-400 to-pink-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         `;
         songElement.dataset.songIndex = index;
         songElement.addEventListener('click', () => playSong(song, index));
@@ -456,21 +732,22 @@
       
       // Update visual selection
       document.querySelectorAll('#playlist > div.song-card').forEach(el => {
-        el.classList.remove('bg-gradient-to-r', 'from-yellow-400/20', 'to-orange-400/20');
+        el.classList.remove('bg-gradient-to-r', 'from-yellow-400/20', 'via-purple-400/20', 'to-pink-400/20');
         el.classList.add('card-gradient');
       });
       
       const currentSongElement = document.querySelector(`[data-song-index="${currentSongIndex}"]`);
       if (currentSongElement) {
         currentSongElement.classList.remove('card-gradient');
-        currentSongElement.classList.add('bg-gradient-to-r', 'from-yellow-400/20', 'to-orange-400/20');
+        currentSongElement.classList.add('bg-gradient-to-r', 'from-yellow-400/20', 'via-purple-400/20', 'to-pink-400/20');
+        currentSongElement.style.boxShadow = '0 0 30px rgba(251, 191, 36, 0.3)';
       }
 
       audioPlayer.src = song.mp3;
       audioPlayer.play().catch(error => {
         console.error('Gagal memutar audio:', error);
         nowPlaying.innerHTML = `
-          <i class="fas fa-exclamation-triangle mr-2 text-red-400"></i>
+          <i class="fas fa-exclamation-triangle mr-3 text-red-400"></i>
           Gagal memutar lagu. Pastikan file audio tersedia.
         `;
       });
@@ -480,9 +757,19 @@
       musicControls.classList.remove('hidden');
       
       nowPlaying.innerHTML = `
-        <i class="fas fa-music mr-2"></i>
-        Sedang diputar: <span class="font-bold">${song.artist} - ${song.title}</span>
-        <br><span class="text-white/70 text-sm">(${currentSongIndex + 1}/${currentPlaylist.length})</span>
+        <div class="flex items-center justify-center mb-2">
+          <div class="music-visualizer mr-4">
+            <div class="visualizer-bar"></div>
+            <div class="visualizer-bar"></div>
+            <div class="visualizer-bar"></div>
+            <div class="visualizer-bar"></div>
+            <div class="visualizer-bar"></div>
+          </div>
+          <i class="fas fa-music mr-3"></i>
+          Sedang diputar
+        </div>
+        <div class="text-2xl font-black">${song.artist} - ${song.title}</div>
+        <div class="text-white/70 text-lg mt-2">Track ${currentSongIndex + 1} dari ${currentPlaylist.length}</div>
       `;
       
       loadLyrics(song.lyric);
@@ -509,9 +796,9 @@
 
     function loadLyrics(lyricPath) {
       lyricsContainer.innerHTML = `
-        <div class="text-center py-8">
-          <i class="fas fa-spinner fa-spin text-2xl text-yellow-400 mb-4"></i>
-          <p class="text-white/80">Memuat lirik...</p>
+        <div class="text-center py-10">
+          <i class="fas fa-spinner loading-spinner text-3xl text-yellow-400 mb-6"></i>
+          <p class="text-white/80 text-lg">Memuat lirik dengan kualitas terbaik...</p>
         </div>
       `;
       const oldScript = document.getElementById('lyricScript');
@@ -533,27 +820,27 @@
             startAutoScroll();
           } else {
             lyricsContainer.innerHTML = `
-              <div class="empty-state rounded-xl p-8 text-center">
-                <i class="fas fa-exclamation-triangle text-2xl text-orange-400 mb-4"></i>
-                <p class="text-white/80">Format lirik tidak valid.</p>
+              <div class="empty-state rounded-2xl p-10 text-center">
+                <i class="fas fa-exclamation-triangle text-3xl text-orange-400 mb-6"></i>
+                <p class="text-white/80 text-lg">Format lirik tidak valid.</p>
               </div>
             `;
           }
         } else {
           lyricsContainer.innerHTML = `
-            <div class="empty-state rounded-xl p-8 text-center">
-              <i class="fas fa-times-circle text-2xl text-red-400 mb-4"></i>
-              <p class="text-white/80">Lirik tidak valid.</p>
+            <div class="empty-state rounded-2xl p-10 text-center">
+              <i class="fas fa-times-circle text-3xl text-red-400 mb-6"></i>
+              <p class="text-white/80 text-lg">Lirik tidak valid.</p>
             </div>
           `;
         }
       };
       script.onerror = () => {
         lyricsContainer.innerHTML = `
-          <div class="empty-state rounded-xl p-8 text-center">
-            <i class="fas fa-exclamation-circle text-2xl text-red-400 mb-4"></i>
-            <p class="text-white/80">Gagal memuat lirik.</p>
-            <p class="text-white/60 text-sm mt-2">${lyricPath}</p>
+          <div class="empty-state rounded-2xl p-10 text-center">
+            <i class="fas fa-exclamation-circle text-3xl text-red-400 mb-6"></i>
+            <p class="text-white/80 text-lg">Gagal memuat lirik.</p>
+            <p class="text-white/60 text-base mt-3">${lyricPath}</p>
           </div>
         `;
       };
@@ -564,9 +851,9 @@
       lyricsContainer.innerHTML = '';
       if (!currentLyrics || !Array.isArray(currentLyrics)) {
         lyricsContainer.innerHTML = `
-          <div class="empty-state rounded-xl p-8 text-center">
-            <i class="fas fa-music text-2xl text-white/50 mb-4"></i>
-            <p class="text-white/80">Tidak ada lirik untuk ditampilkan.</p>
+          <div class="empty-state rounded-2xl p-10 text-center">
+            <i class="fas fa-music text-3xl text-white/50 mb-6"></i>
+            <p class="text-white/80 text-lg">Tidak ada lirik untuk ditampilkan.</p>
           </div>
         `;
         return;
@@ -671,14 +958,17 @@
         }, 1000);
       } else if (currentPlaylist.length > 0) {
         nowPlaying.innerHTML = `
-          <i class="fas fa-check-circle mr-2 text-green-400"></i>
-          Playlist selesai - Semua lagu telah diputar
+          <div class="flex items-center justify-center">
+            <i class="fas fa-check-circle mr-3 text-green-400 text-2xl"></i>
+            <span class="text-xl">Playlist selesai - Semua lagu telah diputar</span>
+          </div>
         `;
         musicControls.classList.add('hidden');
         currentSongIndex = -1;
         document.querySelectorAll('#playlist > div.song-card').forEach(el => {
-          el.classList.remove('bg-gradient-to-r', 'from-yellow-400/20', 'to-orange-400/20');
+          el.classList.remove('bg-gradient-to-r', 'from-yellow-400/20', 'via-purple-400/20', 'to-pink-400/20');
           el.classList.add('card-gradient');
+          el.style.boxShadow = '';
         });
       }
     }
@@ -711,7 +1001,7 @@
       }
     }
 
-        backButton.addEventListener('click', () => {
+    backButton.addEventListener('click', () => {
       artistList.classList.remove('hidden');
       playlistContainer.classList.add('hidden');
       backButton.classList.add('hidden');
@@ -721,9 +1011,9 @@
       updatePlayPauseButton();
       nowPlaying.textContent = '';
       lyricsContainer.innerHTML = `
-        <div class="empty-state rounded-xl p-8 text-center">
-          <i class="fas fa-music text-4xl text-white/30 mb-4"></i>
-          <p class="text-white/60">Pilih artis dan lagu untuk melihat lirik</p>
+        <div class="empty-state rounded-2xl p-10 text-center">
+          <i class="fas fa-music text-5xl text-white/20 mb-6"></i>
+          <p class="text-white/60 text-lg">Pilih artis dan lagu untuk memulai perjalanan musik</p>
         </div>
       `;
       currentLyrics = [];
@@ -739,6 +1029,7 @@
     });
 
     // Initialize
+    createParticles();
     loadArtists();
   </script>
 </body>
