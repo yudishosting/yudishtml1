@@ -278,12 +278,7 @@
         Kembali ke Daftar Artis
       </button>
 
-      <div id="artistList" class="empty-state p-6 glass-effect rounded-2xl mb-6">
-        <h3 class="initial-message font-['Inter'] text-yellow-400">
-          <i class="fas fa-headphones-alt text-yellow-400 mr-2"></i>
-          Pilih artis dan musik untuk memulai
-        </h3>
-      </div>
+      <div id="artistList" class="grid-responsive"></div>
 
       <div id="playlist" class="hidden space-y-4"></div>
 
@@ -497,19 +492,54 @@
     }
 
     // Load Daftar Artis
-    // Fungsi ini sekarang tidak digunakan lagi karena Anda meminta untuk menghapus daftar artis
     function getArtists() {
-      // Kode ini tidak lagi relevan
-      return []; 
+      const artistsData = {};
+      playlist.forEach(song => {
+        if (!artistsData[song.artist]) {
+          artistsData[song.artist] = {
+            name: song.artist,
+            songCount: 0,
+            photo: song.artistPhoto
+          };
+        }
+        artistsData[song.artist].songCount++;
+      });
+      return Object.values(artistsData);
     }
 
     function loadArtists() {
-      // Kode ini tidak lagi relevan
+      artistList.innerHTML = '';
+      const artists = getArtists();
+      artists.forEach((artistData, index) => {
+        const artistElement = document.createElement('div');
+        artistElement.classList.add('card', 'p-6', 'fade-in');
+        artistElement.style.animationDelay = `${index * 0.1}s`;
+        artistElement.innerHTML = `
+          ${artistData.photo ? `
+            <div class="mb-4 flex justify-center">
+              <img src="${artistData.photo}" alt="${artistData.name}" 
+                   class="w-24 h-24 rounded-full object-cover border-2 border-yellow-400/30 shadow-lg">
+            </div>
+          ` : `
+            <div class="mb-4 flex justify-center">
+              <div class="w-24 h-24 rounded-full bg-yellow-400/10 flex items-center justify-center">
+                <i class="fas fa-user-music text-2xl text-yellow-400"></i>
+              </div>
+            </div>
+          `}
+          <h3 class="text-xl font-medium text-white text-center">${artistData.name}</h3>
+          <p class="text-gray-300 text-sm text-center">${artistData.songCount} lagu</p>
+        `;
+        artistElement.addEventListener('click', () => {
+          showArtistSongs(artistData.name);
+        });
+        artistList.appendChild(artistElement);
+      });
     }
 
-    // Tampilkan Lagu per Artis (tetap dipertahankan untuk fungsionalitas)
+    // Tampilkan Lagu per Artis
     function showArtistSongs(artist) {
-      // artistList.classList.add('hidden'); // Ini juga tidak perlu jika daftar artis sudah tidak ada
+      artistList.classList.add('hidden');
       playlistContainer.classList.remove('hidden');
       backButton.classList.remove('hidden');
       playlistContainer.innerHTML = '';
@@ -839,7 +869,7 @@
 
     // Event Listeners
     backButton.addEventListener('click', () => {
-      // artistList.classList.remove('hidden'); // Ini juga tidak perlu
+      artistList.classList.remove('hidden');
       playlistContainer.classList.add('hidden');
       backButton.classList.add('hidden');
       musicControls.classList.add('hidden');
@@ -885,7 +915,7 @@
 
     // Inisialisasi
     initParticles();
-    // loadArtists(); // Tidak lagi dipanggil
+    loadArtists();
   </script>
 </body>
 </html>
