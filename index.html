@@ -3,216 +3,359 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Playlist musik favorit dengan pengalaman premium dan panel admin">
   <title>Playlist Musik Favorit</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-    
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap');
+
+    /* Reset dan Base Styles */
     * {
-      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
     }
-    
+
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #1e1e4a 0%, #2d2d7a 100%);
       min-height: 100vh;
+      color: #ffffff;
+      overflow-x: hidden;
+      position: relative;
     }
-    
+
+    /* Glassmorphism Effect */
     .glass-effect {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      border-radius: 16px;
     }
-    
-    .card-gradient {
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+
+    /* Card Styles */
+    .card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
       transition: all 0.3s ease;
     }
-    
+
+    .card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Animasi */
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-    }
-    
+
     .fade-in {
-      animation: fadeIn 0.6s ease-out;
+      animation: fadeIn 0.6s ease-out forwards;
     }
-    
-    .pulse-animation {
-      animation: pulse 2s ease-in-out infinite;
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
-    
+
+    /* Scrollbar */
     ::-webkit-scrollbar {
-      width: 8px;
+      width: 6px;
     }
+
     ::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
+      background: transparent;
     }
+
     ::-webkit-scrollbar-thumb {
-      background: linear-gradient(45deg, #667eea, #764ba2);
+      background: rgba(255, 255, 255, 0.2);
       border-radius: 10px;
     }
+
     ::-webkit-scrollbar-thumb:hover {
-      background: linear-gradient(45deg, #764ba2, #667eea);
+      background: rgba(255, 255, 255, 0.3);
     }
-    
+
+    /* Lirik Styles */
     .lyric-line {
-      padding: 10px 0;
-      transition: all 0.3s ease;
-      opacity: 0.6;
+      padding: 12px 16px;
+      margin: 4px 0;
       border-radius: 8px;
-      margin: 2px 0;
-      padding-left: 16px;
+      transition: all 0.3s ease;
+      opacity: 0.7;
+      font-size: 0.95rem;
+      line-height: 1.6;
     }
-    
+
     .lyric-line.current {
-      color: #fbbf24;
-      font-weight: 600;
-      transform: translateX(10px);
+      color: #facc15;
+      font-weight: 500;
       opacity: 1;
-      background: rgba(251, 191, 36, 0.1);
-      border-left: 4px solid #fbbf24;
+      background: rgba(250, 204, 21, 0.1);
+      border-left: 3px solid #facc15;
+      transform: translateX(4px);
     }
-    
+
     .lyric-line.passed {
-      opacity: 0.3;
+      opacity: 0.4;
       color: rgba(255, 255, 255, 0.5);
     }
-    
+
     .lyric-line.upcoming {
-      opacity: 0.7;
-      color: rgba(255, 255, 255, 0.8);
+      opacity: 0.8;
+      color: rgba(255, 255, 255, 0.9);
     }
-    
-    .artist-card {
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .artist-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    }
-    
-    .song-card {
+
+    /* Control Buttons */
+    .control-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
       transition: all 0.3s ease;
-      cursor: pointer;
     }
-    
-    .song-card:hover {
-      transform: translateY(-3px);
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.08));
-    }
-    
-    .contact-icon {
-      transition: transform 0.3s ease;
-    }
-    
-    .contact-icon:hover {
+
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
       transform: scale(1.05);
     }
-    
-    .control-btn {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: all 0.3s ease;
-    }
-    
-    .control-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
-    
+
+    /* Now Playing Text */
     .now-playing-text {
-      background: linear-gradient(270deg, #fbbf24, #f59e0b, #fbbf24);
-      background-size: 200% 200%;
-      animation: gradientShift 3s ease infinite;
+      background: linear-gradient(90deg, #facc15, #fef08a);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      font-weight: 600;
     }
-    
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    
+
+    /* Grid Responsif */
     .grid-responsive {
       display: grid;
       gap: 1.5rem;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     }
-    
-    @media (min-width: 768px) {
+
+    /* Empty State */
+    .empty-state {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    /* Partikel Animasi */
+    #particleCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Loading Animation */
+    .loading {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #facc15, #fef08a);
+      width: 0;
+      transition: width 0.1s linear;
+    }
+
+    /* Volume Slider */
+    .volume-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .volume-slider {
+      -webkit-appearance: none;
+      width: 100px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: #facc15;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    /* Form Input */
+    .form-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: 0.75rem;
+      border-radius: 8px;
+      width: 100%;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      border-color: #facc15;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Responsive Adjustments */
+    @media (min-width: 640px) {
       .grid-responsive {
         grid-template-columns: repeat(2, 1fr);
       }
     }
-    
+
     @media (min-width: 1024px) {
       .grid-responsive {
         grid-template-columns: repeat(3, 1fr);
       }
     }
-    
-    .empty-state {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 2px dashed rgba(255, 255, 255, 0.2);
-    }
 
-    /* Simple floating notes - less resource intensive */
-    .floating-note {
-      position: absolute;
-      opacity: 0.1;
-      animation: float 10s ease-in-out infinite;
-      pointer-events: none;
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-
-    /* Loading animation */
-    .loading {
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    @media (max-width: 640px) {
+      .container {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
-<body class="min-h-screen p-4 lg:p-6">
-  <!-- Simple floating notes -->
-  <div class="floating-note text-2xl text-white" style="top: 10%; left: 5%;"><i class="fas fa-music"></i></div>
-  <div class="floating-note text-2xl text-white" style="top: 20%; right: 10%; animation-delay: -5s;"><i class="fas fa-musical-note"></i></div>
-  <div class="floating-note text-2xl text-white" style="bottom: 15%; left: 15%; animation-delay: -3s;"><i class="fas fa-compact-disc"></i></div>
+<body>
+  <!-- Partikel Latar Belakang -->
+  <canvas id="particleCanvas"></canvas>
 
-  <div class="container max-w-6xl mx-auto">
-    <div class="glass-effect rounded-3xl p-6 lg:p-8 relative overflow-hidden">
+  <!-- Floating Notes -->
+  <div class="absolute text-xl text-yellow-300/10 animate-[float_8s_ease-in-out_infinite]" style="top: 10%; left: 5%;">
+    <i class="fas fa-music"></i>
+  </div>
+  <div class="absolute text-xl text-yellow-300/10 animate-[float_8s_ease-in-out_infinite_-4s]" style="top: 25%; right: 8%;">
+    <i class="fas fa-musical-note"></i>
+  </div>
+  <div class="absolute text-xl text-yellow-300/10 animate-[float_8s_ease-in-out_infinite_-2s]" style="bottom: 15%; left: 10%;">
+    <i class="fas fa-compact-disc"></i>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+    <div class="glass-effect rounded-2xl p-8 max-w-md w-full">
+      <h2 class="text-2xl font-semibold text-white mb-6 font-['Playfair_Display']">Login Admin</h2>
+      <div class="space-y-4">
+        <div>
+          <label class="text-gray-300 text-sm mb-2 block">Username</label>
+          <input id="adminUsername" type="text" class="form-input" placeholder="Masukkan username">
+        </div>
+        <div>
+          <label class="text-gray-300 text-sm mb-2 block">Password</label>
+          <input id="adminPassword" type="password" class="form-input" placeholder="Masukkan password">
+        </div>
+        <div id="loginError" class="text-red-400 text-sm hidden">Username atau password salah</div>
+        <button id="loginSubmit" class="w-full px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium">
+          Login
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="glass-effect rounded-2xl p-6 sm:p-8 lg:p-10 relative z-10">
       <!-- Header -->
-      <div class="text-center mb-8">
-        <h1 class="text-4xl lg:text-5xl font-bold text-white mb-4 pulse-animation">
-          <i class="fas fa-headphones mr-3 text-yellow-400"></i>
-          Playlist Musik Favorit
-        </h1>
-        <p class="text-white/80 text-lg">Koleksi musik pilihan terbaik</p>
+      <div class="flex justify-between items-center mb-10">
+        <div>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 font-['Playfair_Display']">
+            <i class="fas fa-headphones-alt mr-2 text-yellow-400"></i>
+            Playlist Musik Favorit
+          </h1>
+          <p class="text-gray-300 text-base sm:text-lg">Nikmati koleksi musik pilihan dengan pengalaman premium</p>
+        </div>
+        <button id="adminLoginBtn" class="px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium text-sm">
+          <i class="fas fa-user-lock mr-2"></i>
+          Login Admin
+        </button>
+      </div>
+
+      <!-- Admin Panel -->
+      <div id="adminPanel" class="hidden mb-8">
+        <div class="glass-effect rounded-2xl p-6">
+          <h2 class="text-2xl font-semibold text-white mb-6 font-['Playfair_Display']">Panel Admin</h2>
+          <div class="space-y-6">
+            <!-- Form Tambah Lagu -->
+            <div>
+              <h3 class="text-lg font-medium text-white mb-4">Tambah Lagu Baru</h3>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label class="text-gray-300 text-sm mb-2 block">Judul Lagu</label>
+                  <input id="songTitle" type="text" class="form-input" placeholder="Masukkan judul lagu">
+                </div>
+                <div>
+                  <label class="text-gray-300 text-sm mb-2 block">Artis</label>
+                  <input id="songArtist" type="text" class="form-input" placeholder="Masukkan nama artis">
+                </div>
+                <div>
+                  <label class="text-gray-300 text-sm mb-2 block">URL File MP3</label>
+                  <input id="songMp3" type="text" class="form-input" placeholder="Masukkan URL MP3">
+                </div>
+                <div>
+                  <label class="text-gray-300 text-sm mb-2 block">URL File Lirik</label>
+                  <input id="songLyric" type="text" class="form-input" placeholder="Masukkan URL lirik">
+                </div>
+                <div>
+                  <label class="text-gray-300 text-sm mb-2 block">URL Foto Artis</label>
+                  <input id="songPhoto" type="text" class="form-input" placeholder="Masukkan URL foto">
+                </div>
+              </div>
+              <button id="addSongBtn" class="mt-4 px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium">
+                Tambah Lagu
+              </button>
+            </div>
+            <!-- Form Tambah Playlist -->
+            <div>
+              <h3 class="text-lg font-medium text-white mb-4">Tambah Playlist Baru</h3>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label class="text-gray-300 text-sm mb-2 block">Nama Playlist</label>
+                  <input id="playlistName" type="text" class="form-input" placeholder="Masukkan nama playlist">
+                </div>
+              </div>
+              <button id="addPlaylistBtn" class="mt-4 px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium">
+                Tambah Playlist
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Back Button -->
-      <button id="backButton" class="hidden mb-6 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full hover:from-purple-600 hover:to-pink-600 transition duration-300 font-semibold shadow-lg">
+      <button id="backButton" class="hidden mb-6 px-5 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium text-sm">
         <i class="fas fa-arrow-left mr-2"></i>
         Kembali ke Daftar Artis
       </button>
@@ -227,54 +370,68 @@
       <audio id="audioPlayer" class="hidden"></audio>
 
       <!-- Music Controls -->
-      <div id="musicControls" class="hidden mt-8 text-center">
-        <div class="glass-effect rounded-2xl p-6 mb-6">
-          <div id="nowPlaying" class="text-lg font-semibold mb-6 now-playing-text"></div>
+      <div id="musicControls" class="hidden mt-8">
+        <div class="glass-effect rounded-2xl p-6">
+          <div id="nowPlaying" class="text-lg font-medium now-playing-text mb-4"></div>
           
+          <div class="progress-container mb-4" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+          
+          <div class="flex justify-between text-sm text-gray-300 mb-4">
+            <span id="currentTime">0:00</span>
+            <span id="duration">0:00</span>
+          </div>
+
           <div class="flex items-center justify-center space-x-4">
-            <button onclick="playPreviousSong()" class="control-btn w-12 h-12 rounded-full text-white flex items-center justify-center">
-              <i class="fas fa-step-backward text-lg"></i>
+            <button onclick="playPreviousSong()" class="control-btn w-10 h-10 text-white flex items-center justify-center">
+              <i class="fas fa-step-backward text-base"></i>
             </button>
             
-            <button id="playPauseBtn" onclick="togglePlayPause()" class="control-btn w-16 h-16 rounded-full text-white flex items-center justify-center text-xl">
+            <button id="playPauseBtn" onclick="togglePlayPause()" class="control-btn w-14 h-14 text-white flex items-center justify-center text-lg">
               <i id="playPauseIcon" class="fas fa-play"></i>
             </button>
             
-            <button onclick="playNextSongManual()" class="control-btn w-12 h-12 rounded-full text-white flex items-center justify-center">
-              <i class="fas fa-step-forward text-lg"></i>
+            <button onclick="playNextSongManual()" class="control-btn w-10 h-10 text-white flex items-center justify-center">
+              <i class="fas fa-step-forward text-base"></i>
             </button>
+
+            <div class="volume-container">
+              <i class="fas fa-volume-up text-gray-300"></i>
+              <input type="range" min="0" max="1" step="0.01" value="1" class="volume-slider" id="volumeSlider">
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Lyrics -->
-      <div id="lyrics" class="mt-8 p-6 glass-effect rounded-2xl text-white font-medium text-base leading-relaxed max-h-96 overflow-y-auto">
-        <div class="empty-state rounded-xl p-8 text-center">
-          <i class="fas fa-headphones text-4xl text-white/30 mb-4"></i>
-          <p class="text-white/60">Pilih artis dan lagu untuk memulai</p>
+      <div id="lyrics" class="mt-8 p-6 glass-effect rounded-2xl text-white text-base max-h-96 overflow-y-auto">
+        <div class="empty-state">
+          <i class="fas fa-headphones text-3xl text-gray-400 mb-3"></i>
+          <p class="text-gray-300">Pilih artis dan lagu untuk memulai</p>
         </div>
       </div>
 
       <!-- Footer -->
-      <footer class="mt-12 pt-8 border-t border-white/20">
-        <div class="flex flex-col lg:flex-row items-center justify-between space-y-4 lg:space-y-0">
-          <div class="text-white/80">
-            <p class="text-sm">&copy; 2025 <span class="font-semibold text-yellow-400">Yudis</span>. All rights reserved.</p>
+      <footer class="mt-12 pt-6 border-t border-gray-700">
+        <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+          <div class="text-gray-300 text-sm">
+            <p>&copy; 2025 <span class="font-medium text-yellow-400">Yudis</span>. All rights reserved.</p>
           </div>
           
-          <div class="flex items-center space-x-4">
-            <p class="text-white/80 text-sm font-medium">Contact Me:</p>
+          <div class="flex items-center space-x-3">
+            <p class="text-gray-300 text-sm font-medium">Contact Me:</p>
             
             <a href="https://instagram.com/yudis_299" target="_blank" 
-               class="contact-icon flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 rounded-full text-white hover:shadow-lg">
-              <i class="fab fa-instagram text-lg"></i>
-              <span class="font-medium text-sm">@yudis_299</span>
+               class="flex items-center space-x-2 bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg hover:bg-yellow-300 transition-all duration-300">
+              <i class="fab fa-instagram text-base"></i>
+              <span class="text-sm">@yudis_299</span>
             </a>
             
             <a href="https://wa.me/6285124039070" target="_blank" 
-               class="contact-icon flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-500 px-4 py-2 rounded-full text-white hover:shadow-lg">
-              <i class="fab fa-whatsapp text-lg"></i>
-              <span class="font-medium text-sm">WhatsApp</span>
+               class="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all duration-300">
+              <i class="fab fa-whatsapp text-base"></i>
+              <span class="text-sm">WhatsApp</span>
             </a>
           </div>
         </div>
@@ -283,7 +440,8 @@
   </div>
 
   <script>
-    const playlist = [
+    // Data Playlist (Disimpan di localStorage)
+    let playlist = JSON.parse(localStorage.getItem('playlist')) || [
       {
         artist: "Nina",
         title: "Feast",
@@ -342,6 +500,7 @@
       }
     ];
 
+    // DOM Elements
     const artistList = document.getElementById('artistList');
     const playlistContainer = document.getElementById('playlist');
     const audioPlayer = document.getElementById('audioPlayer');
@@ -351,13 +510,136 @@
     const musicControls = document.getElementById('musicControls');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const playPauseIcon = document.getElementById('playPauseIcon');
-    
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+    const currentTimeEl = document.getElementById('currentTime');
+    const durationEl = document.getElementById('duration');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const loginModal = document.getElementById('loginModal');
+    const adminUsername = document.getElementById('adminUsername');
+    const adminPassword = document.getElementById('adminPassword');
+    const loginSubmit = document.getElementById('loginSubmit');
+    const loginError = document.getElementById('loginError');
+    const adminLoginBtn = document.getElementById('adminLoginBtn');
+    const adminPanel = document.getElementById('adminPanel');
+    const addSongBtn = document.getElementById('addSongBtn');
+    const songTitle = document.getElementById('songTitle');
+    const songArtist = document.getElementById('songArtist');
+    const songMp3 = document.getElementById('songMp3');
+    const songLyric = document.getElementById('songLyric');
+    const songPhoto = document.getElementById('songPhoto');
+    const addPlaylistBtn = document.getElementById('addPlaylistBtn');
+    const playlistName = document.getElementById('playlistName');
+
+    // State
     let currentLyrics = [];
     let currentLineIndex = -1;
     let currentPlaylist = [];
     let currentSongIndex = -1;
     let isPlaying = false;
+    let isAdmin = false;
 
+    // Kredensial Admin (Sementara, untuk produksi gunakan backend)
+    const ADMIN_CREDENTIALS = {
+      username: "admin",
+      password: "admin123"
+    };
+
+    // Format Waktu
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
+    // Partikel Animasi
+    function initParticles() {
+      const canvas = document.getElementById('particleCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = [];
+      const particleCount = 50;
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 2 + 1,
+          speed: Math.random() * 0.5 + 0.2
+        });
+      }
+
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(250, 204, 21, 0.2)';
+          ctx.fill();
+          p.y -= p.speed;
+          if (p.y < 0) p.y = canvas.height;
+        });
+        requestAnimationFrame(animateParticles);
+      }
+
+      animateParticles();
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+    }
+
+    // Login Admin
+    function handleLogin() {
+      const username = adminUsername.value.trim();
+      const password = adminPassword.value.trim();
+
+      if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+        isAdmin = true;
+        loginModal.classList.add('hidden');
+        adminPanel.classList.remove('hidden');
+        adminLoginBtn.classList.add('hidden');
+        loginError.classList.add('hidden');
+        adminUsername.value = '';
+        adminPassword.value = '';
+      } else {
+        loginError.classList.remove('hidden');
+      }
+    }
+
+    // Tambah Lagu
+    function addSong() {
+      const title = songTitle.value.trim();
+      const artist = songArtist.value.trim();
+      const mp3 = songMp3.value.trim();
+      const lyric = songLyric.value.trim();
+      const photo = songPhoto.value.trim();
+
+      if (title && artist && mp3 && lyric) {
+        const newSong = {
+          artist,
+          title,
+          mp3,
+          lyric,
+          artistPhoto: photo || 'https://via.placeholder.com/150'
+        };
+        playlist.push(newSong);
+        localStorage.setItem('playlist', JSON.stringify(playlist));
+        loadArtists();
+        songTitle.value = '';
+        songArtist.value = '';
+        songMp3.value = '';
+        songLyric.value = '';
+        songPhoto.value = '';
+        alert('Lagu berhasil ditambahkan!');
+      } else {
+        alert('Harap isi semua kolom yang diperlukan.');
+      }
+    }
+
+    // Load Daftar Artis
     function getArtists() {
       const artistsData = {};
       playlist.forEach(song => {
@@ -376,28 +658,52 @@
     function loadArtists() {
       artistList.innerHTML = '';
       const artists = getArtists();
-      artists.forEach(artistData => {
+      artists.forEach((artistData, index) => {
         const artistElement = document.createElement('div');
-        artistElement.classList.add('artist-card', 'card-gradient', 'p-6', 'rounded-2xl', 'cursor-pointer', 'transition-all', 'duration-300', 'fade-in', 'text-center', 'group');
+        artistElement.classList.add('card', 'p-6', 'fade-in');
+        artistElement.style.animationDelay = `${index * 0.1}s`;
         artistElement.innerHTML = `
           ${artistData.photo ? `
             <div class="mb-4 flex justify-center">
               <img src="${artistData.photo}" alt="${artistData.name}" 
-                   class="w-20 h-20 lg:w-24 lg:h-24 rounded-full object-cover border-3 border-yellow-400/50 shadow-xl group-hover:scale-105 transition-transform duration-300">
+                   class="w-24 h-24 rounded-full object-cover border-2 border-yellow-400/30 shadow-lg">
             </div>
           ` : `
-            <div class="text-4xl mb-4 text-yellow-400 group-hover:scale-105 transition-transform duration-300">
-              <i class="fas fa-user-music"></i>
+            <div class="mb-4 flex justify-center">
+              <div class="w-24 h-24 rounded-full bg-yellow-400/10 flex items-center justify-center">
+                <i class="fas fa-user-music text-2xl text-yellow-400"></i>
+              </div>
             </div>
           `}
-          <h3 class="text-xl font-semibold text-white mb-2">${artistData.name}</h3>
-          <p class="text-white/70 text-sm">${artistData.songCount} lagu</p>
+          <h3 class="text-xl font-medium text-white text-center">${artistData.name}</h3>
+          <p class="text-gray-300 text-sm text-center">${artistData.songCount} lagu</p>
+          ${isAdmin ? `
+            <button class="delete-artist mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-300 font-medium text-sm" data-artist="${artistData.name}">
+              Hapus Artis
+            </button>
+          ` : ''}
         `;
-        artistElement.addEventListener('click', () => showArtistSongs(artistData.name));
+        artistElement.addEventListener('click', (e) => {
+          if (e.target.classList.contains('delete-artist')) {
+            deleteArtist(artistData.name);
+          } else {
+            showArtistSongs(artistData.name);
+          }
+        });
         artistList.appendChild(artistElement);
       });
     }
 
+    // Hapus Artis
+    function deleteArtist(artistName) {
+      if (confirm(`Yakin ingin menghapus semua lagu dari ${artistName}?`)) {
+        playlist = playlist.filter(song => song.artist !== artistName);
+        localStorage.setItem('playlist', JSON.stringify(playlist));
+        loadArtists();
+      }
+    }
+
+    // Tampilkan Lagu per Artis
     function showArtistSongs(artist) {
       artistList.classList.add('hidden');
       playlistContainer.classList.remove('hidden');
@@ -406,69 +712,107 @@
 
       currentPlaylist = playlist.filter(song => song.artist === artist);
       currentSongIndex = -1;
-      
+
       // Artist Header
       const artistHeader = document.createElement('div');
       artistHeader.classList.add('text-center', 'mb-8', 'fade-in');
-      
       const artistPhoto = currentPlaylist[0]?.artistPhoto;
       artistHeader.innerHTML = `
         <div class="flex flex-col items-center space-y-4">
           ${artistPhoto ? `
-            <div class="relative">
-              <img src="${artistPhoto}" alt="${artist}" 
-                   class="w-32 h-32 lg:w-40 lg:h-40 rounded-full object-cover border-4 border-yellow-400/50 shadow-2xl hover:scale-105 transition-transform duration-300">
-            </div>
+            <img src="${artistPhoto}" alt="${artist}" 
+                 class="w-32 h-32 rounded-full object-cover border-2 border-yellow-400/30 shadow-xl">
           ` : `
-            <div class="w-32 h-32 lg:w-40 lg:h-40 rounded-full bg-gradient-to-br from-yellow-400/30 to-purple-500/30 flex items-center justify-center border-4 border-yellow-400/50 shadow-2xl">
-              <i class="fas fa-user-music text-4xl text-white"></i>
+            <div class="w-32 h-32 rounded-full bg-yellow-400/10 flex items-center justify-center">
+              <i class="fas fa-user-music text-3xl text-yellow-400"></i>
             </div>
           `}
           <div>
-            <h2 class="text-3xl lg:text-4xl font-bold text-white mb-2">${artist}</h2>
-            <p class="text-white/70 text-lg">${currentPlaylist.length} lagu tersedia</p>
+            <h2 class="text-2xl sm:text-3xl font-semibold text-white font-['Playfair_Display']">${artist}</h2>
+            <p class="text-gray-300 text-base">${currentPlaylist.length} lagu tersedia</p>
           </div>
+          ${isAdmin ? `
+            <button id="editArtistPhoto" class="mt-4 px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium text-sm">
+              Ubah Foto Artis
+            </button>
+          ` : ''}
         </div>
       `;
       playlistContainer.appendChild(artistHeader);
-      
+
       // Songs List
       currentPlaylist.forEach((song, index) => {
         const songElement = document.createElement('div');
-        songElement.classList.add('song-card', 'card-gradient', 'p-5', 'rounded-xl', 'cursor-pointer', 'transition-all', 'duration-300', 'fade-in', 'flex', 'items-center', 'space-x-4', 'group');
+        songElement.classList.add('card', 'p-4', 'fade-in', 'flex', 'items-center', 'space-x-4', 'cursor-pointer');
+        songElement.style.animationDelay = `${index * 0.1}s`;
         songElement.innerHTML = `
-          <div class="text-2xl text-yellow-400 group-hover:scale-110 transition-transform duration-300">
+          <div class="text-yellow-400 text-xl">
             <i class="fas fa-play-circle"></i>
           </div>
           <div class="flex-1">
-            <h4 class="text-lg font-semibold text-white">${song.title}</h4>
-            <p class="text-white/70 text-sm">${song.artist}</p>
+            <h4 class="text-base font-medium text-white">${song.title}</h4>
+            <p class="text-gray-300 text-sm">${song.artist}</p>
           </div>
-          <div class="text-white/50 text-sm">
+          <div class="text-gray-400 text-sm">
             ${index + 1}/${currentPlaylist.length}
           </div>
+          ${isAdmin ? `
+            <button class="delete-song text-red-400 hover:text-red-300" data-index="${index}">
+              <i class="fas fa-trash"></i>
+            </button>
+          ` : ''}
         `;
-        songElement.dataset.songIndex = index;
-        songElement.addEventListener('click', () => playSong(song, index));
+        songElement.addEventListener('click', (e) => {
+          if (e.target.closest('.delete-song')) {
+            deleteSong(index);
+          } else {
+            playSong(song, index);
+          }
+        });
         playlistContainer.appendChild(songElement);
       });
+
+      // Event Listener untuk Ubah Foto Artis
+      if (isAdmin) {
+        document.getElementById('editArtistPhoto').addEventListener('click', () => {
+          const newPhoto = prompt('Masukkan URL foto artis baru:');
+          if (newPhoto) {
+            playlist = playlist.map(song => {
+              if (song.artist === artist) {
+                return { ...song, artistPhoto: newPhoto };
+              }
+              return song;
+            });
+            localStorage.setItem('playlist', JSON.stringify(playlist));
+            showArtistSongs(artist);
+          }
+        });
+      }
     }
 
+    // Hapus Lagu
+    function deleteSong(index) {
+      if (confirm(`Yakin ingin menghapus lagu ${currentPlaylist[index].title}?`)) {
+        const song = currentPlaylist[index];
+        playlist = playlist.filter(s => !(s.artist === song.artist && s.title === song.title));
+        localStorage.setItem('playlist', JSON.stringify(playlist));
+        showArtistSongs(song.artist);
+      }
+    }
+
+    // Mainkan Lagu
     function playSong(song, index = -1) {
       if (index !== -1) {
         currentSongIndex = index;
       }
-      
-      // Update visual selection
-      document.querySelectorAll('#playlist > div.song-card').forEach(el => {
-        el.classList.remove('bg-gradient-to-r', 'from-yellow-400/20', 'to-orange-400/20');
-        el.classList.add('card-gradient');
+
+      document.querySelectorAll('#playlist > div.card').forEach(el => {
+        el.classList.remove('bg-yellow-400/10');
       });
-      
+
       const currentSongElement = document.querySelector(`[data-song-index="${currentSongIndex}"]`);
       if (currentSongElement) {
-        currentSongElement.classList.remove('card-gradient');
-        currentSongElement.classList.add('bg-gradient-to-r', 'from-yellow-400/20', 'to-orange-400/20');
+        currentSongElement.classList.add('bg-yellow-400/10');
       }
 
       audioPlayer.src = song.mp3;
@@ -483,16 +827,17 @@
       isPlaying = true;
       updatePlayPauseButton();
       musicControls.classList.remove('hidden');
-      
+
       nowPlaying.innerHTML = `
         <i class="fas fa-music mr-2"></i>
-        Sedang diputar: <span class="font-bold">${song.artist} - ${song.title}</span>
-        <br><span class="text-white/70 text-sm">(${currentSongIndex + 1}/${currentPlaylist.length})</span>
+        Sedang diputar: <span class="font-medium">${song.artist} - ${song.title}</span>
+        <br><span class="text-gray-300 text-sm">(${currentSongIndex + 1}/${currentPlaylist.length})</span>
       `;
-      
+
       loadLyrics(song.lyric);
     }
 
+    // Toggle Play/Pause
     function togglePlayPause() {
       if (isPlaying) {
         audioPlayer.pause();
@@ -512,14 +857,15 @@
       }
     }
 
+    // Load Lirik
     function loadLyrics(lyricPath) {
       lyricsContainer.innerHTML = `
         <div class="text-center py-8">
-          <i class="fas fa-spinner loading text-2xl text-yellow-400 mb-4"></i>
-          <p class="text-white/80">Memuat lirik...</p>
+          <i class="fas fa-spinner loading text-xl text-yellow-400 mb-3"></i>
+          <p class="text-gray-300">Memuat lirik...</p>
         </div>
       `;
-      
+
       const oldScript = document.getElementById('lyricScript');
       if (oldScript) oldScript.remove();
 
@@ -533,50 +879,51 @@
             typeof line.time === 'number' && 
             typeof line.text === 'string'
           );
-          
+
           if (currentLyrics.length > 0) {
             displayLyrics();
             startAutoScroll();
           } else {
             lyricsContainer.innerHTML = `
-              <div class="empty-state rounded-xl p-8 text-center">
-                <i class="fas fa-exclamation-triangle text-2xl text-orange-400 mb-4"></i>
-                <p class="text-white/80">Format lirik tidak valid.</p>
+              <div class="empty-state">
+                <i class="fas fa-exclamation-triangle text-xl text-orange-400 mb-3"></i>
+                <p class="text-gray-300">Format lirik tidak valid.</p>
               </div>
             `;
           }
         } else {
           lyricsContainer.innerHTML = `
-            <div class="empty-state rounded-xl p-8 text-center">
-              <i class="fas fa-times-circle text-2xl text-red-400 mb-4"></i>
-              <p class="text-white/80">Lirik tidak valid.</p>
+            <div class="empty-state">
+              <i class="fas fa-times-circle text-xl text-red-400 mb-3"></i>
+              <p class="text-gray-300">Lirik tidak valid.</p>
             </div>
           `;
         }
       };
       script.onerror = () => {
         lyricsContainer.innerHTML = `
-          <div class="empty-state rounded-xl p-8 text-center">
-            <i class="fas fa-exclamation-circle text-2xl text-red-400 mb-4"></i>
-            <p class="text-white/80">Gagal memuat lirik.</p>
+          <div class="empty-state">
+            <i class="fas fa-exclamation-circle text-xl text-red-400 mb-3"></i>
+            <p class="text-gray-300">Gagal memuat lirik.</p>
           </div>
         `;
       };
       document.body.appendChild(script);
     }
 
+    // Tampilkan Lirik
     function displayLyrics() {
       lyricsContainer.innerHTML = '';
       if (!currentLyrics || !Array.isArray(currentLyrics)) {
         lyricsContainer.innerHTML = `
-          <div class="empty-state rounded-xl p-8 text-center">
-            <i class="fas fa-music text-2xl text-white/50 mb-4"></i>
-            <p class="text-white/80">Tidak ada lirik untuk ditampilkan.</p>
+          <div class="empty-state">
+            <i class="fas fa-music text-xl text-gray-400 mb-3"></i>
+            <p class="text-gray-300">Tidak ada lirik untuk ditampilkan.</p>
           </div>
         `;
         return;
       }
-      
+
       currentLyrics.forEach((line, index) => {
         const lineElement = document.createElement('div');
         lineElement.classList.add('lyric-line');
@@ -585,37 +932,40 @@
         lineElement.dataset.time = line.time;
         lyricsContainer.appendChild(lineElement);
       });
-      
+
       currentLineIndex = -1;
       updateLyricDisplay();
     }
 
+    // Auto Scroll Lirik
     function startAutoScroll() {
       currentLineIndex = -1;
       updateLyricDisplay();
-      
+
       audioPlayer.removeEventListener('timeupdate', handleTimeUpdate);
       audioPlayer.removeEventListener('ended', handleEnded);
       audioPlayer.removeEventListener('pause', handlePause);
       audioPlayer.removeEventListener('play', handlePlay);
-      
+      audioPlayer.removeEventListener('loadedmetadata', updateDuration);
+
       audioPlayer.addEventListener('timeupdate', handleTimeUpdate);
       audioPlayer.addEventListener('ended', handleEnded);
       audioPlayer.addEventListener('pause', handlePause);
       audioPlayer.addEventListener('play', handlePlay);
+      audioPlayer.addEventListener('loadedmetadata', updateDuration);
     }
 
     function handleTimeUpdate() {
       const currentTime = audioPlayer.currentTime;
       let newLineIndex = -1;
-      
+
       for (let i = currentLyrics.length - 1; i >= 0; i--) {
         if (currentTime >= currentLyrics[i].time) {
           newLineIndex = i;
           break;
         }
       }
-      
+
       if (newLineIndex !== currentLineIndex) {
         currentLineIndex = newLineIndex;
         updateLyricDisplay();
@@ -623,6 +973,15 @@
           scrollToCurrentLine();
         }
       }
+
+      // Update Progress Bar
+      const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+      progressBar.style.width = `${progress}%`;
+      currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+    }
+
+    function updateDuration() {
+      durationEl.textContent = formatTime(audioPlayer.duration);
     }
 
     function handleEnded() {
@@ -644,6 +1003,7 @@
       updatePlayPauseButton();
     }
 
+    // Navigasi Lagu
     function playNextSongManual() {
       if (currentPlaylist.length > 0 && currentSongIndex < currentPlaylist.length - 1) {
         const nextIndex = currentSongIndex + 1;
@@ -681,19 +1041,19 @@
         `;
         musicControls.classList.add('hidden');
         currentSongIndex = -1;
-        document.querySelectorAll('#playlist > div.song-card').forEach(el => {
-          el.classList.remove('bg-gradient-to-r', 'from-yellow-400/20', 'to-orange-400/20');
-          el.classList.add('card-gradient');
+        document.querySelectorAll('#playlist > div.card').forEach(el => {
+          el.classList.remove('bg-yellow-400/10');
         });
       }
     }
 
+    // Update Tampilan Lirik
     function updateLyricDisplay() {
       const lyricLines = document.querySelectorAll('.lyric-line');
-      
+
       lyricLines.forEach((line, index) => {
         line.classList.remove('current', 'passed', 'upcoming');
-        
+
         if (currentLineIndex === -1) {
           line.classList.add('upcoming');
         } else if (index < currentLineIndex) {
@@ -706,16 +1066,18 @@
       });
     }
 
+    // Scroll ke Baris Lirik Aktif
     function scrollToCurrentLine() {
       const currentLine = document.querySelector(`[data-index="${currentLineIndex}"]`);
       if (currentLine) {
-                currentLine.scrollIntoView({
+        currentLine.scrollIntoView({
           behavior: 'smooth',
           block: 'center'
         });
       }
     }
 
+    // Event Listeners
     backButton.addEventListener('click', () => {
       artistList.classList.remove('hidden');
       playlistContainer.classList.add('hidden');
@@ -726,24 +1088,65 @@
       updatePlayPauseButton();
       nowPlaying.textContent = '';
       lyricsContainer.innerHTML = `
-        <div class="empty-state rounded-xl p-8 text-center">
-          <i class="fas fa-music text-4xl text-white/30 mb-4"></i>
-          <p class="text-white/60">Pilih artis dan lagu untuk melihat lirik</p>
+        <div class="empty-state">
+          <i class="fas fa-headphones text-3xl text-gray-400 mb-3"></i>
+          <p class="text-gray-300">Pilih artis dan lagu untuk melihat lirik</p>
         </div>
       `;
       currentLyrics = [];
       currentLineIndex = -1;
       currentPlaylist = [];
       currentSongIndex = -1;
-      
+
       // Clean up listeners
       audioPlayer.removeEventListener('timeupdate', handleTimeUpdate);
       audioPlayer.removeEventListener('ended', handleEnded);
       audioPlayer.removeEventListener('pause', handlePause);
       audioPlayer.removeEventListener('play', handlePlay);
+      audioPlayer.removeEventListener('loadedmetadata', updateDuration);
     });
 
-    // Initialize
+    // Progress Bar Interaction
+    progressContainer.addEventListener('click', (e) => {
+      const rect = progressContainer.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      const percentage = clickX / width;
+      audioPlayer.currentTime = percentage * audioPlayer.duration;
+    });
+
+    // Volume Control
+    volumeSlider.addEventListener('input', () => {
+      audioPlayer.volume = volumeSlider.value;
+    });
+
+    // Admin Login Button
+    adminLoginBtn.addEventListener('click', () => {
+      loginModal.classList.remove('hidden');
+    });
+
+    // Login Submit
+    loginSubmit.addEventListener('click', handleLogin);
+    adminPassword.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleLogin();
+    });
+
+    // Add Song Button
+    addSongBtn.addEventListener('click', addSong);
+
+    // Add Playlist Button (Placeholder untuk fitur masa depan)
+    addPlaylistBtn.addEventListener('click', () => {
+      const name = playlistName.value.trim();
+      if (name) {
+        alert(`Playlist ${name} akan ditambahkan di masa depan! Fitur ini belum diimplementasikan sepenuhnya.`);
+        playlistName.value = '';
+      } else {
+        alert('Masukkan nama playlist.');
+      }
+    });
+
+    // Inisialisasi
+    initParticles();
     loadArtists();
   </script>
 </body>
