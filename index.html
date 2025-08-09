@@ -369,109 +369,67 @@
     </div>
   </div>
 
+  <div id="adminPanel" class="hidden fixed inset-0 bg-gray-900 bg-opacity-90 backdrop-blur-sm z-50 p-8">
+    <div class="max-w-4xl mx-auto glass-effect p-8 rounded-2xl text-white">
+      <h2 class="text-3xl font-bold mb-6">Dashboard Admin</h2>
+      <p class="text-gray-300 mb-4">
+        Fitur ini memerlukan **server-side** dan **database** untuk menyimpan data like dan visitor secara permanen dan global. 
+        Implementasi saat ini hanya sebagai placeholder.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-effect p-6 rounded-xl">
+          <h3 class="text-xl font-medium text-yellow-400">Total Pengunjung</h3>
+          <p class="text-4xl font-bold mt-2" id="adminVisitorCount">0</p>
+        </div>
+        <div class="glass-effect p-6 rounded-xl">
+          <h3 class="text-xl font-medium text-yellow-400">Total Like</h3>
+          <p class="text-4xl font-bold mt-2" id="adminTotalLikes">0</p>
+        </div>
+      </div>
+      <button onclick="closeAdminPanel()" class="mt-8 px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all duration-300 font-medium">
+        Tutup
+      </button>
+    </div>
+  </div>
+
   <script>
     // Data Playlist (Disimpan di localStorage)
-    let playlist = JSON.parse(localStorage.getItem('playlist')) || [
-      {
-        id: "nina-feast",
-        artist: "Nina",
-        title: "Feast",
-        mp3: "music/nina/feast.mp3",
-        lyric: "lyrics/nina/feast.js",
-        artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg",
-        likes: 0
-      },
-      {
-        id: "nina-tarot",
-        artist: "Nina",
-        title: "Tarot",
-        mp3: "music/nina/tarot.mp3",
-        lyric: "lyrics/nina/tarot.js",
-        artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg",
-        likes: 0
-      },
-      {
-        id: "nina-otuan",
-        artist: "Nina",
-        title: "o,Tuan",
-        mp3: "music/nina/otuan.mp3",
-        lyric: "lyrics/nina/otuan.js",
-        artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg",
-        likes: 0
-      },
-      {
-        id: "hindia-evaluasi",
-        artist: "Hindia",
-        title: "Evaluasi",
-        mp3: "music/hindia/evaluasi.mp3",
-        lyric: "lyrics/hindia/evaluasi.js",
-        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg",
-        likes: 0
-      },
-      {
-        id: "hindia-cincin",
-        artist: "Hindia",
-        title: "Cincin",
-        mp3: "music/hindia/cincin.mp3",
-        lyric: "lyrics/hindia/cincin.js",
-        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg",
-        likes: 0
-      },
-      {
-        id: "hindia-kitakesana",
-        artist: "Hindia",
-        title: "Kita Kesana",
-        mp3: "music/hindia/kitakesana.mp3",
-        lyric: "lyrics/hindia/kitakesana.js",
-        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg",
-        likes: 0
-      },
-      {
-        id: "hindia-everythinguare",
-        artist: "Hindia",
-        title: "Everything U Are",
-        mp3: "music/hindia/everything.mp3",
-        lyric: "lyrics/hindia/everything.js",
-        artistPhoto: "https://files.catbox.moe/ln8c0r.jpg",
-        likes: 0
-      },
-      {
-        id: "nadhif-basalamah-bergema",
-        artist: "Nadhif Basalamah",
-        title: "Bergema Sampai Selamanya",
-        mp3: "music/nadifbasalamah/bergema.mp3",
-        lyric: "lyrics/nadifbasalamah/bergema.js",
-        artistPhoto: "https://files.catbox.moe/951vb9.jpeg",
-        likes: 0
-      },
-      {
-        id: "nadhif-basalamah-penjagahati",
-        artist: "Nadhif Basalamah",
-        title: "Penjaga Hati",
-        mp3: "music/nadifbasalamah/penjagahati.mp3",
-        lyric: "lyrics/nadifbasalamah/penjagahati.js",
-        artistPhoto: "https://files.catbox.moe/951vb9.jpeg",
-        likes: 0
-      }
+    // ID lagu dibuat unik untuk identifikasi
+    let playlist = [
+      { id: "nina-feast", artist: "Nina", title: "Feast", mp3: "music/nina/feast.mp3", lyric: "lyrics/nina/feast.js", artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg" },
+      { id: "nina-tarot", artist: "Nina", title: "Tarot", mp3: "music/nina/tarot.mp3", lyric: "lyrics/nina/tarot.js", artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg" },
+      { id: "nina-otuan", artist: "Nina", title: "o,Tuan", mp3: "music/nina/otuan.mp3", lyric: "lyrics/nina/otuan.js", artistPhoto: "https://files.catbox.moe/u5b8mp.jpeg" },
+      { id: "hindia-evaluasi", artist: "Hindia", title: "Evaluasi", mp3: "music/hindia/evaluasi.mp3", lyric: "lyrics/hindia/evaluasi.js", artistPhoto: "https://files.catbox.moe/ln8c0r.jpg" },
+      { id: "hindia-cincin", artist: "Hindia", title: "Cincin", mp3: "music/hindia/cincin.mp3", lyric: "lyrics/hindia/cincin.js", artistPhoto: "https://files.catbox.moe/ln8c0r.jpg" },
+      { id: "hindia-kitakesana", artist: "Hindia", title: "Kita Kesana", mp3: "music/hindia/kitakesana.mp3", lyric: "lyrics/hindia/kitakesana.js", artistPhoto: "https://files.catbox.moe/ln8c0r.jpg" },
+      { id: "hindia-everythinguare", artist: "Hindia", title: "Everything U Are", mp3: "music/hindia/everything.mp3", lyric: "lyrics/hindia/everything.js", artistPhoto: "https://files.catbox.moe/ln8c0r.jpg" },
+      { id: "nadhif-basalamah-bergema", artist: "Nadhif Basalamah", title: "Bergema Sampai Selamanya", mp3: "music/nadifbasalamah/bergema.mp3", lyric: "lyrics/nadifbasalamah/bergema.js", artistPhoto: "https://files.catbox.moe/951vb9.jpeg" },
+      { id: "nadhif-basalamah-penjagahati", artist: "Nadhif Basalamah", title: "Penjaga Hati", mp3: "music/nadifbasalamah/penjagahati.mp3", lyric: "lyrics/nadifbasalamah/penjagahati.js", artistPhoto: "https://files.catbox.moe/951vb9.jpeg" }
     ];
-    
-    // Inisialisasi data likes dari localStorage
-    const likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || {};
-    // Gabungkan data playlist dengan likes dari localStorage
-    playlist = playlist.map(song => ({
-      ...song,
-      likes: likedSongs[song.id] || 0
-    }));
-    
-    // Inisialisasi Visitor Count
-    let visitorCount = parseInt(localStorage.getItem('visitorCount')) || 0;
-    const sessionVisited = sessionStorage.getItem('sessionVisited');
-    if (!sessionVisited) {
-      visitorCount++;
-      localStorage.setItem('visitorCount', visitorCount);
-      sessionStorage.setItem('sessionVisited', 'true');
+
+    // Status like dari user (disimpan di localStorage)
+    const userLikes = JSON.parse(localStorage.getItem('userLikes')) || {};
+
+    // Simulasi data like dan visitor publik dari server (diganti dengan backend sungguhan)
+    let publicData = {
+      likes: JSON.parse(localStorage.getItem('publicLikes')) || {},
+      visitors: parseInt(localStorage.getItem('publicVisitors')) || 0
+    };
+
+    // Fungsi untuk memperbarui data di localStorage sebagai simulasi backend
+    function savePublicData() {
+        localStorage.setItem('publicLikes', JSON.stringify(publicData.likes));
+        localStorage.setItem('publicVisitors', publicData.visitors);
     }
     
+    // Inisialisasi Visitor Count
+    const sessionVisited = sessionStorage.getItem('sessionVisited');
+    if (!sessionVisited) {
+      publicData.visitors++;
+      savePublicData();
+      sessionStorage.setItem('sessionVisited', 'true');
+    }
+
     // DOM Elements
     const artistList = document.getElementById('artistList');
     const playlistContainer = document.getElementById('playlist');
@@ -488,6 +446,7 @@
     const durationEl = document.getElementById('duration');
     const volumeSlider = document.getElementById('volumeSlider');
     const visitorCountEl = document.querySelector('#visitorCount span');
+    const adminPanel = document.getElementById('adminPanel');
 
     // State
     let currentLyrics = [];
@@ -637,9 +596,9 @@
             </div>
           </div>
           <div class="flex items-center space-x-2">
-            <span class="text-gray-400 text-sm like-count">${song.likes}</span>
+            <span class="text-gray-400 text-sm like-count">${publicData.likes[song.id] || 0}</span>
             <button class="like-btn" data-song-id="${song.id}">
-              <i class="${isLiked(song.id) ? 'fas fa-heart liked' : 'far fa-heart'}"></i>
+              <i class="${userLikes[song.id] ? 'fas fa-heart liked' : 'far fa-heart'}"></i>
             </button>
           </div>
         `;
@@ -647,7 +606,7 @@
         const likeButton = songElement.querySelector('.like-btn');
         likeButton.addEventListener('click', () => {
           toggleLike(song.id);
-          updateLikesDisplay(songElement, song.id);
+          updateAllLikesDisplay();
         });
 
         playlistContainer.appendChild(songElement);
@@ -656,39 +615,20 @@
 
     // Toggle Like
     function toggleLike(songId) {
-      let isSongLiked = isLiked(songId);
-      const song = playlist.find(s => s.id === songId);
-      if (!song) return;
-
-      if (isSongLiked) {
-        likedSongs[songId] = false;
-        song.likes = Math.max(0, song.likes - 1);
+      if (userLikes[songId]) {
+        // Jika sudah like, hapus like
+        delete userLikes[songId];
+        // Kurangi like di data publik
+        publicData.likes[songId] = (publicData.likes[songId] || 1) - 1;
       } else {
-        likedSongs[songId] = true;
-        song.likes++;
+        // Jika belum like, tambahkan like
+        userLikes[songId] = true;
+        // Tambah like di data publik
+        publicData.likes[songId] = (publicData.likes[songId] || 0) + 1;
       }
       
-      localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
-      updateAllLikesDisplay();
-    }
-    
-    function isLiked(songId) {
-      return likedSongs[songId] === true;
-    }
-    
-    function updateLikesDisplay(songElement, songId) {
-      const song = playlist.find(s => s.id === songId);
-      if (!song) return;
-      
-      const likeCountEl = songElement.querySelector('.like-count');
-      const likeBtnIcon = songElement.querySelector('.like-btn i');
-      
-      likeCountEl.textContent = song.likes;
-      if (isLiked(songId)) {
-        likeBtnIcon.className = 'fas fa-heart liked';
-      } else {
-        likeBtnIcon.className = 'far fa-heart';
-      }
+      localStorage.setItem('userLikes', JSON.stringify(userLikes));
+      savePublicData();
     }
     
     function updateAllLikesDisplay() {
@@ -696,7 +636,15 @@
         const likeButton = songElement.querySelector('.like-btn');
         if (likeButton) {
           const songId = likeButton.dataset.songId;
-          updateLikesDisplay(songElement, songId);
+          const likeCountEl = songElement.querySelector('.like-count');
+          const likeBtnIcon = songElement.querySelector('.like-btn i');
+          
+          likeCountEl.textContent = publicData.likes[songId] || 0;
+          if (userLikes[songId]) {
+            likeBtnIcon.className = 'fas fa-heart liked';
+          } else {
+            likeBtnIcon.className = 'far fa-heart';
+          }
         }
       });
     }
@@ -1019,12 +967,33 @@
     volumeSlider.addEventListener('input', () => {
       audioPlayer.volume = volumeSlider.value;
     });
-    
+
+    // Admin Panel (Sangat sederhana, hanya untuk demonstrasi)
+    function checkAdminAccess() {
+      if (window.location.pathname === '/admin') {
+        // Implementasi otentikasi (seperti login) harus ada di sini
+        // Sebagai contoh sederhana, kita langsung tampilkan panel
+        openAdminPanel();
+      }
+    }
+
+    function openAdminPanel() {
+      adminPanel.classList.remove('hidden');
+      document.getElementById('adminVisitorCount').textContent = publicData.visitors;
+      const totalLikes = Object.values(publicData.likes).reduce((sum, val) => sum + val, 0);
+      document.getElementById('adminTotalLikes').textContent = totalLikes;
+    }
+
+    function closeAdminPanel() {
+      adminPanel.classList.add('hidden');
+    }
+
     // Inisialisasi Tampilan
     function initializeApp() {
       initParticles();
       loadArtists();
-      visitorCountEl.textContent = visitorCount;
+      visitorCountEl.textContent = publicData.visitors;
+      checkAdminAccess();
     }
 
     initializeApp();
