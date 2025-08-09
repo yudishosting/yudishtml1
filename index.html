@@ -510,6 +510,19 @@
     function loadArtists() {
       artistList.innerHTML = '';
       const artists = getArtists();
+      
+      // Menambahkan pesan "Pilih artis dan musik untuk memulai" di dalam elemen artistList
+      const introMessage = document.createElement('div');
+      introMessage.classList.add('empty-state', 'p-6', 'glass-effect', 'rounded-2xl', 'col-span-full', 'mb-6');
+      introMessage.innerHTML = `
+          <h3 class="initial-message font-['Inter'] text-yellow-400">
+            <i class="fas fa-headphones-alt text-yellow-400 mr-2"></i>
+            Pilih artis dan musik untuk memulai
+          </h3>
+      `;
+      artistList.appendChild(introMessage);
+      
+      // Membuat dan menambahkan kartu artis
       artists.forEach((artistData, index) => {
         const artistElement = document.createElement('div');
         artistElement.classList.add('card', 'p-6', 'fade-in');
@@ -919,3 +932,4 @@
   </script>
 </body>
 </html>
+
