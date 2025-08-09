@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&family=Poppins:wght@600;700&display=swap');
 
     /* Reset dan Base Styles */
     * {
@@ -84,9 +84,9 @@
 
     /* Lirik Styles */
     .lyric-line {
-      padding: 0;
-      margin: 12px 0;
-      border-radius: 0;
+      padding: 12px 16px;
+      margin: 4px 0;
+      border-radius: 8px;
       transition: all 0.3s ease;
       opacity: 0.7;
       font-size: 0.95rem;
@@ -97,9 +97,8 @@
       color: #facc15;
       font-weight: 500;
       opacity: 1;
-      background: none;
+      background: rgba(250, 204, 21, 0.1);
       border-left: 3px solid #facc15;
-      padding-left: 16px;
       transform: translateX(4px);
     }
 
@@ -144,8 +143,9 @@
 
     /* Empty State */
     .empty-state {
-      background: none;
-      border: none;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
       padding: 2.5rem;
       text-align: center;
     }
@@ -212,7 +212,7 @@
       border-radius: 50%;
       cursor: pointer;
     }
-    
+
     /* Responsive Adjustments */
     @media (min-width: 640px) {
       .grid-responsive {
@@ -234,8 +234,10 @@
   </style>
 </head>
 <body>
+  <!-- Partikel Latar Belakang -->
   <canvas id="particleCanvas"></canvas>
 
+  <!-- Floating Notes -->
   <div class="absolute text-xl text-yellow-300/10 animate-[float_8s_ease-in-out_infinite]" style="top: 10%; left: 5%;">
     <i class="fas fa-music"></i>
   </div>
@@ -246,29 +248,41 @@
     <i class="fas fa-compact-disc"></i>
   </div>
 
+  <!-- Main Content -->
   <div id="mainContent" class="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="glass-effect rounded-2xl p-6 sm:p-8 lg:p-10 relative z-10">
+      <!-- Header -->
       <div class="flex justify-between items-center mb-10">
         <div>
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3 font-['Playfair_Display']">
             <i class="fas fa-headphones-alt mr-2 text-yellow-400"></i>
-            Playlist Musik Favorit Ku
+            Playlist Musik Favorit
           </h1>
           <p class="text-gray-300 text-base sm:text-lg">Nikmati koleksi musik pilihan dengan pengalaman premium</p>
         </div>
       </div>
 
+      <!-- Instruction Text -->
+      <div class="text-center mb-8">
+        <p class="text-lg font-semibold text-yellow-400 font-['Poppins']">pilih artis dan musik untuk memulai</p>
+      </div>
+
+      <!-- Back Button -->
       <button id="backButton" class="hidden mb-6 px-5 py-2 bg-yellow-400 text-gray-900 rounded-lg hover:bg-yellow-300 transition-all duration-300 font-medium text-sm">
         <i class="fas fa-arrow-left mr-2"></i>
         Kembali ke Daftar Artis
       </button>
 
+      <!-- Artist List -->
       <div id="artistList" class="grid-responsive"></div>
 
+      <!-- Playlist -->
       <div id="playlist" class="hidden space-y-4"></div>
 
+      <!-- Audio Player (Hidden) -->
       <audio id="audioPlayer" class="hidden"></audio>
 
+      <!-- Music Controls -->
       <div id="musicControls" class="hidden mt-8">
         <div class="glass-effect rounded-2xl p-6">
           <div id="nowPlaying" class="text-lg font-medium now-playing-text mb-4"></div>
@@ -303,29 +317,19 @@
         </div>
       </div>
 
+      <!-- Lyrics -->
       <div id="lyrics" class="mt-8 p-6 glass-effect rounded-2xl text-white text-base max-h-96 overflow-y-auto">
+        <div class="empty-state">
+          <i class="fas fa-headphones text-3xl text-gray-400 mb-3"></i>
+          <p class="text-gray-300">pilih artis dan musik untuk memulai</p>
+        </div>
       </div>
 
+      <!-- Footer -->
       <footer class="mt-12 pt-6 border-t border-gray-700">
         <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
           <div class="text-gray-300 text-sm">
             <p>&copy; 2025 <span class="font-medium text-yellow-400">Yudis</span>. All rights reserved.</p>
-          </div>
-          
-          <div class="flex items-center space-x-3">
-            <p class="text-gray-300 text-sm font-medium">Contact Me:</p>
-            
-            <a href="https://instagram.com/yudis_299" target="_blank" 
-               class="flex items-center space-x-2 bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg hover:bg-yellow-300 transition-all duration-300">
-              <i class="fab fa-instagram text-base"></i>
-              <span class="text-sm">@yudis_299</span>
-            </a>
-            
-            <a href="https://wa.me/6285124039070" target="_blank" 
-               class="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-all duration-300">
-              <i class="fab fa-whatsapp text-base"></i>
-              <span class="text-sm">WhatsApp</span>
-            </a>
           </div>
         </div>
       </footer>
@@ -547,28 +551,35 @@
       `;
       playlistContainer.appendChild(artistHeader);
 
-      // Songs List
-      currentPlaylist.forEach((song, index) => {
-        const songElement = document.createElement('div');
-        songElement.classList.add('card', 'p-4', 'fade-in', 'flex', 'items-center', 'space-x-4', 'cursor-pointer');
-        songElement.style.animationDelay = `${index * 0.1}s`;
-        songElement.dataset.songIndex = index;
-        songElement.innerHTML = `
-          <div class="text-yellow-400 text-xl">
-            <i class="fas fa-play-circle"></i>
-          </div>
-          <div class="flex-1">
-            <h4 class="text-base font-medium text-white">${song.title}</h4>
-            <p class="text-gray-300 text-sm">${song.artist}</p>
-          </div>
-          <div class="text-gray-400 text-sm">
-            ${index + 1}/${currentPlaylist.length}
-          </div>
-        `;
-        songElement.addEventListener('click', () => {
-          playSong(song, index);
+      // Songs Table
+      const table = document.createElement('table');
+      table.classList.add('song-table');
+      table.innerHTML = `
+        <tbody>
+          ${currentPlaylist.map((song, index) => `
+            <tr class="fade-in" style="animation-delay: ${index * 0.1}s" data-song-index="${index}">
+              <td class="text-yellow-400 text-center">
+                <i class="fas fa-play-circle"></i>
+              </td>
+              <td>
+                <h4 class="text-base font-medium text-white">${song.title}</h4>
+                <p class="text-gray-300 text-sm">${song.artist}</p>
+              </td>
+              <td class="text-gray-400 text-sm text-right">
+                ${index + 1}/${currentPlaylist.length}
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      `;
+      playlistContainer.appendChild(table);
+
+      // Add click listeners to table rows
+      table.querySelectorAll('tr').forEach(row => {
+        row.addEventListener('click', () => {
+          const index = parseInt(row.dataset.songIndex);
+          playSong(currentPlaylist[index], index);
         });
-        playlistContainer.appendChild(songElement);
       });
     }
 
@@ -576,13 +587,13 @@
     function playSong(song, index) {
       currentSongIndex = index;
 
-      document.querySelectorAll('#playlist > div.card').forEach(el => {
-        el.classList.remove('bg-yellow-400/10');
+      document.querySelectorAll('#playlist .song-table tr').forEach(el => {
+        el.classList.remove('active');
       });
 
       const currentSongElement = document.querySelector(`[data-song-index="${currentSongIndex}"]`);
       if (currentSongElement) {
-        currentSongElement.classList.add('bg-yellow-400/10');
+        currentSongElement.classList.add('active');
       }
 
       audioPlayer.src = song.mp3;
@@ -683,7 +694,8 @@
       if (!currentLyrics || !Array.isArray(currentLyrics)) {
         lyricsContainer.innerHTML = `
           <div class="empty-state">
-            <p class="text-gray-400 text-sm mt-2">Tidak ada lirik untuk ditampilkan</p>
+            <i class="fas fa-music text-xl text-gray-400 mb-3"></i>
+            <p class="text-gray-300">Tidak ada lirik untuk ditampilkan.</p>
           </div>
         `;
         return;
@@ -806,8 +818,8 @@
         `;
         musicControls.classList.add('hidden');
         currentSongIndex = -1;
-        document.querySelectorAll('#playlist > div.card').forEach(el => {
-          el.classList.remove('bg-yellow-400/10');
+        document.querySelectorAll('#playlist .song-table tr').forEach(el => {
+          el.classList.remove('active');
         });
       }
     }
@@ -852,7 +864,12 @@
       isPlaying = false;
       updatePlayPauseButton();
       nowPlaying.textContent = '';
-      lyricsContainer.innerHTML = ``;
+      lyricsContainer.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-headphones text-3xl text-gray-400 mb-3"></i>
+          <p class="text-gray-300">pilih artis dan musik untuk memulai</p>
+        </div>
+      `;
       currentLyrics = [];
       currentLineIndex = -1;
       currentPlaylist = [];
